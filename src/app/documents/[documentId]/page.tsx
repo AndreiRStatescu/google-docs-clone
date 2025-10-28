@@ -9,9 +9,9 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
 
   return (
     <div>
-      <h1>Document ID: {documentId}</h1>
-      <p>This is the page for document with ID: {documentId}</p>
-      <Editor params={{ documentId }} />
+      <div className="min-h-screen bg-[#FAFBFD]">
+        <Editor documentId={documentId} />
+      </div>
     </div>
   );
 };
