@@ -1,3 +1,5 @@
+"use client"
+
 import { cn } from "@/lib/utils";
 import { LucideIcon, Undo2Icon } from "lucide-react";
 
