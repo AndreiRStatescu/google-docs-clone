@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { TableKit } from '@tiptap/extension-table'
+import Image from '@tiptap/extension-image'
 import StarterKit from '@tiptap/starter-kit'
 
 interface EditorProps {
@@ -17,9 +18,10 @@ export const Editor = ({ documentId }: EditorProps) => {
         class: 'focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text',
       },
     },
-    extensions: [StarterKit, TableKit, TaskList, TaskItem.configure({ nested: true })],
+    extensions: [StarterKit, TableKit, TaskList, TaskItem.configure({ nested: true }), Image],
     immediatelyRender: false,
     content: `
+        <p>Hello World! 🌎️</p>
         <table>
           <tbody>
             <tr>
@@ -34,6 +36,9 @@ export const Editor = ({ documentId }: EditorProps) => {
             </tr>
           </tbody>
         </table>
+        <p>This is a basic example of implementing images. Drag to re-order.</p>
+        <img src="https://placehold.co/600x400" />
+        <img src="https://placehold.co/800x400" />
       `,
   })
 
