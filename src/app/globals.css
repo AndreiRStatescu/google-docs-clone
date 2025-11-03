@@ -147,14 +147,14 @@
   h5,
   h6 {
     line-height: 1.1;
-    margin-top: .4rem;
+    margin-top: 0.4rem;
     text-wrap: pretty;
   }
 
   h1,
   h2 {
-    margin-top: .6rem;
-    margin-bottom: .6rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
   }
 
   h1 {
@@ -179,7 +179,7 @@
   ul,
   ol {
     padding: 0 1rem;
-    margin: .5rem 1rem .5rem 0.4rem;
+    margin: 0.5rem 1rem 0.5rem 0.4rem;
   }
 
   ul li {
@@ -201,7 +201,7 @@
   }
 
   /* Task list specific styles */
-  ul[data-type='taskList'] {
+  ul[data-type="taskList"] {
     list-style: none;
     margin-left: 0;
     padding: 0;
@@ -210,22 +210,22 @@
       align-items: flex-start;
       display: flex;
 
-      >label {
+      > label {
         flex: 0 0 auto;
         margin-right: 0.5rem;
         user-select: none;
       }
 
-      >div {
+      > div {
         flex: 1 1 auto;
       }
     }
 
-    input[type='checkbox'] {
+    input[type="checkbox"] {
       cursor: pointer;
     }
 
-    ul[data-type='taskList'] {
+    ul[data-type="taskList"] {
       margin: 0;
     }
   }
@@ -260,7 +260,7 @@
 
     .selectedCell:after {
       background: var(--gray-2);
-      content: '';
+      content: "";
       left: 0;
       right: 0;
       top: 0;
