@@ -29,13 +29,20 @@ import {
 import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 
 interface ToolbarButtonProps {
+  type: "button";
   label: string;
   icon: LucideIcon;
   isActive?: (editor: Editor) => boolean;
   onClick: (editor: Editor) => void;
 }
 
-type ToolbarSection = ToolbarButtonProps[];
+interface FontFamilyDropdownProps {
+  type: "fontFamily";
+}
+
+type ToolbarItem = ToolbarButtonProps | FontFamilyDropdownProps;
+
+type ToolbarSection = ToolbarItem[];
 
 const ToolbarButton = ({
   label,
@@ -126,21 +133,25 @@ const ToolbarSeparator = () => {
 const toolbarSections: ToolbarSection[] = [
   [
     {
+      type: "button",
       label: "Undo",
       icon: Undo2Icon,
       onClick: editor => editor.chain().focus().undo().run(),
     },
     {
+      type: "button",
       label: "Redo",
       icon: Redo2Icon,
       onClick: editor => editor.chain().focus().redo().run(),
     },
     {
+      type: "button",
       label: "Print",
       icon: PrinterIcon,
       onClick: () => window.print(),
     },
     {
+      type: "button",
       label: "Spell Check",
       icon: SpellCheckIcon,
       onClick: editor => {
@@ -154,24 +165,28 @@ const toolbarSections: ToolbarSection[] = [
   ],
   [
     {
+      type: "button",
       label: "Bold",
       icon: BoldIcon,
       isActive: editor => editor.isActive("bold"),
       onClick: editor => editor.chain().focus().toggleBold().run(),
     },
     {
+      type: "button",
       label: "Italic",
       icon: ItalicIcon,
       isActive: editor => editor.isActive("italic"),
       onClick: editor => editor.chain().focus().toggleItalic().run(),
     },
     {
+      type: "button",
       label: "Underline",
       icon: UnderlineIcon,
       isActive: editor => editor.isActive("underline"),
       onClick: editor => editor.chain().focus().toggleUnderline().run(),
     },
     {
+      type: "button",
       label: "Strikethrough",
       icon: StrikethroughIcon,
       isActive: editor => editor.isActive("strike"),
@@ -180,24 +195,43 @@ const toolbarSections: ToolbarSection[] = [
   ],
   [
     {
+      type: "button",
       label: "Comment",
       icon: MessageSquarePlusIcon,
       onClick: () => console.log("Add comment"),
       isActive: () => false,
     },
     {
+      type: "button",
       label: "List Todo",
       icon: ListTodoIcon,
       onClick: editor => editor.chain().focus().toggleTaskList().run(),
       isActive: editor => editor.isActive("taskList"),
     },
     {
+      type: "button",
       label: "Remove Formatting",
       icon: RemoveFormattingIcon,
       onClick: editor => editor.chain().focus().unsetAllMarks().run(),
     },
   ],
+  [
+    {
+      type: "fontFamily",
+    },
+  ],
 ];
+
+const renderToolbarItem = (item: ToolbarItem, index: number) => {
+  switch (item.type) {
+    case "button":
+      return <ToolbarButton key={index} {...item} />;
+    case "fontFamily":
+      return <FontFamilyButton key={index} />;
+    default:
+      return null;
+  }
+};
 
 export const Toolbar = () => {
   return (
@@ -205,12 +239,9 @@ export const Toolbar = () => {
       {toolbarSections.map((section, sectionIndex) => (
         <div key={sectionIndex} className="contents">
           {sectionIndex > 0 && <ToolbarSeparator />}
-          {section.map((button, buttonIndex) => (
-            <ToolbarButton key={buttonIndex} {...button} />
-          ))}
+          {section.map((item, itemIndex) => renderToolbarItem(item, itemIndex))}
         </div>
       ))}
-      <FontFamilyButton />
     </div>
   );
 };
