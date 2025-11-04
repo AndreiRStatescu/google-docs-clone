@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { type Editor } from "@tiptap/react";
-import { type LucideIcon } from "lucide-react";
+import { ListTodoIcon, MessageSquarePlusIcon, RemoveFormattingIcon, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
@@ -120,7 +120,25 @@ const toolbarSections: ToolbarSection[] = [
       onClick: editor => editor.chain().focus().toggleStrike().run(),
     },
   ],
-  [],
+  [
+    {
+      label: "Comment",
+      icon: MessageSquarePlusIcon,
+      onClick: () => console.log("Add comment"),
+      isActive: () => false,
+    },
+    {
+      label: "List Todo",
+      icon: ListTodoIcon,
+      onClick: editor => editor.chain().focus().toggleTaskList().run(),
+      isActive: editor => editor.isActive("taskList"),
+    },
+    {
+      label: "Remove Formatting",
+      icon: RemoveFormattingIcon,
+      onClick: editor => editor.chain().focus().unsetAllMarks().run(),
+    },
+  ],
 ];
 
 export const Toolbar = () => {
