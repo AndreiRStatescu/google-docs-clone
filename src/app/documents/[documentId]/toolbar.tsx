@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 interface ToolbarButtonProps {
+  label: string;
   icon: LucideIcon;
   isActive?: (editor: Editor) => boolean;
   onClick: (editor: Editor) => void;
@@ -26,6 +27,7 @@ interface ToolbarButtonProps {
 type ToolbarSection = ToolbarButtonProps[];
 
 const ToolbarButton = ({
+  label,
   icon: Icon,
   isActive: checkIsActive,
   onClick: handleClick,
@@ -52,6 +54,7 @@ const ToolbarButton = ({
       }}
       className={className}
       style={{ backgroundColor: isActive ? "#ffd4d8" : undefined }}
+      title={label}
     >
       <Icon className="size-4" />
     </button>
@@ -65,18 +68,22 @@ const ToolbarSeparator = () => {
 const toolbarSections: ToolbarSection[] = [
   [
     {
+      label: "Undo",
       icon: Undo2Icon,
       onClick: editor => editor.chain().focus().undo().run(),
     },
     {
+      label: "Redo",
       icon: Redo2Icon,
       onClick: editor => editor.chain().focus().redo().run(),
     },
     {
+      label: "Print",
       icon: PrinterIcon,
       onClick: () => window.print(),
     },
     {
+      label: "Spell Check",
       icon: SpellCheckIcon,
       onClick: editor => {
         const current = editor.view.dom.getAttribute("spellcheck");
@@ -89,21 +96,25 @@ const toolbarSections: ToolbarSection[] = [
   ],
   [
     {
+      label: "Bold",
       icon: BoldIcon,
       isActive: editor => editor.isActive("bold"),
       onClick: editor => editor.chain().focus().toggleBold().run(),
     },
     {
+      label: "Italic",
       icon: ItalicIcon,
       isActive: editor => editor.isActive("italic"),
       onClick: editor => editor.chain().focus().toggleItalic().run(),
     },
     {
+      label: "Underline",
       icon: UnderlineIcon,
       isActive: editor => editor.isActive("underline"),
       onClick: editor => editor.chain().focus().toggleUnderline().run(),
     },
     {
+      label: "Strikethrough",
       icon: StrikethroughIcon,
       isActive: editor => editor.isActive("strike"),
       onClick: editor => editor.chain().focus().toggleStrike().run(),
