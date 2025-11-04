@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { type Editor } from "@tiptap/react";
-import { ListTodoIcon, MessageSquarePlusIcon, RemoveFormattingIcon, type LucideIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ListTodoIcon,
+  MessageSquarePlusIcon,
+  RemoveFormattingIcon,
+  type LucideIcon,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
@@ -16,6 +22,11 @@ import {
   PrinterIcon,
   SpellCheckIcon,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 
 interface ToolbarButtonProps {
   label: string;
@@ -32,8 +43,7 @@ const ToolbarButton = ({
   isActive: checkIsActive,
   onClick: handleClick,
 }: ToolbarButtonProps) => {
-  const editor = useEditorStore(state => state.editor);
-  const lastUpdate = useEditorStore(state => state.lastUpdate);
+  const { editor, lastUpdate } = useEditorStore();
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
@@ -58,6 +68,54 @@ const ToolbarButton = ({
     >
       <Icon className="size-4" />
     </button>
+  );
+};
+
+const FontFamilyButton = () => {
+  const { editor, lastUpdate } = useEditorStore();
+  const [selectedFont, setSelectedFont] = useState("Arial");
+
+  useEffect(() => {
+    const currentFont =
+      editor?.getAttributes("textStyle").fontFamily || "Arial";
+    setSelectedFont(currentFont);
+  }, [editor, lastUpdate]);
+
+  const fonts = [
+    { label: "Arial", value: "Arial" },
+    { label: "Courier New", value: "Courier New" },
+    { label: "Georgia", value: "Georgia" },
+    { label: "Times New Roman", value: "Times New Roman" },
+    { label: "Verdana", value: "Verdana" },
+  ];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-7 w-[120px] shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+          <span className="truncate">{selectedFont}</span>
+          <ChevronDownIcon className="size-4 ml-2 shrink-0" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+        {fonts.map(({ label, value }) => (
+          <button
+            key={value}
+            className={cn(
+              "flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
+              editor?.getAttributes("textStyle").fontFamily === value &&
+                "bg-neutral-200/80"
+            )}
+            style={{ fontFamily: value }}
+            onClick={() => {
+              editor?.chain().focus().setFontFamily(value).run();
+            }}
+          >
+            <span className="text-sm">{label}</span>
+          </button>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -152,6 +210,7 @@ export const Toolbar = () => {
           ))}
         </div>
       ))}
+      <FontFamilyButton />
     </div>
   );
 };

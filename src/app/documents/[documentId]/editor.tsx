@@ -3,7 +3,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { TableKit } from "@tiptap/extension-table";
-import Image from "@tiptap/extension-image";
+import { FontFamily, TextStyle } from '@tiptap/extension-text-style'
 import ImageResize from "tiptap-extension-resize-image";
 import StarterKit from "@tiptap/starter-kit";
 
@@ -56,6 +56,8 @@ export const Editor = ({ documentId }: EditorProps) => {
       TaskList,
       TaskItem.configure({ nested: true }),
       ImageResize,
+      FontFamily,
+      TextStyle,
     ],
     immediatelyRender: false,
     content: `
