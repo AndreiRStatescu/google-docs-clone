@@ -9,6 +9,8 @@ import { useEditorStore } from "@/store/use-editor-store";
 import {
   BoldIcon,
   ItalicIcon,
+  UnderlineIcon,
+  StrikethroughIcon,
   Undo2Icon,
   Redo2Icon,
   PrinterIcon,
@@ -95,6 +97,16 @@ const toolbarSections: ToolbarSection[] = [
       icon: ItalicIcon,
       isActive: editor => editor.isActive("italic"),
       onClick: editor => editor.chain().focus().toggleItalic().run(),
+    },
+    {
+      icon: UnderlineIcon,
+      isActive: editor => editor.isActive("underline"),
+      onClick: editor => editor.chain().focus().toggleUnderline().run(),
+    },
+    {
+      icon: StrikethroughIcon,
+      isActive: editor => editor.isActive("strike"),
+      onClick: editor => editor.chain().focus().toggleStrike().run(),
     },
   ],
   [],
