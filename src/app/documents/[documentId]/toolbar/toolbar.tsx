@@ -226,7 +226,7 @@ const renderToolbarItem = (item: ToolbarItem, index: number) => {
 
 export const Toolbar = () => {
   return (
-    <div className="bg-[#F1F3F9] px-2.5 py-0.5 rounded-3xl min-h-10 flex items-center gap-x-0.5 overflow-x-auto">
+    <div className="sticky top-0 z-50 bg-[#F1F3F9] px-2.5 py-0.5 rounded-3xl min-h-10 flex items-center gap-x-0.5 overflow-x-auto">
       {toolbarSections.map((section, sectionIndex) => (
         <div key={sectionIndex} className="contents">
           {sectionIndex > 0 && <ToolbarSeparator />}
