@@ -8,6 +8,7 @@ import Color from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import ImageResize from "tiptap-extension-resize-image";
 import StarterKit from "@tiptap/starter-kit";
+import { Link } from "@tiptap/extension-link";
 
 import { useEditorStore } from "@/store/use-editor-store";
 import { set } from "date-fns";
@@ -62,6 +63,11 @@ export const Editor = ({ documentId }: EditorProps) => {
       TextStyle,
       Color,
       Highlight.configure({ multicolor: true }),
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https://",
+      }),
     ],
     immediatelyRender: false,
     content: `
