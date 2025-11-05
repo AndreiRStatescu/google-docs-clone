@@ -25,8 +25,15 @@ import {
   ToolbarDropdownButton,
   type ToolbarDropdownButtonProps,
 } from "./toolbar-dropdown-button";
+import {
+  ToolbarHighlightButton,
+  type ToolbarHighlightButtonProps,
+} from "./toolbar-highlight-button";
 
-type ToolbarItem = ToolbarSimpleButtonProps | ToolbarDropdownButtonProps;
+type ToolbarItem =
+  | ToolbarSimpleButtonProps
+  | ToolbarDropdownButtonProps
+  | ToolbarHighlightButtonProps;
 
 type ToolbarSection = ToolbarItem[];
 
@@ -96,6 +103,10 @@ const toolbarSections: ToolbarSection[] = [
       isActive: editor => editor.isActive("strike"),
       onClick: editor => editor.chain().focus().toggleStrike().run(),
     },
+    {
+      type: "highlight",
+      label: "Text Highlight",
+    },
   ],
   [
     {
@@ -150,7 +161,7 @@ const toolbarSections: ToolbarSection[] = [
         return "normal";
       },
       options: [
-        { label: "Normal", value: "normal"},
+        { label: "Normal", value: "normal" },
         { label: "Heading 1", value: "heading1", fontSize: "18px" },
         { label: "Heading 2", value: "heading2", fontSize: "17px" },
         { label: "Heading 3", value: "heading3", fontSize: "16px" },
@@ -182,6 +193,8 @@ const renderToolbarItem = (item: ToolbarItem, index: number) => {
       return <ToolbarSimpleButton key={index} {...item} />;
     case "dropdown":
       return <ToolbarDropdownButton key={index} {...item} />;
+    case "highlight":
+      return <ToolbarHighlightButton key={index} {...item} />;
     default:
       return null;
   }

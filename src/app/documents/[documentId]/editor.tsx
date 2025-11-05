@@ -3,7 +3,9 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { TableKit } from "@tiptap/extension-table";
-import { FontFamily, TextStyle } from '@tiptap/extension-text-style'
+import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
+import { Highlight } from "@tiptap/extension-highlight";
 import ImageResize from "tiptap-extension-resize-image";
 import StarterKit from "@tiptap/starter-kit";
 
@@ -58,6 +60,8 @@ export const Editor = ({ documentId }: EditorProps) => {
       ImageResize,
       FontFamily,
       TextStyle,
+      Color,
+      Highlight.configure({ multicolor: true }),
     ],
     immediatelyRender: false,
     content: `
