@@ -136,6 +136,43 @@ const toolbarSections: ToolbarSection[] = [
       onSelect: (editor, value) =>
         editor.chain().focus().setFontFamily(value).run(),
     },
+    {
+      type: "dropdown",
+      label: "Heading",
+      width: "120px",
+      getCurrentValue: editor => {
+        if (editor.isActive("heading", { level: 1 })) return "heading1";
+        if (editor.isActive("heading", { level: 2 })) return "heading2";
+        if (editor.isActive("heading", { level: 3 })) return "heading3";
+        if (editor.isActive("heading", { level: 4 })) return "heading4";
+        if (editor.isActive("heading", { level: 5 })) return "heading5";
+        if (editor.isActive("heading", { level: 6 })) return "heading6";
+        return "normal";
+      },
+      options: [
+        { label: "Normal", value: "normal"},
+        { label: "Heading 1", value: "heading1", fontSize: "18px" },
+        { label: "Heading 2", value: "heading2", fontSize: "17px" },
+        { label: "Heading 3", value: "heading3", fontSize: "16px" },
+        { label: "Heading 4", value: "heading4", fontSize: "15px" },
+        { label: "Heading 5", value: "heading5", fontSize: "14px" },
+        { label: "Heading 6", value: "heading6", fontSize: "13px" },
+      ],
+      onSelect: (editor, value) => {
+        if (value === "normal") {
+          editor.chain().focus().setParagraph().run();
+        } else {
+          const level = parseInt(value.replace("heading", "")) as
+            | 1
+            | 2
+            | 3
+            | 4
+            | 5
+            | 6;
+          editor.chain().focus().setHeading({ level }).run();
+        }
+      },
+    },
   ],
 ];
 

@@ -15,6 +15,7 @@ import {
 export interface ToolbarDropdownOption {
   label: string;
   value: string;
+  fontSize?: string;
 }
 
 export interface ToolbarDropdownButtonProps {
@@ -58,7 +59,7 @@ export const ToolbarDropdownButton = ({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
-        {options.map(({ label, value }) => (
+        {options.map(({ label, value, fontSize }) => (
           <button
             key={value}
             className={cn(
@@ -72,7 +73,9 @@ export const ToolbarDropdownButton = ({
               }
             }}
           >
-            <span className="text-sm">{label}</span>
+            <span className={cn(!fontSize && "text-sm")} style={{ fontSize }}>
+              {label}
+            </span>
           </button>
         ))}
       </DropdownMenuContent>
