@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 import { ToolbarSimpleButton, type ToolbarSimpleButtonProps } from "./toolbar-button";
-import { ToolbarDropdownButton, type ToolbarDropdownButtonProps } from "./dropdown-button";
+import { ToolbarDropdownButton, type ToolbarDropdownButtonProps } from "./toolbar-dropdown-button";
 
 type ToolbarItem = ToolbarSimpleButtonProps | ToolbarDropdownButtonProps;
 

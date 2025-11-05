@@ -12,7 +12,7 @@ import {
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 
-export interface DropdownOption {
+export interface ToolbarDropdownOption {
   label: string;
   value: string;
 }
@@ -21,7 +21,7 @@ export interface ToolbarDropdownButtonProps {
   type: "dropdown";
   width?: string;
   getCurrentValue: (editor: Editor) => string;
-  options: DropdownOption[];
+  options: ToolbarDropdownOption[];
   onSelect: (editor: Editor, value: string) => void;
 }
 
