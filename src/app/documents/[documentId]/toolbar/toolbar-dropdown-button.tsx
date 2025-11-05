@@ -46,13 +46,20 @@ export const ToolbarDropdownButton = ({
   const currentLabel =
     options.find(opt => opt.value === currentValue)?.label || currentValue;
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button
           className="h-7 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm"
           style={{ width }}
           title={label}
+          // Keep editor selection visible and toggle menu manually
+          onMouseDown={e => {
+            e.preventDefault();
+            setOpen(prev => !prev);
+          }}
         >
           <span className="truncate">{currentLabel}</span>
           <ChevronDownIcon className="size-4 ml-2 shrink-0" />
@@ -67,10 +74,13 @@ export const ToolbarDropdownButton = ({
               currentValue === value && "bg-neutral-200/80"
             )}
             style={{ fontFamily: value }}
+            // Keep editor selection visible by avoiding focus shift
+            onMouseDown={e => e.preventDefault()}
             onClick={() => {
               if (editor) {
                 onSelect(editor, value);
               }
+              setOpen(false);
             }}
           >
             <span className={cn(!fontSize && "text-sm")} style={{ fontSize }}>
