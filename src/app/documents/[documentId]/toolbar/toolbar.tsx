@@ -15,6 +15,8 @@ import {
   Redo2Icon,
   PrinterIcon,
   SpellCheckIcon,
+  PaletteIcon,
+  HighlighterIcon,
 } from "lucide-react";
 
 import {
@@ -26,14 +28,14 @@ import {
   type ToolbarDropdownButtonProps,
 } from "./toolbar-dropdown-button";
 import {
-  ToolbarHighlightButton,
-  type ToolbarHighlightButtonProps,
-} from "./toolbar-highlight-button";
+  ToolbarColorPickerButton,
+  type ToolbarColorPickerButtonProps,
+} from "./toolbar-color-picker-button";
 
 type ToolbarItem =
   | ToolbarSimpleButtonProps
   | ToolbarDropdownButtonProps
-  | ToolbarHighlightButtonProps;
+  | ToolbarColorPickerButtonProps;
 
 type ToolbarSection = ToolbarItem[];
 
@@ -104,8 +106,30 @@ const toolbarSections: ToolbarSection[] = [
       onClick: editor => editor.chain().focus().toggleStrike().run(),
     },
     {
-      type: "highlight",
+      type: "color-picker",
       label: "Text Highlight",
+      icon: HighlighterIcon,
+      isActive: editor => editor.isActive("highlight"),
+      getCurrentColor: editor =>
+        (editor.getAttributes("highlight").color as string | undefined) ||
+        "#ffff00",
+      onSelectColor: (editor, hex) =>
+        editor.chain().focus().setHighlight({ color: hex }).run(),
+      storageKey: "customHighlightColors",
+      fallbackColor: "#ffff00",
+    },
+    {
+      type: "color-picker",
+      label: "Text Color",
+      icon: PaletteIcon,
+      isActive: editor => Boolean(editor.getAttributes("textStyle").color),
+      getCurrentColor: editor =>
+        (editor.getAttributes("textStyle").color as string | undefined) ||
+        "#000000",
+      onSelectColor: (editor, hex) =>
+        editor.chain().focus().setColor(hex).run(),
+      storageKey: "customTextColors",
+      fallbackColor: "#000000",
     },
   ],
   [
@@ -193,8 +217,8 @@ const renderToolbarItem = (item: ToolbarItem, index: number) => {
       return <ToolbarSimpleButton key={index} {...item} />;
     case "dropdown":
       return <ToolbarDropdownButton key={index} {...item} />;
-    case "highlight":
-      return <ToolbarHighlightButton key={index} {...item} />;
+    case "color-picker":
+      return <ToolbarColorPickerButton key={index} {...item} />;
     default:
       return null;
   }
