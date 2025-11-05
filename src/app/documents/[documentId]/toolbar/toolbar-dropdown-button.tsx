@@ -19,6 +19,7 @@ export interface ToolbarDropdownOption {
 
 export interface ToolbarDropdownButtonProps {
   type: "dropdown";
+  label: string;
   width?: string;
   getCurrentValue: (editor: Editor) => string;
   options: ToolbarDropdownOption[];
@@ -26,6 +27,7 @@ export interface ToolbarDropdownButtonProps {
 }
 
 export const ToolbarDropdownButton = ({
+  label,
   width = "120px",
   getCurrentValue,
   options,
@@ -49,6 +51,7 @@ export const ToolbarDropdownButton = ({
         <button
           className="h-7 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm"
           style={{ width }}
+          title={label}
         >
           <span className="truncate">{currentLabel}</span>
           <ChevronDownIcon className="size-4 ml-2 shrink-0" />

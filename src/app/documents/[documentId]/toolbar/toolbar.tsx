@@ -17,8 +17,14 @@ import {
   SpellCheckIcon,
 } from "lucide-react";
 
-import { ToolbarSimpleButton, type ToolbarSimpleButtonProps } from "./toolbar-button";
-import { ToolbarDropdownButton, type ToolbarDropdownButtonProps } from "./toolbar-dropdown-button";
+import {
+  ToolbarSimpleButton,
+  type ToolbarSimpleButtonProps,
+} from "./toolbar-simple-button";
+import {
+  ToolbarDropdownButton,
+  type ToolbarDropdownButtonProps,
+} from "./toolbar-dropdown-button";
 
 type ToolbarItem = ToolbarSimpleButtonProps | ToolbarDropdownButtonProps;
 
@@ -116,6 +122,7 @@ const toolbarSections: ToolbarSection[] = [
   [
     {
       type: "dropdown",
+      label: "Font Family",
       width: "120px",
       getCurrentValue: editor =>
         editor.getAttributes("textStyle").fontFamily || "Arial",
