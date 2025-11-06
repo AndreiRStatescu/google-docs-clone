@@ -12,9 +12,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
 
 export interface ToolbarColorPickerButtonProps {
-  type: "color-picker";
+  type: string;
   label: string;
   icon?: LucideIcon;
   // Compute whether the button is active (e.g., a color/mark is applied)

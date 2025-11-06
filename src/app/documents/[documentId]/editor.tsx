@@ -9,6 +9,7 @@ import { Highlight } from "@tiptap/extension-highlight";
 import ImageResize from "tiptap-extension-resize-image";
 import StarterKit from "@tiptap/starter-kit";
 import { Link } from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
 
 import { useEditorStore } from "@/store/use-editor-store";
 import { set } from "date-fns";
@@ -68,6 +69,7 @@ export const Editor = ({ documentId }: EditorProps) => {
         autolink: true,
         defaultProtocol: "https://",
       }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
     immediatelyRender: false,
     content: `

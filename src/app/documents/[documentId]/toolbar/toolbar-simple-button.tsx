@@ -6,9 +6,10 @@ import { type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
+import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
 
 export interface ToolbarSimpleButtonProps {
-  type: "button";
+  type: string;
   label: string;
   icon: LucideIcon;
   isActive?: (editor: Editor) => boolean;

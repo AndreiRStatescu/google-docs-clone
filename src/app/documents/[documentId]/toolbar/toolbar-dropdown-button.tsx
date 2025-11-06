@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
+import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
 
 export interface ToolbarDropdownOption {
   label: string;
@@ -19,7 +20,7 @@ export interface ToolbarDropdownOption {
 }
 
 export interface ToolbarDropdownButtonProps {
-  type: "dropdown";
+  type: string;
   label: string;
   width?: string;
   getCurrentValue: (editor: Editor) => string;
