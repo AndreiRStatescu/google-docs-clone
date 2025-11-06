@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { type Editor } from "@tiptap/react";
 import { type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
-import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
 
 export interface ToolbarSimpleButtonProps {
   type: string;
@@ -23,11 +21,13 @@ export const ToolbarSimpleButton = ({
   onClick: handleClick,
 }: ToolbarSimpleButtonProps) => {
   const { editor, lastUpdate } = useEditorStore();
-  const [isActive, setIsActive] = useState(false);
 
-  useEffect(() => {
-    setIsActive(editor && checkIsActive ? checkIsActive(editor) : false);
-  }, [editor, lastUpdate, checkIsActive]);
+  // Derive isActive directly from editor state
+  const isActive = editor && checkIsActive ? checkIsActive(editor) : false;
+
+  // Trigger re-render when editor state changes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _forceUpdate = lastUpdate;
 
   const className = cn(
     "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",

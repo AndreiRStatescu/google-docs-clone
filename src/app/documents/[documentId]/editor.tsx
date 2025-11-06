@@ -12,7 +12,6 @@ import { Link } from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 
 import { useEditorStore } from "@/store/use-editor-store";
-import { set } from "date-fns";
 
 interface EditorProps {
   documentId: string;

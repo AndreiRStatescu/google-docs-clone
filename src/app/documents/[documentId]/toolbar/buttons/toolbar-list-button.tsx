@@ -1,12 +1,8 @@
 "use client";
 
 import {
-  AlignCenterIcon,
-  AlignJustifyIcon,
-  AlignLeftIcon,
-  AlignRightIcon,
   ListIcon,
-  ListOrderedIcon,
+  ListOrderedIcon
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -15,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEditorStore } from "@/store/use-editor-store";
 import { cn } from "@/lib/utils";
-import { List } from "@radix-ui/react-tabs";
 
 export const ToolbarListButton = () => {
   const { editor } = useEditorStore();

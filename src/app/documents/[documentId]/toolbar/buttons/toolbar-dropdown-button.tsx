@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { type Editor } from "@tiptap/react";
 import { ChevronDownIcon } from "lucide-react";
+import { useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { useEditorStore } from "@/store/use-editor-store";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
+import { cn } from "@/lib/utils";
+import { useEditorStore } from "@/store/use-editor-store";
 
 export interface ToolbarDropdownOption {
   label: string;
@@ -36,13 +35,13 @@ export const ToolbarDropdownButton = ({
   onSelect,
 }: ToolbarDropdownButtonProps) => {
   const { editor, lastUpdate } = useEditorStore();
-  const [currentValue, setCurrentValue] = useState("");
 
-  useEffect(() => {
-    if (editor) {
-      setCurrentValue(getCurrentValue(editor));
-    }
-  }, [editor, lastUpdate, getCurrentValue]);
+  // Derive currentValue directly from editor state
+  const currentValue = editor ? getCurrentValue(editor) : "";
+
+  // Trigger re-render when editor state changes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _forceUpdate = lastUpdate;
 
   const currentLabel =
     options.find(opt => opt.value === currentValue)?.label || currentValue;

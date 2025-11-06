@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import { type Editor } from "@tiptap/react";
 import { HighlighterIcon, type LucideIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { ChromePicker, type ColorResult } from "react-color";
 
-import { cn } from "@/lib/utils";
-import { useEditorStore } from "@/store/use-editor-store";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
+import { cn } from "@/lib/utils";
+import { useEditorStore } from "@/store/use-editor-store";
 
 export interface ToolbarColorPickerButtonProps {
   type: string;
@@ -40,11 +39,22 @@ export const ToolbarColorPickerButton = ({
   fallbackColor,
 }: ToolbarColorPickerButtonProps) => {
   const { editor, lastUpdate } = useEditorStore();
-  const [isActive, setIsActive] = useState(false);
-  const [currentColor, setCurrentColor] = useState("#ffff00");
   const [open, setOpen] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-  const [customColors, setCustomColors] = useState<string[]>([]);
+
+  // Initialize customColors from localStorage using lazy initializer
+  const [customColors, setCustomColors] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const key = storageKey || `customColors:${label}`;
+      const raw = window.localStorage.getItem(key);
+      if (raw) {
+        const parsed = JSON.parse(raw) as string[];
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return [];
+  });
 
   const STANDARD_COLORS = useMemo(
     () => [
@@ -95,37 +105,26 @@ export const ToolbarColorPickerButton = ({
     []
   );
 
-  useEffect(() => {
-    if (!editor) return;
-    // Active state comes from prop when provided, otherwise default to highlight mark
-    setIsActive(
-      checkIsActive ? checkIsActive(editor) : editor.isActive("highlight")
-    );
+  // Derive isActive and currentColor directly from editor state
+  const isActive = editor
+    ? checkIsActive
+      ? checkIsActive(editor)
+      : editor.isActive("highlight")
+    : false;
 
-    // Determine current color via prop when provided; otherwise default to highlight color
+  const currentColor = (() => {
+    if (!editor) return fallbackColor || "#ffff00";
+
     const resolved = getCurrentColor
       ? getCurrentColor(editor)
       : (editor.getAttributes("highlight").color as string | undefined);
 
-    if (resolved) {
-      setCurrentColor(resolved);
-    } else if (fallbackColor) {
-      setCurrentColor(fallbackColor);
-    }
-  }, [editor, lastUpdate, checkIsActive, getCurrentColor, fallbackColor]);
+    return resolved || fallbackColor || "#ffff00";
+  })();
 
-  // Load saved custom colors on mount
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const key = storageKey || `customColors:${label}`;
-      const raw = window.localStorage.getItem(key);
-      if (raw) {
-        const parsed = JSON.parse(raw) as string[];
-        if (Array.isArray(parsed)) setCustomColors(parsed);
-      }
-    } catch {}
-  }, [label, storageKey]);
+  // Trigger re-render when editor state changes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _forceUpdate = lastUpdate;
 
   // Persist custom colors
   useEffect(() => {
@@ -140,7 +139,6 @@ export const ToolbarColorPickerButton = ({
   }, [customColors, label, storageKey]);
 
   const applyColor = (hex: string) => {
-    setCurrentColor(hex);
     if (!editor) return;
     if (onSelectColor) {
       onSelectColor(editor, hex);
