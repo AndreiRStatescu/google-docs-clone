@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
+import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
 
 export interface ToolbarDropdownOption {
   label: string;

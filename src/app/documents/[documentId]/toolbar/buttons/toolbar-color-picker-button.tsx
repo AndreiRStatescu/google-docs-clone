@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
+import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
 
 export interface ToolbarColorPickerButtonProps {
   type: string;

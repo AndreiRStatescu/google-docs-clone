@@ -14,7 +14,7 @@ import {
 import { useEditorStore } from "@/store/use-editor-store";
 import { cn } from "@/lib/utils";
 
-export const AlignButton = () => {
+export const ToolbarAlignButton = () => {
   const { editor } = useEditorStore();
 
   const alignments = [

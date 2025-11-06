@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentType } from "react";
-import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
+import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
 
 export interface ToolbarCustomButtonProps {
   type: string;

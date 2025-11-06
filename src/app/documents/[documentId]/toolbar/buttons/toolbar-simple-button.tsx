@@ -6,7 +6,7 @@ import { type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
-import { TOOLBAR_BUTTON_TYPES } from "./toolbar-types";
+import { TOOLBAR_BUTTON_TYPES } from "../toolbar-config";
 
 export interface ToolbarSimpleButtonProps {
   type: string;

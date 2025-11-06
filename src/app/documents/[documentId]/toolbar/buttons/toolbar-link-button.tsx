@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditorStore } from "@/store/use-editor-store";
 
-export const LinkButton = () => {
+export const ToolbarLinkButton = () => {
   const { editor } = useEditorStore();
   const [value, setValue] = useState("");
 

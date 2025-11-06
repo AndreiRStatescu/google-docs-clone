@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { useEditorStore } from "@/store/use-editor-store";
 
-export const ImageButton = () => {
+export const ToolbarImageButton = () => {
   const { editor } = useEditorStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
