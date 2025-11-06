@@ -22,6 +22,7 @@ import { ToolbarImageButton } from "./buttons/toolbar-image-button";
 import { ToolbarLinkButton } from "./buttons/toolbar-link-button";
 import { ToolbarAlignButton } from "./buttons/toolbar-align-button";
 import { ToolbarListButton } from "./buttons/toolbar-list-button";
+import { ToolbarFontSizeButton } from "./buttons/toolbar-font-size-button";
 
 export const TOOLBAR_BUTTON_TYPES: Record<string, string> = {
   BUTTON: "button",
@@ -235,13 +236,18 @@ export const listButton: ToolbarCustomButtonProps = {
   component: ToolbarListButton,
 };
 
+export const fontSizeButton: ToolbarCustomButtonProps = {
+  type: TOOLBAR_BUTTON_TYPES.CUSTOM,
+  component: ToolbarFontSizeButton,
+};
+
 // Build toolbar sections from individual button definitions
 // Organized to match Google Docs toolbar layout
 export const toolbarSections: ToolbarSection[] = [
   // History and document actions
   [undoButton, redoButton, printButton, spellCheckButton],
   // Text style and formatting
-  [fontFamilyDropdown, headingDropdown],
+  [fontSizeButton, fontFamilyDropdown, headingDropdown],
   // Basic text formatting
   [boldButton, italicButton, underlineButton, strikethroughButton],
   // Colors

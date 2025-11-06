@@ -12,6 +12,7 @@ import { Link } from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 
 import { useEditorStore } from "@/store/use-editor-store";
+import { FontSizeExtension } from "@/extensions/font-size";
 
 interface EditorProps {
   documentId: string;
@@ -69,6 +70,7 @@ export const Editor = ({ documentId }: EditorProps) => {
         defaultProtocol: "https://",
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      FontSizeExtension,
     ],
     immediatelyRender: false,
     content: `
