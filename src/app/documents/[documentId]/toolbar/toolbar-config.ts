@@ -236,17 +236,20 @@ export const listButton: ToolbarCustomButtonProps = {
 };
 
 // Build toolbar sections from individual button definitions
+// Organized to match Google Docs toolbar layout
 export const toolbarSections: ToolbarSection[] = [
+  // History and document actions
   [undoButton, redoButton, printButton, spellCheckButton],
-  [
-    boldButton,
-    italicButton,
-    underlineButton,
-    strikethroughButton,
-    highlightColorPicker,
-    textColorPicker,
-  ],
-  [commentButton, todoListButton, removeFormattingButton],
+  // Text style and formatting
   [fontFamilyDropdown, headingDropdown],
-  [linkButton, imageButton, alignButton, listButton],
+  // Basic text formatting
+  [boldButton, italicButton, underlineButton, strikethroughButton],
+  // Colors
+  [textColorPicker, highlightColorPicker],
+  // Insert and collaborate
+  [linkButton, commentButton, imageButton],
+  // Paragraph formatting and lists
+  [alignButton, listButton, todoListButton],
+  // Additional formatting
+  [removeFormattingButton],
 ];
