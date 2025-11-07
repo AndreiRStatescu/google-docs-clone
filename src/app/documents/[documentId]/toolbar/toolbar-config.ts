@@ -23,6 +23,7 @@ import { ToolbarLinkButton } from "./buttons/toolbar-link-button";
 import { ToolbarAlignButton } from "./buttons/toolbar-align-button";
 import { ToolbarListButton } from "./buttons/toolbar-list-button";
 import { ToolbarFontSizeButton } from "./buttons/toolbar-font-size-button";
+import { ToolbarLineHeightButton } from "./buttons/toolbar-line-height-button";
 
 export const TOOLBAR_BUTTON_TYPES: Record<string, string> = {
   BUTTON: "button",
@@ -236,6 +237,11 @@ export const listButton: ToolbarCustomButtonProps = {
   component: ToolbarListButton,
 };
 
+export const lineHeightButton: ToolbarCustomButtonProps = {
+  type: TOOLBAR_BUTTON_TYPES.CUSTOM,
+  component: ToolbarLineHeightButton,
+};
+
 export const fontSizeButton: ToolbarCustomButtonProps = {
   type: TOOLBAR_BUTTON_TYPES.CUSTOM,
   component: ToolbarFontSizeButton,
@@ -255,7 +261,7 @@ export const toolbarSections: ToolbarSection[] = [
   // Insert and collaborate
   [linkButton, commentButton, imageButton],
   // Paragraph formatting and lists
-  [alignButton, listButton, todoListButton],
+  [alignButton, listButton, lineHeightButton, todoListButton],
   // Additional formatting
   [removeFormattingButton],
 ];
