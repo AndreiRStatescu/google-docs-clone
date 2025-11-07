@@ -37,11 +37,13 @@ export const Ruler = () => {
         const rawPosition = Math.max(0, Math.min(relativeX, DOCUMENT_WIDTH));
 
         if (isDraggingLeft) {
-          const maxLeftPosition = DOCUMENT_WIDTH - rightMargin - MIN_CONTENT_WIDTH;
+          const maxLeftPosition =
+            DOCUMENT_WIDTH - rightMargin - MIN_CONTENT_WIDTH;
           const newLeftPosition = Math.min(rawPosition, maxLeftPosition);
           setLeftMargin(newLeftPosition);
         } else if (isDraggingRight) {
-          const maxRightPosition = DOCUMENT_WIDTH - (leftMargin + MIN_CONTENT_WIDTH);
+          const maxRightPosition =
+            DOCUMENT_WIDTH - (leftMargin + MIN_CONTENT_WIDTH);
           const newRightPosition = Math.max(DOCUMENT_WIDTH - rawPosition, 0);
           const constrainedRightPosition = Math.min(
             newRightPosition,
@@ -94,7 +96,7 @@ export const Ruler = () => {
         />
 
         <div className="absolute inset-x-0 bottom-0">
-          <div className="relative w-[816px]">
+          <div className="relative" style={{ width: `${DOCUMENT_WIDTH}px` }}>
             {markers.map(marker => {
               const position = (marker * DOCUMENT_WIDTH) / RULER_SEGMENTS;
 
@@ -112,9 +114,10 @@ export const Ruler = () => {
                       </span>
                     </>
                   )}
-                  {marker % MINOR_TICK_INTERVAL === 0 && marker % MAJOR_TICK_INTERVAL !== 0 && (
-                    <div className="absolute bottom-0 w-px h-1.5 bg-neutral-500" />
-                  )}
+                  {marker % MINOR_TICK_INTERVAL === 0 &&
+                    marker % MAJOR_TICK_INTERVAL !== 0 && (
+                      <div className="absolute bottom-0 w-px h-1.5 bg-neutral-500" />
+                    )}
                   {marker % MINOR_TICK_INTERVAL !== 0 && (
                     <div className="absolute bottom-0 w-px h-1 bg-neutral-500" />
                   )}
