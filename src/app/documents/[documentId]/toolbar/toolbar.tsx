@@ -8,11 +8,7 @@ import type { ToolbarSimpleButtonProps } from "./buttons/toolbar-simple-button";
 import type { ToolbarDropdownButtonProps } from "./buttons/toolbar-dropdown-button";
 import type { ToolbarColorPickerButtonProps } from "./buttons/toolbar-color-picker-button";
 import type { ToolbarCustomButtonProps } from "./buttons/toolbar-custom-button";
-import {
-  TOOLBAR_BUTTON_TYPES,
-  toolbarSections,
-  type ToolbarItem,
-} from "./toolbar-config";
+import { TOOLBAR_BUTTON_TYPES, toolbarSections, type ToolbarItem } from "./toolbar-config";
 
 const ToolbarSeparator = () => {
   return <div className="h-6 w-px bg-neutral-300 mx-1" />;
@@ -21,33 +17,13 @@ const ToolbarSeparator = () => {
 const renderToolbarItem = (item: ToolbarItem, index: number) => {
   switch (item.type) {
     case TOOLBAR_BUTTON_TYPES.BUTTON:
-      return (
-        <ToolbarSimpleButton
-          key={index}
-          {...(item as ToolbarSimpleButtonProps)}
-        />
-      );
+      return <ToolbarSimpleButton key={index} {...(item as ToolbarSimpleButtonProps)} />;
     case TOOLBAR_BUTTON_TYPES.DROPDOWN:
-      return (
-        <ToolbarDropdownButton
-          key={index}
-          {...(item as ToolbarDropdownButtonProps)}
-        />
-      );
+      return <ToolbarDropdownButton key={index} {...(item as ToolbarDropdownButtonProps)} />;
     case TOOLBAR_BUTTON_TYPES.COLOR_PICKER:
-      return (
-        <ToolbarColorPickerButton
-          key={index}
-          {...(item as ToolbarColorPickerButtonProps)}
-        />
-      );
+      return <ToolbarColorPickerButton key={index} {...(item as ToolbarColorPickerButtonProps)} />;
     case TOOLBAR_BUTTON_TYPES.CUSTOM:
-      return (
-        <ToolbarCustomButton
-          key={index}
-          {...(item as ToolbarCustomButtonProps)}
-        />
-      );
+      return <ToolbarCustomButton key={index} {...(item as ToolbarCustomButtonProps)} />;
     default:
       return null;
   }

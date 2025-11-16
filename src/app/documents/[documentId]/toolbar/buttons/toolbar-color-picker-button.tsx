@@ -5,11 +5,7 @@ import { HighlighterIcon, type LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ChromePicker, type ColorResult } from "react-color";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
 
@@ -131,10 +127,7 @@ export const ToolbarColorPickerButton = ({
     if (typeof window === "undefined") return;
     try {
       const key = storageKey || `customColors:${label}`;
-      window.localStorage.setItem(
-        key,
-        JSON.stringify(customColors.slice(0, 18))
-      );
+      window.localStorage.setItem(key, JSON.stringify(customColors.slice(0, 18)));
     } catch {}
   }, [customColors, label, storageKey]);
 
@@ -212,9 +205,7 @@ export const ToolbarColorPickerButton = ({
         >
           {/* Standard colors */}
           <div className="mb-2">
-            <div className="text-[11px] text-neutral-500 mb-1 px-0.5">
-              Standard colors
-            </div>
+            <div className="text-[11px] text-neutral-500 mb-1 px-0.5">Standard colors</div>
             <div className="grid grid-cols-8 gap-1 w-52">
               {STANDARD_COLORS.map(hex => (
                 <button
@@ -234,9 +225,7 @@ export const ToolbarColorPickerButton = ({
 
           {/* Custom colors */}
           <div className="mb-2">
-            <div className="text-[11px] text-neutral-500 mb-1 px-0.5">
-              Custom colors
-            </div>
+            <div className="text-[11px] text-neutral-500 mb-1 px-0.5">Custom colors</div>
             <div className="grid grid-cols-8 gap-1 w-52">
               {customColors.map(hex => (
                 <button

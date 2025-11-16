@@ -7,8 +7,6 @@ export interface ToolbarCustomButtonProps {
   component: ComponentType;
 }
 
-export const ToolbarCustomButton = ({
-  component: Component,
-}: ToolbarCustomButtonProps) => {
+export const ToolbarCustomButton = ({ component: Component }: ToolbarCustomButtonProps) => {
   return <Component />;
 };

@@ -68,10 +68,7 @@ export const spellCheckButton: ToolbarSimpleButtonProps = {
   icon: SpellCheckIcon,
   onClick: editor => {
     const current = editor.view.dom.getAttribute("spellcheck");
-    editor.view.dom.setAttribute(
-      "spellcheck",
-      current === "true" ? "false" : "true"
-    );
+    editor.view.dom.setAttribute("spellcheck", current === "true" ? "false" : "true");
   },
 };
 
@@ -115,10 +112,8 @@ export const highlightColorPicker: ToolbarColorPickerButtonProps = {
   icon: HighlighterIcon,
   isActive: editor => editor.isActive("highlight"),
   getCurrentColor: editor =>
-    (editor.getAttributes("highlight").color as string | undefined) ||
-    "#ffff00",
-  onSelectColor: (editor, hex) =>
-    editor.chain().focus().setHighlight({ color: hex }).run(),
+    (editor.getAttributes("highlight").color as string | undefined) || "#ffff00",
+  onSelectColor: (editor, hex) => editor.chain().focus().setHighlight({ color: hex }).run(),
   storageKey: "customHighlightColors",
   fallbackColor: "#ffff00",
 };
@@ -129,8 +124,7 @@ export const textColorPicker: ToolbarColorPickerButtonProps = {
   icon: PaletteIcon,
   isActive: editor => Boolean(editor.getAttributes("textStyle").color),
   getCurrentColor: editor =>
-    (editor.getAttributes("textStyle").color as string | undefined) ||
-    "#000000",
+    (editor.getAttributes("textStyle").color as string | undefined) || "#000000",
   onSelectColor: (editor, hex) => editor.chain().focus().setColor(hex).run(),
   storageKey: "customTextColors",
   fallbackColor: "#000000",
@@ -165,8 +159,7 @@ export const fontFamilyDropdown: ToolbarDropdownButtonProps = {
   type: TOOLBAR_BUTTON_TYPES.DROPDOWN,
   label: "Font Family",
   width: "120px",
-  getCurrentValue: editor =>
-    editor.getAttributes("textStyle").fontFamily || "Arial",
+  getCurrentValue: editor => editor.getAttributes("textStyle").fontFamily || "Arial",
   options: [
     { label: "Arial", value: "Arial" },
     { label: "Courier New", value: "Courier New" },
@@ -174,8 +167,7 @@ export const fontFamilyDropdown: ToolbarDropdownButtonProps = {
     { label: "Times New Roman", value: "Times New Roman" },
     { label: "Verdana", value: "Verdana" },
   ],
-  onSelect: (editor, value) =>
-    editor.chain().focus().setFontFamily(value).run(),
+  onSelect: (editor, value) => editor.chain().focus().setFontFamily(value).run(),
 };
 
 export const headingDropdown: ToolbarDropdownButtonProps = {
@@ -204,13 +196,7 @@ export const headingDropdown: ToolbarDropdownButtonProps = {
     if (value === "normal") {
       editor.chain().focus().setParagraph().run();
     } else {
-      const level = parseInt(value.replace("heading", "")) as
-        | 1
-        | 2
-        | 3
-        | 4
-        | 5
-        | 6;
+      const level = parseInt(value.replace("heading", "")) as 1 | 2 | 3 | 4 | 5 | 6;
       editor.chain().focus().setHeading({ level }).run();
     }
   },

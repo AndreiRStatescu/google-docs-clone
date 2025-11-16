@@ -34,7 +34,7 @@ export const LineHeightExtension = Extension.create({
               return {
                 style: `line-height: ${attributes.lineHeight}`,
               };
-            }
+            },
           },
         },
       },
@@ -43,11 +43,12 @@ export const LineHeightExtension = Extension.create({
   addCommands() {
     return {
       setLineHeight:
-        (lineHeight: string) => ({tr, state, dispatch}) => {
-          const {selection} = state;
+        (lineHeight: string) =>
+        ({ tr, state, dispatch }) => {
+          const { selection } = state;
           tr = tr.setSelection(selection);
 
-          const {from, to} = selection;
+          const { from, to } = selection;
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (this.options.types.includes(node.type.name)) {
               tr = tr.setNodeMarkup(pos, undefined, {
@@ -64,11 +65,12 @@ export const LineHeightExtension = Extension.create({
           return true;
         },
       unsetLineHeight:
-        () => ({tr, state, dispatch}) => {
-          const {selection} = state;
+        () =>
+        ({ tr, state, dispatch }) => {
+          const { selection } = state;
           tr = tr.setSelection(selection);
 
-          const {from, to} = selection;
+          const { from, to } = selection;
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (this.options.types.includes(node.type.name)) {
               tr = tr.setNodeMarkup(pos, undefined, {

@@ -37,18 +37,13 @@ export const Ruler = () => {
         const rawPosition = Math.max(0, Math.min(relativeX, DOCUMENT_WIDTH));
 
         if (isDraggingLeft) {
-          const maxLeftPosition =
-            DOCUMENT_WIDTH - rightMargin - MIN_CONTENT_WIDTH;
+          const maxLeftPosition = DOCUMENT_WIDTH - rightMargin - MIN_CONTENT_WIDTH;
           const newLeftPosition = Math.min(rawPosition, maxLeftPosition);
           setLeftMargin(newLeftPosition);
         } else if (isDraggingRight) {
-          const maxRightPosition =
-            DOCUMENT_WIDTH - (leftMargin + MIN_CONTENT_WIDTH);
+          const maxRightPosition = DOCUMENT_WIDTH - (leftMargin + MIN_CONTENT_WIDTH);
           const newRightPosition = Math.max(DOCUMENT_WIDTH - rawPosition, 0);
-          const constrainedRightPosition = Math.min(
-            newRightPosition,
-            maxRightPosition
-          );
+          const constrainedRightPosition = Math.min(newRightPosition, maxRightPosition);
           setRightMargin(constrainedRightPosition);
         }
       }
@@ -76,10 +71,7 @@ export const Ruler = () => {
       onMouseLeave={handleMouseUp}
       className="h-6 border-b border-gray-300 flex items-end relative select-none print:hidden"
     >
-      <div
-        id="ruler-container"
-        className="max-w-[816px] mx-auto w-full h-full relative"
-      >
+      <div id="ruler-container" className="max-w-[816px] mx-auto w-full h-full relative">
         <Marker
           position={leftMargin}
           isLeft={true}
@@ -101,11 +93,7 @@ export const Ruler = () => {
               const position = (marker * DOCUMENT_WIDTH) / RULER_SEGMENTS;
 
               return (
-                <div
-                  key={marker}
-                  className="absolute border-0"
-                  style={{ left: `${position}px` }}
-                >
+                <div key={marker} className="absolute border-0" style={{ left: `${position}px` }}>
                   {marker % MAJOR_TICK_INTERVAL === 0 && (
                     <>
                       <div className="absolute bottom-0 w-px h-2 bg-neutral-500" />
@@ -114,10 +102,9 @@ export const Ruler = () => {
                       </span>
                     </>
                   )}
-                  {marker % MINOR_TICK_INTERVAL === 0 &&
-                    marker % MAJOR_TICK_INTERVAL !== 0 && (
-                      <div className="absolute bottom-0 w-px h-1.5 bg-neutral-500" />
-                    )}
+                  {marker % MINOR_TICK_INTERVAL === 0 && marker % MAJOR_TICK_INTERVAL !== 0 && (
+                    <div className="absolute bottom-0 w-px h-1.5 bg-neutral-500" />
+                  )}
                   {marker % MINOR_TICK_INTERVAL !== 0 && (
                     <div className="absolute bottom-0 w-px h-1 bg-neutral-500" />
                   )}
@@ -139,13 +126,7 @@ interface MarkerProps {
   onDoubleClick: () => void;
 }
 
-const Marker = ({
-  position,
-  isLeft,
-  isDragging,
-  onMouseDown,
-  onDoubleClick,
-}: MarkerProps) => {
+const Marker = ({ position, isLeft, isDragging, onMouseDown, onDoubleClick }: MarkerProps) => {
   return (
     <div
       className={`absolute top-0 w-4 h-full cursor-ew-resize z-[5] group ${isLeft ? "-ml-2" : "-mr-2"}`}
@@ -154,6 +135,16 @@ const Marker = ({
       onDoubleClick={onDoubleClick}
     >
       <FaCaretDown className="absolute left-1/2 top-0 h-full fill-blue-500 transform -translate-x-1/2" />
+      <div
+        className="absolute left-1/2 top-0 transform -translate-x-1/2"
+        style={{
+          height: "100vh",
+          width: "1px",
+          transform: "scaleX(0.5)",
+          backgroundColor: "#3b72f6",
+          display: isDragging ? "block" : "none",
+        }}
+      />
     </div>
   );
 };

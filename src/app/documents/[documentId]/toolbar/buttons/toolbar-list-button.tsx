@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  ListIcon,
-  ListOrderedIcon
-} from "lucide-react";
+import { ListIcon, ListOrderedIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,14 +13,14 @@ export const ToolbarListButton = () => {
   const { editor } = useEditorStore();
 
   const lists = [
-    { 
-      label: "Bullet List", 
+    {
+      label: "Bullet List",
       icon: ListIcon,
       isActive: () => editor?.isActive("bulletList"),
       onClick: () => editor?.chain().focus().toggleBulletList().run(),
     },
-    { 
-      label: "Ordered List", 
+    {
+      label: "Ordered List",
       icon: ListOrderedIcon,
       isActive: () => editor?.isActive("orderedList"),
       onClick: () => editor?.chain().focus().toggleOrderedList().run(),

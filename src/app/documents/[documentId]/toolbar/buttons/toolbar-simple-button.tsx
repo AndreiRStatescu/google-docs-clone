@@ -24,8 +24,7 @@ export const ToolbarSimpleButton = ({
   const lastUpdate = useEditorStore(state => state.lastUpdate);
 
   // This re-evaluates on every render triggered by lastUpdate changes
-  const isNowActive =
-    lastUpdate && editor && checkIsActive ? checkIsActive(editor) : false;
+  const isNowActive = lastUpdate && editor && checkIsActive ? checkIsActive(editor) : false;
 
   const className = cn(
     "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",

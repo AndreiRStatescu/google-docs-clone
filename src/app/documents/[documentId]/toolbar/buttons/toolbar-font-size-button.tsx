@@ -33,9 +33,7 @@ export const ToolbarFontSizeButton = () => {
     } else {
       // Check stored marks for cursor position
       const storedMarks = editor.state.storedMarks;
-      const textStyleMark = storedMarks?.find(
-        mark => mark.type.name === "textStyle"
-      );
+      const textStyleMark = storedMarks?.find(mark => mark.type.name === "textStyle");
 
       if (textStyleMark?.attrs?.fontSize) {
         currentFontSize = textStyleMark.attrs.fontSize.replace("px", "");

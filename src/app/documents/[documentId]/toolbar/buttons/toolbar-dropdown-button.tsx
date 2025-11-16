@@ -38,8 +38,7 @@ export const ToolbarDropdownButton = ({
 
   // Trigger re-render when editor state changes
   const currentValue = lastUpdate && editor ? getCurrentValue(editor) : "";
-  const currentLabel =
-    options.find(opt => opt.value === currentValue)?.label || currentValue;
+  const currentLabel = options.find(opt => opt.value === currentValue)?.label || currentValue;
 
   const [open, setOpen] = useState(false);
 
