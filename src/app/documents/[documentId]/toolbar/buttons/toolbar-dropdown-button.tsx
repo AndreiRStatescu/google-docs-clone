@@ -36,13 +36,8 @@ export const ToolbarDropdownButton = ({
 }: ToolbarDropdownButtonProps) => {
   const { editor, lastUpdate } = useEditorStore();
 
-  // Derive currentValue directly from editor state
-  const currentValue = editor ? getCurrentValue(editor) : "";
-
   // Trigger re-render when editor state changes
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _forceUpdate = lastUpdate;
-
+  const currentValue = lastUpdate && editor ? getCurrentValue(editor) : "";
   const currentLabel =
     options.find(opt => opt.value === currentValue)?.label || currentValue;
 

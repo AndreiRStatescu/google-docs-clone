@@ -1,19 +1,19 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import { TaskItem, TaskList } from "@tiptap/extension-list";
-import { TableKit } from "@tiptap/extension-table";
-import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
-import ImageResize from "tiptap-extension-resize-image";
-import StarterKit from "@tiptap/starter-kit";
 import { Link } from "@tiptap/extension-link";
+import { TaskItem, TaskList } from "@tiptap/extension-list";
+import { TableKit } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
+import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import ImageResize from "tiptap-extension-resize-image";
 
-import { useEditorStore } from "@/store/use-editor-store";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
+import { useEditorStore } from "@/store/use-editor-store";
 import { Ruler } from "./ruler";
 
 interface EditorProps {
@@ -21,7 +21,7 @@ interface EditorProps {
 }
 
 export const Editor = ({ documentId }: EditorProps) => {
-  const { setEditor } = useEditorStore();
+  const { setEditor, triggerUpdate } = useEditorStore();
 
   const editor = useEditor({
     onCreate: ({ editor }) => {
@@ -31,22 +31,22 @@ export const Editor = ({ documentId }: EditorProps) => {
       setEditor(null);
     },
     onUpdate: ({ editor }) => {
-      setEditor(editor);
+      triggerUpdate();
     },
     onSelectionUpdate: ({ editor }) => {
-      setEditor(editor);
+      triggerUpdate();
     },
     onTransaction: ({ editor }) => {
-      setEditor(editor);
+      triggerUpdate();
     },
     onFocus: ({ editor }) => {
-      setEditor(editor);
+      triggerUpdate();
     },
     onBlur: ({ editor }) => {
-      setEditor(editor);
+      triggerUpdate();
     },
     onContentError: ({ editor }) => {
-      setEditor(editor);
+      triggerUpdate();
     },
 
     editorProps: {

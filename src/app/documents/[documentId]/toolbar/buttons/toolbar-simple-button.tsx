@@ -20,18 +20,16 @@ export const ToolbarSimpleButton = ({
   isActive: checkIsActive,
   onClick: handleClick,
 }: ToolbarSimpleButtonProps) => {
-  const { editor, lastUpdate } = useEditorStore();
+  const editor = useEditorStore(state => state.editor);
+  const lastUpdate = useEditorStore(state => state.lastUpdate);
 
-  // Derive isActive directly from editor state
-  const isActive = editor && checkIsActive ? checkIsActive(editor) : false;
-
-  // Trigger re-render when editor state changes
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _forceUpdate = lastUpdate;
+  // This re-evaluates on every render triggered by lastUpdate changes
+  const isNowActive =
+    lastUpdate && editor && checkIsActive ? checkIsActive(editor) : false;
 
   const className = cn(
     "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
-    isActive && "#d4d4d8"
+    isNowActive && "bg-[#ffd4d8]/80"
   );
 
   return (
@@ -42,7 +40,6 @@ export const ToolbarSimpleButton = ({
         }
       }}
       className={className}
-      style={{ backgroundColor: isActive ? "#ffd4d8" : undefined }}
       title={label}
     >
       <Icon className="size-4" />
