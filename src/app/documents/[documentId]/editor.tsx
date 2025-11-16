@@ -10,6 +10,7 @@ import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import ImageResize from "tiptap-extension-resize-image";
+import { useRef, useState } from "react";
 
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
@@ -21,7 +22,9 @@ interface EditorProps {
 }
 
 export const Editor = ({ documentId }: EditorProps) => {
-  const { setEditor, triggerUpdate } = useEditorStore();
+  const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
+  const [dummyCursorPosition, setDummyCursorPosition] = useState<{ top: number; left: number } | null>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     onCreate: ({ editor }) => {
@@ -40,9 +43,24 @@ export const Editor = ({ documentId }: EditorProps) => {
       triggerUpdate();
     },
     onFocus: ({ editor }) => {
+      setEditorFocused(true);
       triggerUpdate();
     },
     onBlur: ({ editor }) => {
+      // Store cursor position before losing focus
+      const { from } = editor.state.selection;
+      const coords = editor.view.coordsAtPos(from);
+      const editorElement = editorRef.current?.querySelector('.ProseMirror');
+      
+      if (editorElement && coords) {
+        const editorRect = editorElement.getBoundingClientRect();
+        setDummyCursorPosition({
+          top: coords.top - editorRect.top,
+          left: coords.left - editorRect.left,
+        });
+      }
+      
+      setEditorFocused(false);
       triggerUpdate();
     },
     onContentError: ({ editor }) => {
@@ -105,7 +123,19 @@ export const Editor = ({ documentId }: EditorProps) => {
     <div className="size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible">
       <Ruler />
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
-        <EditorContent editor={editor} />
+        <div ref={editorRef} className="relative">
+          <EditorContent editor={editor} />
+          {/* Dummy cursor that appears when editor loses focus */}
+          {!isEditorFocused && dummyCursorPosition && (
+            <div
+              className="absolute w-px h-[1.2em] bg-black pointer-events-none z-10"
+              style={{
+                top: `${dummyCursorPosition.top}px`,
+                left: `${dummyCursorPosition.left}px`,
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
