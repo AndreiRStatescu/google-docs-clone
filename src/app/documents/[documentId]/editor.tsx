@@ -9,8 +9,8 @@ import TextAlign from "@tiptap/extension-text-align";
 import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import ImageResize from "tiptap-extension-resize-image";
 import { useRef, useState } from "react";
+import ImageResize from "tiptap-extension-resize-image";
 
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
@@ -23,7 +23,10 @@ interface EditorProps {
 
 export const Editor = ({ documentId }: EditorProps) => {
   const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
-  const [dummyCursorPosition, setDummyCursorPosition] = useState<{ top: number; left: number } | null>(null);
+  const [dummyCursorPosition, setDummyCursorPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
@@ -50,8 +53,8 @@ export const Editor = ({ documentId }: EditorProps) => {
       // Store cursor position before losing focus
       const { from } = editor.state.selection;
       const coords = editor.view.coordsAtPos(from);
-      const editorElement = editorRef.current?.querySelector('.ProseMirror');
-      
+      const editorElement = editorRef.current?.querySelector(".ProseMirror");
+
       if (editorElement && coords) {
         const editorRect = editorElement.getBoundingClientRect();
         setDummyCursorPosition({
@@ -59,7 +62,7 @@ export const Editor = ({ documentId }: EditorProps) => {
           left: coords.left - editorRect.left,
         });
       }
-      
+
       setEditorFocused(false);
       triggerUpdate();
     },
