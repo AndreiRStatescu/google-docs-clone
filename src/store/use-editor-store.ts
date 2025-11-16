@@ -12,11 +12,9 @@ export const useEditorStore = create<EditorStore>(set => ({
   editor: null,
   lastUpdate: 0,
   setEditor: editor => {
-    console.log("setEditor called", editor);
     set({ editor });
   },
   triggerUpdate: () => {
-    console.log("triggerUpdate called");
     set({ lastUpdate: Date.now() });
   },
 }));
