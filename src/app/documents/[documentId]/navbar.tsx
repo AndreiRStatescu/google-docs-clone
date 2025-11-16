@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { DocumentInput } from "./document-input";
-import { MenuBar } from "./menu-bar";
+import { MenuBar } from "./menubar/menubar";
 
 export const Navbar = () => {
   return (
