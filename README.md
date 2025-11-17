@@ -39,3 +39,6 @@ TODO
 
 - some console logs in toolbar-font-size-button.tsx are triggering mandatory reloads - fix this
 - ...
+
+## TODO Notes
+- when editor is out of focus, we use a dummy cursor that doesn't blink in its place, but the behaviour doesn't work well on some behaviours, like Undo
