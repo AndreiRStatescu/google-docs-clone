@@ -41,12 +41,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-TODO
-
-- some console logs in toolbar-font-size-button.tsx are triggering mandatory reloads - fix this
-- ...
-
 ## TODO Notes
+- some console logs in toolbar-font-size-button.tsx are triggering mandatory reloads - fix this
 - when editor is out of focus, we use a dummy cursor that doesn't blink in its place, but the behaviour doesn't work well on some behaviours, like Undo
 - explore TanStack query from Convex
 - removing a document on Home screen does not sync with pagination properly - will not add another document in the place of the deleted one, even the pagination requires so (e.g for a pagination of 5, removing 2 documents will leave only 3 docs on screen, until the user does a manual page refresh)
