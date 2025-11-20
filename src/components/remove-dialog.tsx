@@ -2,19 +2,19 @@
 
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AlertDialogDescription,
-  AlertDialogAction,
-  AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-import { Id } from "../../convex/_generated/dataModel";
-import { api } from "../../convex/_generated/api";
 import { useMutation } from "convex/react";
 import { useState } from "react";
+import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 
 interface RemoveDialogProps {
   documentId: Id<"documents">;

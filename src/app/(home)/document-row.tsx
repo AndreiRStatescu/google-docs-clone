@@ -1,9 +1,9 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Doc } from "../../../convex/_generated/dataModel";
-import { SiGoogledocs } from "react-icons/si";
-import { Building2Icon, CircleUserIcon, MoreVertical } from "lucide-react";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
+import { Building2Icon, CircleUserIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { SiGoogledocs } from "react-icons/si";
+import { Doc } from "../../../convex/_generated/dataModel";
 import { DocumentMenu } from "./document-menu";
 
 interface DocumentRowProps {
@@ -11,17 +11,29 @@ interface DocumentRowProps {
 }
 
 export const DocumentRow = ({ document }: DocumentRowProps) => {
-  const onNewTabClick = (id: string) => {
-    window.open(`/documents/${id}`, "_blank");
+  const router = useRouter();
+
+  const onRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    // Only navigate if clicking on the row itself or its cells
+    const target = e.target as HTMLElement;
+    if (!target.hasAttribute("data-row-clickable")) {
+      return;
+    }
+    router.push(`/documents/${document._id}`);
   };
 
   return (
-    <TableRow className="cursor-pointer">
-      <TableCell className="w-[50px]">
+    <TableRow className="cursor-pointer" onClick={onRowClick} data-row-clickable>
+      <TableCell className="w-[50px]" data-row-clickable>
         <SiGoogledocs className="size-6 fill-blue-500" />
       </TableCell>
-      <TableCell className="font-medium md:w-[45%]">{document.title}</TableCell>
-      <TableCell className="text-muted-foreground hidden md:flex items-center gap-2">
+      <TableCell className="font-medium md:w-[45%]" data-row-clickable>
+        {document.title}
+      </TableCell>
+      <TableCell
+        className="text-muted-foreground hidden md:flex items-center gap-2"
+        data-row-clickable
+      >
         {document.organizationId ? (
           <Building2Icon className="size-4" />
         ) : (
@@ -29,11 +41,11 @@ export const DocumentRow = ({ document }: DocumentRowProps) => {
         )}
         {document.organizationId ? "Organization" : "Personal"}
       </TableCell>
-      <TableCell className="text-muted-foreground hidden md:table-cell">
+      <TableCell className="text-muted-foreground hidden md:table-cell" data-row-clickable>
         {format(new Date(document._creationTime), "MMM dd, yyyy")}
       </TableCell>
-      <TableCell className="flex ml-auto justify-end">
-        <DocumentMenu documentId={document._id} title={document.title} onNewTab={onNewTabClick} />
+      <TableCell className="flex ml-auto justify-end" data-row-clickable>
+        <DocumentMenu documentId={document._id} title={document.title} />
       </TableCell>
     </TableRow>
   );
