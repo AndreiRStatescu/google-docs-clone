@@ -2,28 +2,37 @@
 
 import {
   Carousel,
+  CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  CarouselContent,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import { templates } from "../constants/templates";
-import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import { api } from "../../../convex/_generated/api";
+import { templates } from "../constants/templates";
 
 export const TemplatesGallery = () => {
   const router = useRouter();
   const create = useMutation(api.documents.create);
   const [isCreating, setIsCreating] = useState(false);
 
-  const onTemplateClick = (title: string, initialContent: string) => {
+  const onTemplateClick = (title: string, initialContent: string, e: React.MouseEvent) => {
     setIsCreating(true);
     create({ title, initialContent })
       .then(documentId => {
-        router.push(`/documents/${documentId}`);
+        toast.success("Document created successfully");
+        if (e.metaKey || e.ctrlKey) {
+          window.open(`/documents/${documentId}`, "_blank");
+        } else {
+          router.push(`/documents/${documentId}`);
+        }
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
       })
       .finally(() => {
         setIsCreating(false);
@@ -50,7 +59,7 @@ export const TemplatesGallery = () => {
                   <button
                     disabled={isCreating}
                     /* TODO: Add proper initial content */
-                    onClick={() => onTemplateClick(template.label, "DDDDD")}
+                    onClick={e => onTemplateClick(template.label, "DDDDD", e)}
                     style={{
                       backgroundImage: `url(${template.imgUrl})`,
                       backgroundSize: "cover",
