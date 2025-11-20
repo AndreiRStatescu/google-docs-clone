@@ -2,22 +2,14 @@ import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-export const create = mutation({
-  args: {
-    title: v.optional(v.string()),
-    initialContent: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
+export const getUserId = query({
+  args: {},
+  handler: async ctx => {
     const user = await ctx.auth.getUserIdentity();
     if (!user) {
       throw new ConvexError("Unauthenticated");
     }
-
-    return await ctx.db.insert("documents", {
-      title: args.title ?? "Untitled Document",
-      ownerId: user.subject,
-      initialContent: args.initialContent ?? "",
-    });
+    return user.tokenIdentifier;
   },
 });
 
@@ -32,17 +24,47 @@ export const get = query({
       throw new ConvexError("Unauthenticated");
     }
 
+    const organizationId = user.organization_id
+      ? (user.organization_id as string)
+      : user.tokenIdentifier;
+
     if (search) {
       return await ctx.db
         .query("documents")
-        .withSearchIndex("search_title", q => q.search("title", search).eq("ownerId", user.subject))
+        .withSearchIndex("search_title", q =>
+          q.search("title", search).eq("organizationId", organizationId)
+        )
         .paginate(paginationOpts);
     } else {
       return await ctx.db
         .query("documents")
-        .withIndex("by_owner_id", q => q.eq("ownerId", user.subject))
+        .withIndex("by_organization_id", q => q.eq("organizationId", organizationId))
         .paginate(paginationOpts);
     }
+  },
+});
+
+export const create = mutation({
+  args: {
+    title: v.optional(v.string()),
+    initialContent: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthenticated");
+    }
+
+    const organizationId = user.organization_id
+      ? (user.organization_id as string)
+      : user.tokenIdentifier;
+
+    return await ctx.db.insert("documents", {
+      title: args.title ?? "Untitled Document",
+      ownerId: user.tokenIdentifier,
+      organizationId: organizationId,
+      initialContent: args.initialContent ?? "",
+    });
   },
 });
 
@@ -58,7 +80,7 @@ export const removeById = mutation({
     if (!document) {
       throw new ConvexError("Document not found");
     }
-    if (document.ownerId !== user.subject) {
+    if (document.ownerId !== user.tokenIdentifier) {
       throw new ConvexError("Forbidden");
     }
 
@@ -81,7 +103,7 @@ export const updateById = mutation({
     if (!document) {
       throw new ConvexError("Document not found");
     }
-    if (document.ownerId !== user.subject) {
+    if (document.ownerId !== user.tokenIdentifier) {
       throw new ConvexError("Forbidden");
     }
 

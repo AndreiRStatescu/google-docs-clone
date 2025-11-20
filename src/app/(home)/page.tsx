@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParam } from "@/hooks/use-search-param";
+import { useOrganization } from "@clerk/nextjs";
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DOCUMENTS_PAGE_SIZE } from "../constants/defaults";
@@ -10,9 +11,10 @@ import { TemplatesGallery } from "./templates-gallery";
 
 const Home = () => {
   const [search] = useSearchParam("search");
+  const { organization } = useOrganization();
   const { results, status, loadMore } = usePaginatedQuery(
     api.documents.get,
-    search ? { search } : {},
+    { search: search || undefined },
     { initialNumItems: DOCUMENTS_PAGE_SIZE }
   );
 

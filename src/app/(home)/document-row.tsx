@@ -34,12 +34,12 @@ export const DocumentRow = ({ document }: DocumentRowProps) => {
         className="text-muted-foreground hidden md:flex items-center gap-2"
         data-row-clickable
       >
-        {document.organizationId ? (
+        {document.organizationId?.startsWith("org_") ? (
           <Building2Icon className="size-4" />
         ) : (
           <CircleUserIcon className="size-4" />
         )}
-        {document.organizationId ? "Organization" : "Personal"}
+        {document.organizationId?.startsWith("org_") ? "Organization" : "Personal"}
       </TableCell>
       <TableCell className="text-muted-foreground hidden md:table-cell" data-row-clickable>
         {format(new Date(document._creationTime), "MMM dd, yyyy")}

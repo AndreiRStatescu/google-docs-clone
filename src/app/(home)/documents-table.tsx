@@ -1,4 +1,8 @@
-import { PaginationStatus } from "convex/react";
+"use client";
+
+import { useOrganization } from "@clerk/nextjs";
+import { PaginationStatus, useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { Doc } from "../../../convex/_generated/dataModel";
 import { DOCUMENTS_PAGE_SIZE } from "../constants/defaults";
 
@@ -21,8 +25,24 @@ interface DocumentsTableProps {
 }
 
 export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTableProps) => {
+  const tokenIdentifier = useQuery(api.documents.getUserId);
+  const { organization } = useOrganization();
+
   return (
     <div className="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
+      {(tokenIdentifier || organization !== undefined) && (
+        <div className="mb-4 p-4 bg-gray-100 rounded-lg space-y-2">
+          {tokenIdentifier && (
+            <p className="text-sm font-medium text-gray-700">
+              User ID: <span className="font-mono text-gray-900">{tokenIdentifier}</span>
+            </p>
+          )}
+          <p className="text-sm font-medium text-gray-700">
+            Organization ID:{" "}
+            <span className="font-mono text-gray-900">{organization?.id || "None"}</span>
+          </p>
+        </div>
+      )}
       {documents === undefined ? (
         <div>
           <LoaderIcon className="animate-spin text-muted-foreground size-5" />
