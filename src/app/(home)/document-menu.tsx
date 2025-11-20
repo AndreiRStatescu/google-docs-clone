@@ -41,6 +41,17 @@ export const DocumentMenu = ({ documentId, title, isOwner }: DocumentMenuProps) 
           <ExternalLinkIcon className="size-4 mr-2" /> Open in new tab
         </DropdownMenuItem>
         {isOwner ? (
+          <RenameDialog documentId={documentId} initialTitle={title}>
+            <DropdownMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
+              <FilePenIcon className="size-4 mr-2" /> Rename
+            </DropdownMenuItem>
+          </RenameDialog>
+        ) : (
+          <DropdownMenuItem disabled className="opacity-50">
+            <FilePenIcon className="size-4 mr-2" /> Rename
+          </DropdownMenuItem>
+        )}
+        {isOwner ? (
           <RemoveDialog documentId={documentId}>
             <DropdownMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
               <TrashIcon className="size-4 mr-2" /> Remove
@@ -51,11 +62,6 @@ export const DocumentMenu = ({ documentId, title, isOwner }: DocumentMenuProps) 
             <TrashIcon className="size-4 mr-2" /> Remove
           </DropdownMenuItem>
         )}
-        <RenameDialog documentId={documentId} initialTitle={title}>
-          <DropdownMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
-            <FilePenIcon className="size-4 mr-2" /> Rename
-          </DropdownMenuItem>
-        </RenameDialog>
       </DropdownMenuContent>
     </DropdownMenu>
   );
