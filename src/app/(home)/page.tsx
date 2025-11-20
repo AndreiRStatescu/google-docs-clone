@@ -2,15 +2,16 @@
 
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { DOCUMENTS_PAGE_SIZE } from "../constants/documents";
+import { DocumentsTable } from "./documents-table";
 import { Navbar } from "./navbar";
 import { TemplatesGallery } from "./templates-gallery";
-import { DocumentsTable } from "./documents-table";
 
 const Home = () => {
   const { results, status, loadMore } = usePaginatedQuery(
     api.documents.get,
     {},
-    { initialNumItems: 5 }
+    { initialNumItems: DOCUMENTS_PAGE_SIZE }
   );
 
   return (
@@ -20,11 +21,7 @@ const Home = () => {
       </div>
       <div className="mt-16">
         <TemplatesGallery />
-        <DocumentsTable
-          documents={results}
-          status={status}
-          loadMore={loadMore}
-        />
+        <DocumentsTable documents={results} status={status} loadMore={loadMore} />
       </div>
     </div>
   );

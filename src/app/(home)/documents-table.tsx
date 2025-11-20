@@ -1,6 +1,8 @@
 import { PaginationStatus } from "convex/react";
 import { Doc } from "../../../convex/_generated/dataModel";
+import { DOCUMENTS_PAGE_SIZE } from "../constants/documents";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -51,6 +53,16 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
           </TableBody>
         </Table>
       )}
+      <div className="flex items-center justify-center">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => loadMore(DOCUMENTS_PAGE_SIZE)}
+          disabled={status !== "CanLoadMore"}
+        >
+          {status === "CanLoadMore" ? "Load More" : "No More Documents"}
+        </Button>
+      </div>
     </div>
   );
 };
