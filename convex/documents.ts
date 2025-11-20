@@ -1,6 +1,6 @@
+import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { paginationOptsValidator } from "convex/server";
 
 export const create = mutation({
   args: {
@@ -22,14 +22,27 @@ export const create = mutation({
 });
 
 export const get = query({
-  args: { paginationOpts: paginationOptsValidator },
-  handler: async (ctx, args) => {
+  args: {
+    search: v.optional(v.string()),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { search, paginationOpts }) => {
     const user = await ctx.auth.getUserIdentity();
     if (!user) {
       throw new ConvexError("Unauthenticated");
     }
 
-    return await ctx.db.query("documents").paginate(args.paginationOpts);
+    if (search) {
+      return await ctx.db
+        .query("documents")
+        .withSearchIndex("search_title", q => q.search("title", search).eq("ownerId", user.subject))
+        .paginate(paginationOpts);
+    } else {
+      return await ctx.db
+        .query("documents")
+        .withIndex("by_owner_id", q => q.eq("ownerId", user.subject))
+        .paginate(paginationOpts);
+    }
   },
 });
 
