@@ -2,7 +2,7 @@
 
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { DOCUMENTS_PAGE_SIZE } from "../constants/documents";
+import { DOCUMENTS_PAGE_SIZE } from "../constants/defaults";
 import { DocumentsTable } from "./documents-table";
 import { Navbar } from "./navbar";
 import { TemplatesGallery } from "./templates-gallery";

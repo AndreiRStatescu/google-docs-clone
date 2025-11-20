@@ -1,6 +1,6 @@
 import { PaginationStatus } from "convex/react";
 import { Doc } from "../../../convex/_generated/dataModel";
-import { DOCUMENTS_PAGE_SIZE } from "../constants/documents";
+import { DOCUMENTS_PAGE_SIZE } from "../constants/defaults";
 
 import { Button } from "@/components/ui/button";
 import {
