@@ -8,10 +8,12 @@ import { DocumentMenu } from "./document-menu";
 
 interface DocumentRowProps {
   document: Doc<"documents">;
+  currentUserId: string | undefined;
 }
 
-export const DocumentRow = ({ document }: DocumentRowProps) => {
+export const DocumentRow = ({ document, currentUserId }: DocumentRowProps) => {
   const router = useRouter();
+  const isOwner = currentUserId === document.ownerId;
 
   const onRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     // Only navigate if clicking on the row itself or its cells
@@ -45,7 +47,7 @@ export const DocumentRow = ({ document }: DocumentRowProps) => {
         {format(new Date(document._creationTime), "MMM dd, yyyy")}
       </TableCell>
       <TableCell className="flex ml-auto justify-end" data-row-clickable>
-        <DocumentMenu documentId={document._id} title={document.title} />
+        <DocumentMenu documentId={document._id} title={document.title} isOwner={isOwner} />
       </TableCell>
     </TableRow>
   );

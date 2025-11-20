@@ -68,7 +68,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
           )}
           <TableBody>
             {documents.map(doc => (
-              <DocumentRow key={doc._id} document={doc} />
+              <DocumentRow key={doc._id} document={doc} currentUserId={tokenIdentifier} />
             ))}
           </TableBody>
         </Table>
