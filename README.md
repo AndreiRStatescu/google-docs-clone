@@ -59,3 +59,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - currently printing the the Clerk user id and org id in the frontend - remove that from prod version
 - error page - ghost button barely visible
 - denying access currently done only after 5 failed attempts to connect to liveblocks - that's a bit too long and a poor use experience
+- enable pre-push gitguardian check
