@@ -11,11 +11,13 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useRef, useState } from "react";
 import ImageResize from "tiptap-extension-resize-image";
+import { useLiveblocksExtension, FloatingToolbar } from "@liveblocks/react-tiptap";
 
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
 import { useEditorStore } from "@/store/use-editor-store";
 import { Ruler } from "./ruler";
+import { Threads } from "./threads";
 
 interface EditorProps {
   documentId: string;
@@ -23,6 +25,29 @@ interface EditorProps {
 
 export const Editor = ({ documentId }: EditorProps) => {
   const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
+  const liveblocks = useLiveblocksExtension({
+    initialContent: `
+        <p>Hello World! 🌎️</p>
+        <table>
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th colspan="3">Description</th>
+            </tr>
+            <tr>
+              <td>Cyndi Lauper</td>
+              <td>Singer</td>
+              <td>Songwriter</td>
+              <td>Actress</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>This is a basic example of implementing images. Drag to re-order.</p>
+        <img src="https://placehold.co/600x400" />
+        <img src="https://placehold.co/800x400" />
+      `,
+  });
+
   const [dummyCursorPosition, setDummyCursorPosition] = useState<{
     top: number;
     left: number;
@@ -78,7 +103,7 @@ export const Editor = ({ documentId }: EditorProps) => {
       },
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({ undoRedo: false }),
       TableKit,
       TaskList,
       TaskItem.configure({ nested: true }),
@@ -98,28 +123,9 @@ export const Editor = ({ documentId }: EditorProps) => {
         types: ["paragraph", "heading"],
         defaultLineHeight: "normal",
       }),
+      liveblocks,
     ],
     immediatelyRender: false,
-    content: `
-        <p>Hello World! 🌎️</p>
-        <table>
-          <tbody>
-            <tr>
-              <th>Name</th>
-              <th colspan="3">Description</th>
-            </tr>
-            <tr>
-              <td>Cyndi Lauper</td>
-              <td>Singer</td>
-              <td>Songwriter</td>
-              <td>Actress</td>
-            </tr>
-          </tbody>
-        </table>
-        <p>This is a basic example of implementing images. Drag to re-order.</p>
-        <img src="https://placehold.co/600x400" />
-        <img src="https://placehold.co/800x400" />
-      `,
   });
 
   return (
@@ -128,6 +134,8 @@ export const Editor = ({ documentId }: EditorProps) => {
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
         <div ref={editorRef} className="relative">
           <EditorContent editor={editor} />
+          <Threads editor={editor} />
+          
           {/* Dummy cursor that appears when editor loses focus */}
           {!isEditorFocused && dummyCursorPosition && (
             <div

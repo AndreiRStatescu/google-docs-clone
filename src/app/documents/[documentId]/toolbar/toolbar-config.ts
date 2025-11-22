@@ -135,8 +135,8 @@ export const commentButton: ToolbarSimpleButtonProps = {
   type: TOOLBAR_BUTTON_TYPES.BUTTON,
   label: "Comment",
   icon: MessageSquarePlusIcon,
-  onClick: () => console.log("Add comment"),
-  isActive: () => false,
+  onClick: editor => editor?.chain().focus().addPendingComment().run(),
+  isActive: editor => editor?.isActive("liveblocksCommentMark"),
 };
 
 export const todoListButton: ToolbarSimpleButtonProps = {
