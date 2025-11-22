@@ -8,9 +8,6 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 export async function POST(request: Request) {
   const { userId, orgId } = await auth();
 
-  console.log("userId", userId);
-  console.log("orgId", orgId);
-
   const liveblocks = new Liveblocks({
     secret: process.env.LIVEBLOCKS_SECRET_KEY!,
   });
@@ -33,14 +30,6 @@ export async function POST(request: Request) {
 
   const isOwner = document.ownerId.endsWith(user.id); // TODO not an ideal check
   const isOrganizationMember = document.organizationId === orgId;
-
-  console.log("document.ownerId", document.ownerId);
-  console.log("user.id", user.id);
-  console.log("document.organizationId", document.organizationId);
-  console.log("orgId", orgId);
-
-  console.log("isOwner", isOwner);
-  console.log("isOrganizationMember", isOrganizationMember);
 
   if (!isOwner && !isOrganizationMember) {
     return new Response("Forbidden", { status: 403 });
