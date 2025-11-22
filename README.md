@@ -58,3 +58,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - removing a document on Home screen does not sync with pagination properly - will not add another document in the place of the deleted one, even the pagination requires so (e.g for a pagination of 5, removing 2 documents will leave only 3 docs on screen, until the user does a manual page refresh) - design a more elaborate way to handle this
 - currently printing the the Clerk user id and org id in the frontend - remove that from prod version
 - error page - ghost button barely visible
+- denying access currently done only after 5 failed attempts to connect to liveblocks - that's a bit too long and a poor use experience
