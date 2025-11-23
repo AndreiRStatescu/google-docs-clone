@@ -1,7 +1,7 @@
 "use client";
 
 import { AVATAR_SIZE } from "@/app/constants/defaults";
-import { Separator } from "@/components/ui/separator";
+import { VerticalSeparator } from "@/components/ui/vertical-separator";
 import { useOthers, useSelf } from "@liveblocks/react/suspense";
 import { ClientSideSuspense } from "@liveblocks/react";
 
@@ -32,7 +32,7 @@ const AvatarStack = () => {
           return <Avatar key={connectionId} src={info.avatar} name={info.name} />;
         })}
       </div>
-      <Separator orientation="vertical" className="h-6"/>
+      <VerticalSeparator />
     </div>
   );
 };

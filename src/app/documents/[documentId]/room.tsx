@@ -5,7 +5,8 @@ import { ClientSideSuspense, LiveblocksProvider, RoomProvider } from "@liveblock
 import { useParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { getUsers } from "./action";
+import { Id } from "../../../../convex/_generated/dataModel";
+import { getDocuments, getUsers } from "./action";
 
 type User = {
   id: string;
@@ -62,7 +63,10 @@ export function Room({ children }: { children: ReactNode }) {
     return filteredUsers.map(user => user.id);
   };
 
-  const resolveRoomsInfo = () => [];
+  const resolveRoomsInfo = async ({ roomIds }: { roomIds: string[] }) => {
+    const documents = await getDocuments(roomIds as Id<"documents">[]);
+    return documents.map(doc => ({ id: doc.id, name: doc.name }));
+  };
 
   return (
     <LiveblocksProvider

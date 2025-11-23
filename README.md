@@ -60,3 +60,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - error page - ghost button barely visible
 - denying access currently done only after 5 failed attempts to connect to liveblocks - that's a bit too long and a poor use experience
 - enable pre-push gitguardian check
+- notification sometimes show up 2-3 times for the same tagging, also having some frontend errors in Safari when tagging, despite no obvious issue being seen. Additionally, the displayed number of notifications show the count of all the notification, not just the unread ones as was the expected behaviour
