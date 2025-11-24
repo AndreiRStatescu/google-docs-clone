@@ -15,6 +15,7 @@ interface DocumentRowProps {
   onSelectOnly: (documentId: Id<"documents">) => void;
   onContextMenu: (documentId: Id<"documents">) => void;
   selectedCount: number;
+  selectedDocumentIds: Id<"documents">[];
   index: number;
 }
 
@@ -26,6 +27,7 @@ export const DocumentRow = ({
   onSelectOnly,
   onContextMenu,
   selectedCount,
+  selectedDocumentIds,
   index,
 }: DocumentRowProps) => {
   const router = useRouter();
@@ -51,6 +53,7 @@ export const DocumentRow = ({
       isOwner={isOwner}
       onContextMenu={() => onContextMenu(document._id)}
       selectedCount={selectedCount}
+      selectedDocumentIds={selectedDocumentIds}
     >
       <TableRow
         className={`cursor-pointer select-none ${isSelected ? "bg-blue-50 hover:bg-blue-100" : ""}`}

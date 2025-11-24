@@ -20,23 +20,35 @@ import { Id } from "../../convex/_generated/dataModel";
 interface RemoveDialogProps {
   documentId: Id<"documents">;
   children: React.ReactNode;
+  documentIds?: Id<"documents">[];
 }
 
-export const RemoveDialog = ({ documentId, children }: RemoveDialogProps) => {
+export const RemoveDialog = ({ documentId, children, documentIds }: RemoveDialogProps) => {
   const remove = useMutation(api.documents.removeById);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  const onRemove = (e: React.MouseEvent) => {
+  const idsToRemove = documentIds && documentIds.length > 0 ? documentIds : [documentId];
+  const isMultiple = idsToRemove.length > 1;
+
+  const onRemove = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsRemoving(true);
-    remove({ id: documentId })
-      .catch(() => {
-        toast.error("Something went wrong");
-      })
-      .finally(() => {
-        setIsRemoving(false);
-        toast.success("Document deleted successfully");
-      });
+
+    try {
+      // Remove all documents in sequence
+      for (const id of idsToRemove) {
+        await remove({ id });
+      }
+      toast.success(
+        isMultiple
+          ? `${idsToRemove.length} documents deleted successfully`
+          : "Document deleted successfully"
+      );
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsRemoving(false);
+    }
   };
 
   return (
@@ -44,7 +56,10 @@ export const RemoveDialog = ({ documentId, children }: RemoveDialogProps) => {
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent onClick={e => e.stopPropagation()}>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to delete this document?</AlertDialogTitle>
+          <AlertDialogTitle>
+            Are you sure you want to delete{" "}
+            {isMultiple ? `these ${idsToRemove.length} documents` : "this document"}?
+          </AlertDialogTitle>
           <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

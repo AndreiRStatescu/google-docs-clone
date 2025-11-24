@@ -128,6 +128,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
                 onSelectOnly={selectOnly}
                 onContextMenu={handleContextMenu}
                 selectedCount={selectedDocuments.size}
+                selectedDocumentIds={Array.from(selectedDocuments)}
                 index={index}
               />
             ))}

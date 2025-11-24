@@ -17,6 +17,7 @@ interface DocumentContextMenuProps {
   children: React.ReactNode;
   onContextMenu: () => void;
   selectedCount: number;
+  selectedDocumentIds: Id<"documents">[];
 }
 
 export const DocumentContextMenu = ({
@@ -26,6 +27,7 @@ export const DocumentContextMenu = ({
   children,
   onContextMenu,
   selectedCount,
+  selectedDocumentIds,
 }: DocumentContextMenuProps) => {
   const onNewTabClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -57,7 +59,10 @@ export const DocumentContextMenu = ({
             </ContextMenuItem>
           ))}
         {isOwner ? (
-          <RemoveDialog documentId={documentId}>
+          <RemoveDialog
+            documentId={documentId}
+            documentIds={selectedCount > 1 ? selectedDocumentIds : undefined}
+          >
             <ContextMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
               <TrashIcon className="size-4 mr-2" /> Remove
             </ContextMenuItem>
