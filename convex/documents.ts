@@ -106,6 +106,28 @@ export const removeById = mutation({
   },
 });
 
+export const removeByIds = mutation({
+  args: { ids: v.array(v.id("documents")) },
+  handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthenticated");
+    }
+
+    // Validate ownership and delete all documents in a single transaction
+    for (const id of args.ids) {
+      const document = await ctx.db.get(id);
+      if (!document) {
+        throw new ConvexError(`Document ${id} not found`);
+      }
+      if (document.ownerId !== user.tokenIdentifier) {
+        throw new ConvexError(`Forbidden to delete document ${id}`);
+      }
+      await ctx.db.delete(id);
+    }
+  },
+});
+
 export const updateById = mutation({
   args: {
     id: v.id("documents"),

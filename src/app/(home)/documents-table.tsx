@@ -75,6 +75,10 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
     });
   };
 
+  const clearSelection = () => {
+    setSelectedDocuments(new Set());
+  };
+
   return (
     <div className="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
       {selectedDocuments.size > 0 && (
@@ -129,6 +133,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
                 onContextMenu={handleContextMenu}
                 selectedCount={selectedDocuments.size}
                 selectedDocumentIds={Array.from(selectedDocuments)}
+                onClearSelection={clearSelection}
                 index={index}
               />
             ))}

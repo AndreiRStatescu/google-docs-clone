@@ -21,10 +21,12 @@ interface RemoveDialogProps {
   documentId: Id<"documents">;
   children: React.ReactNode;
   documentIds?: Id<"documents">[];
+  onSuccess?: () => void;
 }
 
-export const RemoveDialog = ({ documentId, children, documentIds }: RemoveDialogProps) => {
+export const RemoveDialog = ({ documentId, children, documentIds, onSuccess }: RemoveDialogProps) => {
   const remove = useMutation(api.documents.removeById);
+  const removeBulk = useMutation(api.documents.removeByIds);
   const [isRemoving, setIsRemoving] = useState(false);
 
   const idsToRemove = documentIds && documentIds.length > 0 ? documentIds : [documentId];
@@ -35,15 +37,17 @@ export const RemoveDialog = ({ documentId, children, documentIds }: RemoveDialog
     setIsRemoving(true);
 
     try {
-      // Remove all documents in sequence
-      for (const id of idsToRemove) {
-        await remove({ id });
+      if (isMultiple) {
+        await removeBulk({ ids: idsToRemove });
+      } else {
+        await remove({ id: documentId });
       }
       toast.success(
         isMultiple
           ? `${idsToRemove.length} documents deleted successfully`
           : "Document deleted successfully"
       );
+      onSuccess?.();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {

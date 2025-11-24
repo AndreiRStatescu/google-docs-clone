@@ -18,6 +18,7 @@ interface DocumentContextMenuProps {
   onContextMenu: () => void;
   selectedCount: number;
   selectedDocumentIds: Id<"documents">[];
+  onClearSelection: () => void;
 }
 
 export const DocumentContextMenu = ({
@@ -28,6 +29,7 @@ export const DocumentContextMenu = ({
   onContextMenu,
   selectedCount,
   selectedDocumentIds,
+  onClearSelection,
 }: DocumentContextMenuProps) => {
   const onNewTabClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -62,6 +64,7 @@ export const DocumentContextMenu = ({
           <RemoveDialog
             documentId={documentId}
             documentIds={selectedCount > 1 ? selectedDocumentIds : undefined}
+            onSuccess={onClearSelection}
           >
             <ContextMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
               <TrashIcon className="size-4 mr-2" /> Remove

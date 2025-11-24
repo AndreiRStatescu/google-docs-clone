@@ -16,6 +16,7 @@ interface DocumentRowProps {
   onContextMenu: (documentId: Id<"documents">) => void;
   selectedCount: number;
   selectedDocumentIds: Id<"documents">[];
+  onClearSelection: () => void;
   index: number;
 }
 
@@ -28,6 +29,7 @@ export const DocumentRow = ({
   onContextMenu,
   selectedCount,
   selectedDocumentIds,
+  onClearSelection,
   index,
 }: DocumentRowProps) => {
   const router = useRouter();
@@ -54,6 +56,7 @@ export const DocumentRow = ({
       onContextMenu={() => onContextMenu(document._id)}
       selectedCount={selectedCount}
       selectedDocumentIds={selectedDocumentIds}
+      onClearSelection={onClearSelection}
     >
       <TableRow
         className={`cursor-pointer select-none ${isSelected ? "bg-blue-50 hover:bg-blue-100" : ""}`}
