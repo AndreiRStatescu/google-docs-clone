@@ -62,6 +62,19 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
     setSelectedDocuments(new Set([documentId]));
   };
 
+  const handleContextMenu = (documentId: Id<"documents">) => {
+    setSelectedDocuments(prev => {
+      // If no documents selected or only 1 selected, select only the clicked row
+      if (prev.size === 0 || prev.size === 1) {
+        return new Set([documentId]);
+      }
+      // If multiple documents selected, add the clicked row to selection
+      const newSet = new Set(prev);
+      newSet.add(documentId);
+      return newSet;
+    });
+  };
+
   return (
     <div className="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
       {selectedDocuments.size > 0 && (
@@ -113,6 +126,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
                 isSelected={selectedDocuments.has(doc._id)}
                 onToggleSelect={toggleSelection}
                 onSelectOnly={selectOnly}
+                onContextMenu={handleContextMenu}
                 index={index}
               />
             ))}

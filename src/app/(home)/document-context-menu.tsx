@@ -15,6 +15,7 @@ interface DocumentContextMenuProps {
   title: string;
   isOwner: boolean;
   children: React.ReactNode;
+  onContextMenu: () => void;
 }
 
 export const DocumentContextMenu = ({
@@ -22,6 +23,7 @@ export const DocumentContextMenu = ({
   title,
   isOwner,
   children,
+  onContextMenu,
 }: DocumentContextMenuProps) => {
   const onNewTabClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -29,7 +31,7 @@ export const DocumentContextMenu = ({
   };
 
   return (
-    <ContextMenu>
+    <ContextMenu onOpenChange={open => open && onContextMenu()}>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuItem onClick={onNewTabClick}>

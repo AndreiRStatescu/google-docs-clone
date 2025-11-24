@@ -13,6 +13,7 @@ interface DocumentRowProps {
   isSelected: boolean;
   onToggleSelect: (documentId: Id<"documents">, index: number, shiftKey: boolean) => void;
   onSelectOnly: (documentId: Id<"documents">) => void;
+  onContextMenu: (documentId: Id<"documents">) => void;
   index: number;
 }
 
@@ -22,6 +23,7 @@ export const DocumentRow = ({
   isSelected,
   onToggleSelect,
   onSelectOnly,
+  onContextMenu,
   index,
 }: DocumentRowProps) => {
   const router = useRouter();
@@ -41,7 +43,12 @@ export const DocumentRow = ({
   };
 
   return (
-    <DocumentContextMenu documentId={document._id} title={document.title} isOwner={isOwner}>
+    <DocumentContextMenu
+      documentId={document._id}
+      title={document.title}
+      isOwner={isOwner}
+      onContextMenu={() => onContextMenu(document._id)}
+    >
       <TableRow
         className={`cursor-pointer select-none ${isSelected ? "bg-blue-50 hover:bg-blue-100" : ""}`}
         onClick={onRowClick}
