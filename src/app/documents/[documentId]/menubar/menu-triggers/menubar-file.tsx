@@ -11,6 +11,8 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import { usePlatform } from "@/hooks/use-platform";
+import { useEditorStore } from "@/store/use-editor-store";
 import {
   FileIcon,
   FileJsonIcon,
@@ -22,20 +24,23 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { BsFilePdf } from "react-icons/bs";
+import { Doc } from "../../../../../../convex/_generated/dataModel";
 import styles from "../menubar.module.css";
-import { usePlatform } from "@/hooks/use-platform";
-import { useEditorStore } from "@/store/use-editor-store";
 
-export const MenubarFile = () => {
+interface MenubarFileProps {
+  data: Doc<"documents">;
+}
+
+export const MenubarFile = ({ data }: MenubarFileProps) => {
   const { isMac } = usePlatform();
   const { editor } = useEditorStore();
 
   const onDownload = (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = filename
-    a.click()
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
   };
 
   const onSaveJSON = () => {
@@ -43,19 +48,19 @@ export const MenubarFile = () => {
 
     const content = editor.getJSON();
     const blob = new Blob([JSON.stringify(content)], {
-      type: "application/json"
+      type: "application/json",
     });
-    onDownload(blob, `document.json`) // TODO use document name
+    onDownload(blob, `${data.title}.json`);
   };
-  
+
   const onSaveHTML = () => {
     if (!editor) return;
 
     const content = editor.getHTML();
     const blob = new Blob([content], {
-      type: "text/html"
+      type: "text/html",
     });
-    onDownload(blob, `document.html`) // TODO use document name
+    onDownload(blob, `${data.title}.html`);
   };
 
   const onSaveText = () => {
@@ -63,9 +68,9 @@ export const MenubarFile = () => {
 
     const content = editor.getText();
     const blob = new Blob([content], {
-      type: "text/plain"
+      type: "text/plain",
     });
-    onDownload(blob, `document.txt`) // TODO use document name
+    onDownload(blob, `${data.title}.txt`);
   };
 
   return (
