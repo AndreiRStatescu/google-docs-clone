@@ -1,3 +1,5 @@
+"use client";
+
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,9 +11,10 @@ import { MenuBar } from "./menubar/menubar";
 
 interface NavbarProps {
   data: Doc<"documents">;
+  canEdit: boolean;
 }
 
-export const Navbar = ({ data }: NavbarProps) => {
+export const Navbar = ({ data, canEdit }: NavbarProps) => {
   return (
     <nav className="flex items-center justify-between">
       <div className="flex gap-2 items-center">
@@ -19,7 +22,7 @@ export const Navbar = ({ data }: NavbarProps) => {
           <Image src="/logo.svg" alt="Logo" width={36} height={36} />
         </Link>
         <div className="flex flex-col">
-          <DocumentInput title={data.title} id={data._id} />
+          <DocumentInput title={data.title} id={data._id} canEdit={canEdit} />
           <MenuBar data={data} />
         </div>
       </div>
