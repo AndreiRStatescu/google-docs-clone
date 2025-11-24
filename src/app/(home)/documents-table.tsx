@@ -50,10 +50,10 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
       ) : (
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent border-none">
-              <TableHead>Name</TableHead>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="hidden md:table-cell">Name</TableHead>
               <TableHead>&nbsp;</TableHead>
-              <TableHead className="hidden md:flex">Shared</TableHead>
+              <TableHead className="hidden md:table-cell">Shared</TableHead>
               <TableHead className="hidden md:table-cell">Created at</TableHead>
               <TableHead className="hidden md:table-cell">Updated at</TableHead>
             </TableRow>

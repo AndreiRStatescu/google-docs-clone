@@ -10,23 +10,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 
-interface DocumentMenuProps {
+interface DocumentKebabMenuProps {
   documentId: Id<"documents">;
   title: string;
   isOwner: boolean;
 }
 
-export const DocumentMenu = ({ documentId, title, isOwner }: DocumentMenuProps) => {
+export const DocumentKebabMenu = ({ documentId, title, isOwner }: DocumentKebabMenuProps) => {
   const onNewTabClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(`/documents/${documentId}`, "_blank");
-  };
-
-  const onDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast.error("You don't have permission to delete this document");
   };
 
   return (
