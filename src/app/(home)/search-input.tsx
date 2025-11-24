@@ -18,21 +18,18 @@ export const SearchInput = () => {
 
   const handleClear = () => {
     setValue("");
-    setSearch(""); 
+    setSearch("");
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearch(value);
     inputRef.current?.blur();
-  }
+  };
 
   return (
     <div className="flex-1 flex items-center justify-center">
-      <form 
-        onSubmit={handleSubmit}
-        className="relative max-w-[720px] w-full"
-      >
+      <form onSubmit={handleSubmit} className="relative max-w-[720px] w-full">
         <Input
           value={value}
           onChange={handleChange}
