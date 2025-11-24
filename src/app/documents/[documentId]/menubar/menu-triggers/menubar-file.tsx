@@ -26,6 +26,9 @@ import {
 import { BsFilePdf } from "react-icons/bs";
 import { Doc } from "../../../../../../convex/_generated/dataModel";
 import styles from "../menubar.module.css";
+import { useMutation } from "convex/react";
+import { api } from "../../../../../../convex/_generated/api";
+import { toast } from "sonner";
 
 interface MenubarFileProps {
   data: Doc<"documents">;
@@ -34,6 +37,18 @@ interface MenubarFileProps {
 export const MenubarFile = ({ data }: MenubarFileProps) => {
   const { isMac } = usePlatform();
   const { editor } = useEditorStore();
+  const createDocument = useMutation(api.documents.create);
+
+  const onNewDocument = () => {
+    createDocument({
+      title: "Untitled Document",
+    })
+      .then((id) => {
+        toast.success("Document created");
+        window.open(`/documents/${id}`, "_blank");
+      })
+      .catch(() => toast.error("Failed to create document"));
+  };
 
   const onDownload = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
@@ -101,7 +116,7 @@ export const MenubarFile = ({ data }: MenubarFileProps) => {
             </MenubarItem>
           </MenubarSubContent>
         </MenubarSub>
-        <MenubarItem>
+        <MenubarItem onClick={onNewDocument}>
           <FilePlusIcon className={styles.menubarIcon} />
           New Document
         </MenubarItem>
