@@ -14,18 +14,14 @@ import StarterKit from "@tiptap/starter-kit";
 import { useRef, useState } from "react";
 import ImageResize from "tiptap-extension-resize-image";
 
-import { DOCUMENT_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constants/defaults";
+import { DOC_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constants/defaults";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
 import { useEditorStore } from "@/store/use-editor-store";
 import { Ruler } from "./ruler";
 import { Threads } from "./threads";
 
-interface EditorProps {
-  documentId: string;
-}
-
-export const Editor = ({ documentId }: EditorProps) => {
+export const Editor = () => {
   const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
   const liveblocks = useLiveblocksExtension({
     initialContent: `
@@ -49,7 +45,7 @@ export const Editor = ({ documentId }: EditorProps) => {
         <img src="https://placehold.co/800x400" />
       `,
   });
-  const leftMargin = useStorage(store => store.leftMargin) ?? DOCUMENT_INITIAL_LEFT_MARGIN;
+  const leftMargin = useStorage(store => store.leftMargin) ?? DOC_INITIAL_LEFT_MARGIN;
   const rightMargin = useStorage(store => store.rightMargin) ?? DOC_INITIAL_RIGHT_MARGIN;
 
   const [dummyCursorPosition, setDummyCursorPosition] = useState<{

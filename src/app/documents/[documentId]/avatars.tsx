@@ -2,8 +2,8 @@
 
 import { AVATAR_SIZE } from "@/app/constants/defaults";
 import { VerticalSeparator } from "@/components/ui/vertical-separator";
-import { useOthers, useSelf } from "@liveblocks/react/suspense";
 import { ClientSideSuspense } from "@liveblocks/react";
+import { useOthers, useSelf } from "@liveblocks/react/suspense";
 
 export const Avatars = () => {
   return (
