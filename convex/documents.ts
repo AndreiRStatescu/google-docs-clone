@@ -75,12 +75,14 @@ export const create = mutation({
       ? (user.organization_id as string)
       : user.tokenIdentifier;
 
-    return await ctx.db.insert("documents", {
+    const documentId = await ctx.db.insert("documents", {
       title: args.title ?? "Untitled Document",
       ownerId: user.tokenIdentifier,
       organizationId: organizationId,
       initialContent: args.initialContent ?? "",
     });
+
+    return documentId;
   },
 });
 
@@ -108,6 +110,7 @@ export const updateById = mutation({
   args: {
     id: v.id("documents"),
     title: v.optional(v.string()),
+    updateTime: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -125,6 +128,7 @@ export const updateById = mutation({
 
     await ctx.db.patch(args.id, {
       ...(args.title !== undefined ? { title: args.title } : {}),
+      ...(args.updateTime !== undefined ? { updateTime: args.updateTime } : {}),
     });
   },
 });

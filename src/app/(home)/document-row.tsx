@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { format } from "date-fns";
+import { formatDateTime } from "@/lib/utils";
 import { Building2Icon, CircleUserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SiGoogledocs } from "react-icons/si";
@@ -44,7 +44,12 @@ export const DocumentRow = ({ document, currentUserId }: DocumentRowProps) => {
         {document.organizationId?.startsWith("org_") ? "Organization" : "Personal"}
       </TableCell>
       <TableCell className="text-muted-foreground hidden md:table-cell" data-row-clickable>
-        {format(new Date(document._creationTime), "MMM dd, yyyy")}
+        {formatDateTime(document._creationTime)}
+      </TableCell>
+      <TableCell className="text-muted-foreground hidden md:table-cell" data-row-clickable>
+        {document.updateTime
+          ? formatDateTime(document.updateTime)
+          : formatDateTime(document._creationTime)}
       </TableCell>
       <TableCell className="flex ml-auto justify-end" data-row-clickable>
         <DocumentMenu documentId={document._id} title={document.title} isOwner={isOwner} />

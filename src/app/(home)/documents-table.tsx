@@ -55,6 +55,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
               <TableHead>&nbsp;</TableHead>
               <TableHead className="hidden md:flex">Shared</TableHead>
               <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead className="hidden md:table-cell">Updated at</TableHead>
             </TableRow>
           </TableHeader>
           {documents.length === 0 && (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useDebounce } from "@/hooks/use-debouce";
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { useStorage } from "@liveblocks/react/suspense";
 import Color from "@tiptap/extension-color";
@@ -11,8 +12,11 @@ import TextAlign from "@tiptap/extension-text-align";
 import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useMutation } from "convex/react";
 import { useRef, useState } from "react";
 import ImageResize from "tiptap-extension-resize-image";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 import { DOC_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constants/defaults";
 import { FontSizeExtension } from "@/extensions/font-size";
@@ -23,13 +27,20 @@ import { Threads } from "./threads";
 
 interface EditorProps {
   initialContent?: string | undefined;
+  documentId: Id<"documents">;
 }
 
-export const Editor = ({ initialContent }: EditorProps) => {
+export const Editor = ({ initialContent, documentId }: EditorProps) => {
   const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
   const liveblocks = useLiveblocksExtension({ initialContent, offlineSupport_experimental: true });
   const leftMargin = useStorage(store => store.leftMargin) ?? DOC_INITIAL_LEFT_MARGIN;
   const rightMargin = useStorage(store => store.rightMargin) ?? DOC_INITIAL_RIGHT_MARGIN;
+
+  const updateDocument = useMutation(api.documents.updateById);
+
+  const debouncedUpdateTime = useDebounce(() => {
+    updateDocument({ id: documentId, updateTime: Date.now() });
+  }, 1000);
 
   const [dummyCursorPosition, setDummyCursorPosition] = useState<{
     top: number;
@@ -44,8 +55,17 @@ export const Editor = ({ initialContent }: EditorProps) => {
     onDestroy: () => {
       setEditor(null);
     },
-    onUpdate: ({ editor }) => {
+    onUpdate: ({ editor, transaction }) => {
       triggerUpdate();
+      // Only update time if the document content actually changed by user action
+      // Exclude: sync transactions (initial load, Liveblocks sync) 
+      const isUserEdit =
+        transaction.docChanged &&
+        !transaction.getMeta("y-sync$");
+
+      if (isUserEdit) {
+        debouncedUpdateTime();
+      }
     },
     onSelectionUpdate: ({ editor }) => {
       triggerUpdate();
