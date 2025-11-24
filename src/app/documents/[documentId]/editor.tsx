@@ -12,6 +12,8 @@ import TextAlign from "@tiptap/extension-text-align";
 import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { Markdown } from "tiptap-markdown";
+
 import { useMutation } from "convex/react";
 import { useRef, useState } from "react";
 import ImageResize from "tiptap-extension-resize-image";
@@ -58,10 +60,8 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
     onUpdate: ({ editor, transaction }) => {
       triggerUpdate();
       // Only update time if the document content actually changed by user action
-      // Exclude: sync transactions (initial load, Liveblocks sync) 
-      const isUserEdit =
-        transaction.docChanged &&
-        !transaction.getMeta("y-sync$");
+      // Exclude: sync transactions (initial load, Liveblocks sync)
+      const isUserEdit = transaction.docChanged && !transaction.getMeta("y-sync$");
 
       if (isUserEdit) {
         debouncedUpdateTime();
@@ -127,6 +127,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
         defaultLineHeight: "normal",
       }),
       liveblocks,
+      Markdown,
     ],
     immediatelyRender: false,
   });

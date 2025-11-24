@@ -341,3 +341,102 @@
 div[data-radix-popper-content-wrapper] {
   z-index: 50 !important;
 }
+
+/* Markdown Supports */
+.markdown-parser-demo {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.markdown-parser-demo .split {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 1rem;
+  overflow: auto;
+  padding: 0 1.5rem 1rem;
+}
+
+.markdown-parser-demo .input-panel,
+.markdown-parser-demo .editor-panel {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.markdown-parser-demo .panel-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.markdown-parser-demo .markdown-input {
+  flex: 1 1 auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+
+.markdown-parser-demo .markdown-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.markdown-parser-demo .editor-container {
+  flex: 1 1 auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.markdown-parser-demo .editor-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
+.markdown-parser-demo .editor-toolbar + .editor-container {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+}
+
+.markdown-parser-demo .error {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.markdown-parser-demo .json-preview {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.markdown-parser-demo .json-preview pre {
+  margin: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: #374151;
+}
+
