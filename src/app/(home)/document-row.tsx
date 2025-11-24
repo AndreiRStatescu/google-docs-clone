@@ -3,31 +3,48 @@ import { formatDateTime } from "@/lib/utils";
 import { Building2Icon, CircleUserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SiGoogledocs } from "react-icons/si";
-import { Doc } from "../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { DocumentContextMenu } from "./document-context-menu";
 import { DocumentKebabMenu } from "./document-kebab-menu";
 
 interface DocumentRowProps {
   document: Doc<"documents">;
   currentUserId: string | undefined;
+  isSelected: boolean;
+  onToggleSelect: (documentId: Id<"documents">, index: number, shiftKey: boolean) => void;
+  index: number;
 }
 
-export const DocumentRow = ({ document, currentUserId }: DocumentRowProps) => {
+export const DocumentRow = ({
+  document,
+  currentUserId,
+  isSelected,
+  onToggleSelect,
+  index,
+}: DocumentRowProps) => {
   const router = useRouter();
   const isOwner = currentUserId === document.ownerId;
 
   const onRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
-    // Only navigate if clicking on the row itself or its cells
     const target = e.target as HTMLElement;
+    // Don't toggle selection if clicking on menu buttons
     if (!target.hasAttribute("data-row-clickable")) {
       return;
     }
-    window.open(`/documents/${document._id}`, "_blank");
+    // Prevent text selection when shift-clicking
+    if (e.shiftKey) {
+      e.preventDefault();
+    }
+    onToggleSelect(document._id, index, e.shiftKey);
   };
 
   return (
     <DocumentContextMenu documentId={document._id} title={document.title} isOwner={isOwner}>
-      <TableRow className="cursor-pointer" onClick={onRowClick} data-row-clickable>
+      <TableRow
+        className={`cursor-pointer select-none ${isSelected ? "bg-blue-50 hover:bg-blue-100" : ""}`}
+        onClick={onRowClick}
+        data-row-clickable
+      >
         <TableCell className="w-[50px]" data-row-clickable>
           <SiGoogledocs className="size-6 fill-blue-500" />
         </TableCell>

@@ -3,7 +3,7 @@
 import { useOrganization } from "@clerk/nextjs";
 import { PaginationStatus, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Doc } from "../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { HOME_DOCUMENTS_PER_PAGE } from "../constants/defaults";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LoaderIcon } from "lucide-react";
+import { useState } from "react";
 import { DocumentRow } from "./document-row";
 
 interface DocumentsTableProps {
@@ -27,9 +28,41 @@ interface DocumentsTableProps {
 export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTableProps) => {
   const tokenIdentifier = useQuery(api.documents.getUserId);
   const { organization } = useOrganization();
+  const [selectedDocuments, setSelectedDocuments] = useState<Set<Id<"documents">>>(new Set());
+  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
+
+  const toggleSelection = (documentId: Id<"documents">, index: number, shiftKey: boolean) => {
+    if (shiftKey && lastSelectedIndex !== null && documents) {
+      // Shift-click: select range
+      const start = Math.min(lastSelectedIndex, index);
+      const end = Math.max(lastSelectedIndex, index);
+      const rangeIds = documents.slice(start, end + 1).map(doc => doc._id);
+
+      setSelectedDocuments(prev => {
+        const newSet = new Set(prev);
+        rangeIds.forEach(id => newSet.add(id));
+        return newSet;
+      });
+    } else {
+      // Regular click: toggle single item
+      setSelectedDocuments(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(documentId)) {
+          newSet.delete(documentId);
+        } else {
+          newSet.add(documentId);
+        }
+        return newSet;
+      });
+      setLastSelectedIndex(index);
+    }
+  };
 
   return (
     <div className="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
+      {selectedDocuments.size > 0 && (
+        <div className="text-sm text-muted-foreground">{selectedDocuments.size} selected</div>
+      )}
       {(tokenIdentifier || organization !== undefined) && (
         <div className="mb-4 p-4 bg-gray-100 rounded-lg space-y-2">
           {tokenIdentifier && (
@@ -68,8 +101,15 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
             </TableBody>
           )}
           <TableBody>
-            {documents.map(doc => (
-              <DocumentRow key={doc._id} document={doc} currentUserId={tokenIdentifier} />
+            {documents.map((doc, index) => (
+              <DocumentRow
+                key={doc._id}
+                document={doc}
+                currentUserId={tokenIdentifier}
+                isSelected={selectedDocuments.has(doc._id)}
+                onToggleSelect={toggleSelection}
+                index={index}
+              />
             ))}
           </TableBody>
         </Table>
