@@ -127,6 +127,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
                 onToggleSelect={toggleSelection}
                 onSelectOnly={selectOnly}
                 onContextMenu={handleContextMenu}
+                selectedCount={selectedDocuments.size}
                 index={index}
               />
             ))}

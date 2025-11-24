@@ -16,6 +16,7 @@ interface DocumentContextMenuProps {
   isOwner: boolean;
   children: React.ReactNode;
   onContextMenu: () => void;
+  selectedCount: number;
 }
 
 export const DocumentContextMenu = ({
@@ -24,6 +25,7 @@ export const DocumentContextMenu = ({
   isOwner,
   children,
   onContextMenu,
+  selectedCount,
 }: DocumentContextMenuProps) => {
   const onNewTabClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -34,20 +36,26 @@ export const DocumentContextMenu = ({
     <ContextMenu onOpenChange={open => open && onContextMenu()}>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem onClick={onNewTabClick}>
-          <ExternalLinkIcon className="size-4 mr-2" /> Open in new tab
-        </ContextMenuItem>
-        {isOwner ? (
-          <RenameDialog documentId={documentId} initialTitle={title}>
-            <ContextMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
-              <FilePenIcon className="size-4 mr-2" /> Rename
-            </ContextMenuItem>
-          </RenameDialog>
-        ) : (
-          <ContextMenuItem disabled className="opacity-50">
-            <FilePenIcon className="size-4 mr-2" /> Rename
+        {selectedCount <= 1 && (
+          <ContextMenuItem onClick={onNewTabClick}>
+            <ExternalLinkIcon className="size-4 mr-2" /> Open in new tab
           </ContextMenuItem>
         )}
+        {selectedCount <= 1 &&
+          (isOwner ? (
+            <RenameDialog documentId={documentId} initialTitle={title}>
+              <ContextMenuItem
+                onSelect={e => e.preventDefault()}
+                onClick={e => e.stopPropagation()}
+              >
+                <FilePenIcon className="size-4 mr-2" /> Rename
+              </ContextMenuItem>
+            </RenameDialog>
+          ) : (
+            <ContextMenuItem disabled className="opacity-50">
+              <FilePenIcon className="size-4 mr-2" /> Rename
+            </ContextMenuItem>
+          ))}
         {isOwner ? (
           <RemoveDialog documentId={documentId}>
             <ContextMenuItem onSelect={e => e.preventDefault()} onClick={e => e.stopPropagation()}>
