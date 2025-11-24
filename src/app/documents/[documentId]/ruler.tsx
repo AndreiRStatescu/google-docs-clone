@@ -1,9 +1,10 @@
+import { DOC_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constants/defaults";
+import { useMutation, useStorage } from "@liveblocks/react";
 import { useRef, useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 
 // Ruler configuration constants
 const DOCUMENT_WIDTH = 816; // Standard document width (8.5" paper at ~96 DPI)
-const DEFAULT_MARGIN = 56; // Default margin (0.5-0.6 inches)
 const MIN_CONTENT_WIDTH = 100; // Minimum content width between margins
 const RULER_SEGMENTS = 82; // Number of segments for ruler divisions
 const TICK_MARK_COUNT = 83; // Number of tick marks (creates 82 segments)
@@ -13,8 +14,14 @@ const MINOR_TICK_INTERVAL = 5; // Minor tick marks every 5 units
 const markers = Array.from({ length: TICK_MARK_COUNT }, (_, i) => i);
 
 export const Ruler = () => {
-  const [leftMargin, setLeftMargin] = useState(DEFAULT_MARGIN);
-  const [rightMargin, setRightMargin] = useState(DEFAULT_MARGIN);
+  const leftMargin = useStorage(store => store.leftMargin) ?? DOC_INITIAL_LEFT_MARGIN;
+  const setLeftMargin = useMutation(({ storage }, newLeftMargin: number) => {
+    storage.set("leftMargin", newLeftMargin);
+  }, []);
+  const rightMargin = useStorage(store => store.rightMargin) ?? DOC_INITIAL_RIGHT_MARGIN;
+  const setRightMargin = useMutation(({ storage }, newRightMargin: number) => {
+    storage.set("rightMargin", newRightMargin);
+  }, []);
 
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
@@ -56,11 +63,11 @@ export const Ruler = () => {
   };
 
   const handleLeftDoubleClick = () => {
-    setLeftMargin(DEFAULT_MARGIN);
+    setLeftMargin(DOC_INITIAL_LEFT_MARGIN);
   };
 
   const handleRightDoubleClick = () => {
-    setRightMargin(DEFAULT_MARGIN);
+    setRightMargin(DOC_INITIAL_RIGHT_MARGIN);
   };
 
   return (

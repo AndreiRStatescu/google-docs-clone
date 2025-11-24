@@ -1,5 +1,7 @@
 "use client";
 
+import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
+import { useStorage } from "@liveblocks/react/suspense";
 import Color from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { Link } from "@tiptap/extension-link";
@@ -11,8 +13,8 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useRef, useState } from "react";
 import ImageResize from "tiptap-extension-resize-image";
-import { useLiveblocksExtension, FloatingToolbar } from "@liveblocks/react-tiptap";
 
+import { DOCUMENT_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constants/defaults";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
 import { useEditorStore } from "@/store/use-editor-store";
@@ -47,6 +49,8 @@ export const Editor = ({ documentId }: EditorProps) => {
         <img src="https://placehold.co/800x400" />
       `,
   });
+  const leftMargin = useStorage(store => store.leftMargin) ?? DOCUMENT_INITIAL_LEFT_MARGIN;
+  const rightMargin = useStorage(store => store.rightMargin) ?? DOC_INITIAL_RIGHT_MARGIN;
 
   const [dummyCursorPosition, setDummyCursorPosition] = useState<{
     top: number;
@@ -97,7 +101,7 @@ export const Editor = ({ documentId }: EditorProps) => {
 
     editorProps: {
       attributes: {
-        style: "padding-left: 56px; padding-right: 56px;",
+        style: `padding-left: ${leftMargin}px; padding-right: ${rightMargin}px;`,
         class:
           "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
       },
@@ -135,7 +139,7 @@ export const Editor = ({ documentId }: EditorProps) => {
         <div ref={editorRef} className="relative">
           <EditorContent editor={editor} />
           <Threads editor={editor} />
-          
+
           {/* Dummy cursor that appears when editor loses focus */}
           {!isEditorFocused && dummyCursorPosition && (
             <div

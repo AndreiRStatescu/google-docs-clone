@@ -4,7 +4,7 @@ import { useOrganization } from "@clerk/nextjs";
 import { PaginationStatus, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Doc } from "../../../convex/_generated/dataModel";
-import { DOCUMENTS_PAGE_SIZE } from "../constants/defaults";
+import { HOME_DOCUMENTS_PER_PAGE } from "../constants/defaults";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -77,7 +77,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => loadMore(DOCUMENTS_PAGE_SIZE)}
+          onClick={() => loadMore(HOME_DOCUMENTS_PER_PAGE)}
           disabled={status !== "CanLoadMore"}
         >
           {status === "CanLoadMore" ? "Load More" : "No More Documents"}

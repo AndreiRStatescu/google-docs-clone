@@ -1,5 +1,6 @@
 "use client";
 
+import { DOC_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constants/defaults";
 import { FullscreenLoader } from "@/components/fullscreen-loader";
 import { ClientSideSuspense, LiveblocksProvider, RoomProvider } from "@liveblocks/react/suspense";
 import { useParams } from "next/navigation";
@@ -76,7 +77,13 @@ export function Room({ children }: { children: ReactNode }) {
       resolveMentionSuggestions={resolveMentionSuggestions}
       resolveRoomsInfo={resolveRoomsInfo}
     >
-      <RoomProvider id={params.documentId as string}>
+      <RoomProvider
+        id={params.documentId as string}
+        initialStorage={{
+          leftMargin: DOC_INITIAL_LEFT_MARGIN,
+          rightMargin: DOC_INITIAL_RIGHT_MARGIN,
+        }}
+      >
         <ClientSideSuspense fallback={<FullscreenLoader label="Room loading..." />}>
           {children}
         </ClientSideSuspense>
