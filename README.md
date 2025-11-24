@@ -63,3 +63,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - enable pre-push gitguardian check
 - notification sometimes show up 2-3 times for the same tagging, also having some frontend errors in Safari when tagging, despite no obvious issue being seen. Additionally, the displayed number of notifications show the count of all the notification, not just the unread ones as was the expected behaviour
 - add authorization to api.documents.getById (check for other methods missing authorization as well)
+- removing a doc from the doc page files menu will try to reload and end up with an error. This is because the mutation will trigger an exception before there is any change to route this back to the main page
+- renaming a doc from the doc page files menu does not refresh the title on the page, unless you also a page reload

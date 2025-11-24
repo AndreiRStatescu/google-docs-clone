@@ -1,5 +1,6 @@
 "use client";
 
+import { RemoveDialog } from "@/components/remove-dialog";
 import {
   MenubarContent,
   MenubarItem,
@@ -29,6 +30,7 @@ import { toast } from "sonner";
 import { api } from "../../../../../../convex/_generated/api";
 import { Doc } from "../../../../../../convex/_generated/dataModel";
 import styles from "../menubar.module.css";
+import { RenameDialog } from "@/components/rename-dialog";
 
 interface MenubarFileProps {
   data: Doc<"documents">;
@@ -121,14 +123,18 @@ export const MenubarFile = ({ data }: MenubarFileProps) => {
           New Document
         </MenubarItem>
         <MenubarSeparator />
-        <MenubarItem>
-          <FilePenIcon className={styles.menubarIcon} />
-          Rename
-        </MenubarItem>
-        <MenubarItem>
-          <TrashIcon className={styles.menubarIcon} />
-          Remove
-        </MenubarItem>
+        <RenameDialog documentId={data._id} initialTitle={data.title}>
+          <MenubarItem onClick={e => e.stopPropagation()} onSelect={e => e.preventDefault()}>
+            <FilePenIcon className={styles.menubarIcon} />
+            Rename
+          </MenubarItem>
+        </RenameDialog>
+        <RemoveDialog documentId={data._id}>
+          <MenubarItem onClick={e => e.stopPropagation()} onSelect={e => e.preventDefault()}>
+            <TrashIcon className={styles.menubarIcon} />
+            Remove
+          </MenubarItem>
+        </RemoveDialog>
         <MenubarSeparator />
         <MenubarItem onClick={() => window.print()}>
           <PrinterIcon className={styles.menubarIcon} />

@@ -21,30 +21,13 @@ import { useEditorStore } from "@/store/use-editor-store";
 import { Ruler } from "./ruler";
 import { Threads } from "./threads";
 
-export const Editor = () => {
+interface EditorProps {
+  initialContent?: string | undefined;
+};
+  
+export const Editor = ({ initialContent }: EditorProps) => {
   const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
-  const liveblocks = useLiveblocksExtension({
-    initialContent: `
-        <p>Hello World! 🌎️</p>
-        <table>
-          <tbody>
-            <tr>
-              <th>Name</th>
-              <th colspan="3">Description</th>
-            </tr>
-            <tr>
-              <td>Cyndi Lauper</td>
-              <td>Singer</td>
-              <td>Songwriter</td>
-              <td>Actress</td>
-            </tr>
-          </tbody>
-        </table>
-        <p>This is a basic example of implementing images. Drag to re-order.</p>
-        <img src="https://placehold.co/600x400" />
-        <img src="https://placehold.co/800x400" />
-      `,
-  });
+  const liveblocks = useLiveblocksExtension({initialContent});
   const leftMargin = useStorage(store => store.leftMargin) ?? DOC_INITIAL_LEFT_MARGIN;
   const rightMargin = useStorage(store => store.rightMargin) ?? DOC_INITIAL_RIGHT_MARGIN;
 
