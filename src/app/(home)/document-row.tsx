@@ -12,6 +12,7 @@ interface DocumentRowProps {
   currentUserId: string | undefined;
   isSelected: boolean;
   onToggleSelect: (documentId: Id<"documents">, index: number, shiftKey: boolean) => void;
+  onSelectOnly: (documentId: Id<"documents">) => void;
   index: number;
 }
 
@@ -20,6 +21,7 @@ export const DocumentRow = ({
   currentUserId,
   isSelected,
   onToggleSelect,
+  onSelectOnly,
   index,
 }: DocumentRowProps) => {
   const router = useRouter();
@@ -71,7 +73,12 @@ export const DocumentRow = ({
             : formatDateTime(document._creationTime)}
         </TableCell>
         <TableCell className="flex ml-auto justify-end" data-row-clickable>
-          <DocumentKebabMenu documentId={document._id} title={document.title} isOwner={isOwner} />
+          <DocumentKebabMenu
+            documentId={document._id}
+            title={document.title}
+            isOwner={isOwner}
+            onMenuOpen={() => onSelectOnly(document._id)}
+          />
         </TableCell>
       </TableRow>
     </DocumentContextMenu>

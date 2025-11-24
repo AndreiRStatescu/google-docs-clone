@@ -15,16 +15,22 @@ interface DocumentKebabMenuProps {
   documentId: Id<"documents">;
   title: string;
   isOwner: boolean;
+  onMenuOpen: () => void;
 }
 
-export const DocumentKebabMenu = ({ documentId, title, isOwner }: DocumentKebabMenuProps) => {
+export const DocumentKebabMenu = ({
+  documentId,
+  title,
+  isOwner,
+  onMenuOpen,
+}: DocumentKebabMenuProps) => {
   const onNewTabClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(`/documents/${documentId}`, "_blank");
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={open => open && onMenuOpen()}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <MoreVertical className="size-4" />

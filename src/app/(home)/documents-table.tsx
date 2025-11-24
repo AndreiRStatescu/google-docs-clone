@@ -58,6 +58,10 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
     }
   };
 
+  const selectOnly = (documentId: Id<"documents">) => {
+    setSelectedDocuments(new Set([documentId]));
+  };
+
   return (
     <div className="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
       {selectedDocuments.size > 0 && (
@@ -108,6 +112,7 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
                 currentUserId={tokenIdentifier}
                 isSelected={selectedDocuments.has(doc._id)}
                 onToggleSelect={toggleSelection}
+                onSelectOnly={selectOnly}
                 index={index}
               />
             ))}
