@@ -24,7 +24,12 @@ interface RemoveDialogProps {
   onSuccess?: () => void;
 }
 
-export const RemoveDialog = ({ documentId, children, documentIds, onSuccess }: RemoveDialogProps) => {
+export const RemoveDialog = ({
+  documentId,
+  children,
+  documentIds,
+  onSuccess,
+}: RemoveDialogProps) => {
   const remove = useMutation(api.documents.removeById);
   const removeBulk = useMutation(api.documents.removeByIds);
   const [isRemoving, setIsRemoving] = useState(false);
