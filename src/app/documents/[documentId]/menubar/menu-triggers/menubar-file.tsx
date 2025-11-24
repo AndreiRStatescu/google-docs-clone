@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/menubar";
 import { usePlatform } from "@/hooks/use-platform";
 import { useEditorStore } from "@/store/use-editor-store";
+import { useMutation } from "convex/react";
 import {
   FileIcon,
   FileJsonIcon,
@@ -24,11 +25,10 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { BsFilePdf } from "react-icons/bs";
+import { toast } from "sonner";
+import { api } from "../../../../../../convex/_generated/api";
 import { Doc } from "../../../../../../convex/_generated/dataModel";
 import styles from "../menubar.module.css";
-import { useMutation } from "convex/react";
-import { api } from "../../../../../../convex/_generated/api";
-import { toast } from "sonner";
 
 interface MenubarFileProps {
   data: Doc<"documents">;
@@ -43,7 +43,7 @@ export const MenubarFile = ({ data }: MenubarFileProps) => {
     createDocument({
       title: "Untitled Document",
     })
-      .then((id) => {
+      .then(id => {
         toast.success("Document created");
         window.open(`/documents/${id}`, "_blank");
       })
