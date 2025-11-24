@@ -23,11 +23,11 @@ import { Threads } from "./threads";
 
 interface EditorProps {
   initialContent?: string | undefined;
-};
-  
+}
+
 export const Editor = ({ initialContent }: EditorProps) => {
   const { setEditor, triggerUpdate, setEditorFocused, isEditorFocused } = useEditorStore();
-  const liveblocks = useLiveblocksExtension({initialContent});
+  const liveblocks = useLiveblocksExtension({ initialContent, offlineSupport_experimental: true });
   const leftMargin = useStorage(store => store.leftMargin) ?? DOC_INITIAL_LEFT_MARGIN;
   const rightMargin = useStorage(store => store.rightMargin) ?? DOC_INITIAL_RIGHT_MARGIN;
 
