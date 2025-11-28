@@ -1,3 +1,4 @@
+import { generateColorFromName } from "@/lib/utils";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { Liveblocks } from "@liveblocks/node";
 import { ConvexHttpClient } from "convex/browser";
@@ -35,9 +36,8 @@ export async function POST(request: Request) {
     return new Response("Forbidden", { status: 403 });
   }
 
-  const name = user.fullName ?? "Anonymous"
-  const nameToNumber = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const color = `hsl(${Math.abs(nameToNumber) % 360}, 80%, 60%)`;
+  const name = user.fullName ?? "Anonymous";
+  const color = generateColorFromName(name);
 
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
