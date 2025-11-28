@@ -127,7 +127,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
         defaultLineHeight: "normal",
       }),
       liveblocks,
-      Markdown,
+      // Markdown, adding this seems to break formatting on non-markdown documents
     ],
     immediatelyRender: false,
   });
