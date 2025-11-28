@@ -35,10 +35,15 @@ export async function POST(request: Request) {
     return new Response("Forbidden", { status: 403 });
   }
 
+  const name = user.fullName ?? "Anonymous"
+  const nameToNumber = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const color = `hsl(${Math.abs(nameToNumber) % 360}, 80%, 60%)`;
+
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name: user.fullName ?? "Anonymous",
+      name,
       avatar: user.imageUrl,
+      color,
     },
   });
   session.allow(room, session.FULL_ACCESS);
