@@ -4,7 +4,7 @@ import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Doc } from "../../../../../convex/_generated/dataModel";
-import { Avatars } from "../avatars";
+import { Avatars } from "./avatars";
 import { MenuBar } from "../menubar/menubar";
 import { DocumentInput } from "./document-input";
 import { Inbox } from "./inbox";
