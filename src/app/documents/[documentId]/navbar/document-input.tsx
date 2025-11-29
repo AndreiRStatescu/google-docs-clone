@@ -7,8 +7,8 @@ import { LoaderIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { BsCloudCheck, BsCloudSlash } from "react-icons/bs";
 import { toast } from "sonner";
-import { api } from "../../../../convex/_generated/api";
-import { Doc } from "../../../../convex/_generated/dataModel";
+import { api } from "../../../../../convex/_generated/api";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
 interface DocumentInputProps {
   title: string;

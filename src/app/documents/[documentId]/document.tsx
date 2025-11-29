@@ -1,13 +1,13 @@
 "use client";
 
+import { CONTENT_TYPE_MARKDOWN, CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 import { Preloaded, usePreloadedQuery, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { CONTENT_TYPE_MARKDOWN, CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 import { Editor } from "./editor";
-import { Navbar } from "./navbar";
+import { EditorMarkdown } from "./editor-markdown";
+import { Navbar } from "./navbar/navbar";
 import { Room } from "./room";
 import { Toolbar } from "./toolbar/toolbar";
-import { EditorMarkdown } from "./editor-markdown";
 
 interface DocumentProps {
   preloadedDocument: Preloaded<typeof api.documents.getById>;
@@ -29,9 +29,7 @@ const Document = ({ preloadedDocument }: DocumentProps) => {
           {document.contentType === CONTENT_TYPE_REGULAR && (
             <Editor initialContent={document.initialContent} documentId={document._id} />
           )}
-          {document.contentType === CONTENT_TYPE_MARKDOWN && (
-            <EditorMarkdown />
-          )}
+          {document.contentType === CONTENT_TYPE_MARKDOWN && <EditorMarkdown />}
         </div>
       </div>
     </Room>
