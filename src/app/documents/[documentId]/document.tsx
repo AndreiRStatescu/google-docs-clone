@@ -7,6 +7,7 @@ import { Editor } from "./editor";
 import { Navbar } from "./navbar";
 import { Room } from "./room";
 import { Toolbar } from "./toolbar/toolbar";
+import { EditorMarkdown } from "./editor-markdown";
 
 interface DocumentProps {
   preloadedDocument: Preloaded<typeof api.documents.getById>;
@@ -29,7 +30,7 @@ const Document = ({ preloadedDocument }: DocumentProps) => {
             <Editor initialContent={document.initialContent} documentId={document._id} />
           )}
           {document.contentType === CONTENT_TYPE_MARKDOWN && (
-            <h1>Markdown documents are not supported yet</h1>
+            <EditorMarkdown initialContent={document.initialContent} documentId={document._id} />
           )}
         </div>
       </div>

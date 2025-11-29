@@ -45,6 +45,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tiptap/extension-color": "^3.10.1",
+    "@tiptap/extension-details": "^3.11.1",
     "@tiptap/extension-highlight": "^3.10.1",
     "@tiptap/extension-image": "^3.10.1",
     "@tiptap/extension-link": "^3.10.1",
