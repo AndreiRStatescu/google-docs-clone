@@ -1,14 +1,21 @@
+export type DocumentContentType = "markdown" | "regular";
+
+export const CONTENT_TYPE_MARKDOWN: DocumentContentType = "markdown";
+export const CONTENT_TYPE_REGULAR: DocumentContentType = "regular";
+
 export const templates = [
   {
     id: "blank",
     label: "Blank Document",
     imgUrl: "/templates/blank-document.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: "",
   },
   {
     id: "markdown",
     label: "Markdown Document",
     imgUrl: "/templates/blank-markdown.svg",
+    contentType: CONTENT_TYPE_MARKDOWN,
     initialContent: `# Welcome to the Markdown Demo
 
 This demo showcases **bidirectional** markdown support in Tiptap with extended features.
@@ -164,6 +171,7 @@ You can also edit in the editor and see the markdown update.`,
     id: "business-letter",
     label: "Business Letter",
     imgUrl: "/templates/business-letter.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: `
       <h2>YOUR COMPANY</h2>
       <p>123 YOUR STREET</p>
@@ -198,6 +206,7 @@ You can also edit in the editor and see the markdown update.`,
     id: "cover-letter",
     label: "Cover Letter",
     imgUrl: "/templates/cover-letter.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: `
       <h2>Your Name</h2>
       <p>123 Your Street</p>
@@ -235,6 +244,7 @@ You can also edit in the editor and see the markdown update.`,
     id: "letter",
     label: "Letter",
     imgUrl: "/templates/letter.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: `
       <h2>Your Band</h2>
       <p><strong style="color: #ff4444;">September 24, 20XX</strong></p>
@@ -267,6 +277,7 @@ You can also edit in the editor and see the markdown update.`,
     id: "project-proposal",
     label: "Project Proposal",
     imgUrl: "/templates/project-proposal.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: `
       <p></p>
       <p></p>
@@ -293,6 +304,7 @@ You can also edit in the editor and see the markdown update.`,
     id: "resume",
     label: "Resume",
     imgUrl: "/templates/resume.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: `
       <p><strong style="color: #FF0000;">Hello,</strong></p>
       <h2>I'm Your Name</h2>
@@ -330,6 +342,7 @@ You can also edit in the editor and see the markdown update.`,
     id: "software-proposal",
     label: "Software Proposal",
     imgUrl: "/templates/software-proposal.svg",
+    contentType: CONTENT_TYPE_REGULAR,
     initialContent: `
       <p></p>
       <p></p>

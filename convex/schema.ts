@@ -9,6 +9,7 @@ export default defineSchema({
     roomId: v.optional(v.string()),
     organizationId: v.optional(v.string()),
     updateTime: v.optional(v.number()),
+    contentType: v.optional(v.string()),
   })
     .index("by_owner_id", ["ownerId"])
     .index("by_organization_id", ["organizationId"])

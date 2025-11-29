@@ -13,16 +13,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
-import { templates } from "../constants/templates";
+import { templates, DocumentContentType } from "../constants/templates";
 
 export const TemplatesGallery = () => {
   const router = useRouter();
-  const create = useMutation(api.documents.create);
+  const createDocument = useMutation(api.documents.create);
   const [isCreating, setIsCreating] = useState(false);
 
-  const onTemplateClick = (title: string, initialContent: string, e: React.MouseEvent) => {
+  const onTemplateClick = (title: string, initialContent: string, contentType: DocumentContentType, e: React.MouseEvent) => {
     setIsCreating(true);
-    create({ title, initialContent })
+    createDocument({ title, initialContent, contentType })
       .then(documentId => {
         toast.success("Document created successfully");
         if (e.metaKey || e.ctrlKey) {
@@ -58,8 +58,7 @@ export const TemplatesGallery = () => {
                 >
                   <button
                     disabled={isCreating}
-                    /* TODO: Add proper initial content */
-                    onClick={e => onTemplateClick(template.label, template.initialContent, e)}
+                    onClick={e => onTemplateClick(template.label, template.initialContent, template.contentType, e)}
                     style={{
                       backgroundImage: `url(${template.imgUrl})`,
                       backgroundSize: "cover",

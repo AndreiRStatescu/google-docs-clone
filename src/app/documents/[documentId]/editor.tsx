@@ -10,9 +10,9 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { TableKit } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
 import { FontFamily, TextStyle } from "@tiptap/extension-text-style";
+import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Markdown } from "tiptap-markdown";
 
 import { useMutation } from "convex/react";
 import { useRef, useState } from "react";
@@ -129,8 +129,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
         defaultLineHeight: "normal",
       }),
       liveblocks,
-      // Markdown, adding this seems to break formatting on non-markdown documents
-    ]
+    ],
   });
 
   return (

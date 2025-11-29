@@ -2,6 +2,7 @@
 
 import { Preloaded, usePreloadedQuery, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { CONTENT_TYPE_MARKDOWN, CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 import { Editor } from "./editor";
 import { Navbar } from "./navbar";
 import { Room } from "./room";
@@ -24,7 +25,12 @@ const Document = ({ preloadedDocument }: DocumentProps) => {
           <Toolbar />
         </div>
         <div className="pt-[114px] print:pt-0">
-          <Editor initialContent={document.initialContent} documentId={document._id} />
+          {document.contentType === CONTENT_TYPE_REGULAR && (
+            <Editor initialContent={document.initialContent} documentId={document._id} />
+          )}
+          {document.contentType === CONTENT_TYPE_MARKDOWN && (
+            <h1>Markdown documents are not supported yet</h1>
+          )}
         </div>
       </div>
     </Room>

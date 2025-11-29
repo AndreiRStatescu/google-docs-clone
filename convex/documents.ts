@@ -1,6 +1,7 @@
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 
 export const getByIds = query({
   args: { ids: v.array(v.id("documents")) },
@@ -64,6 +65,7 @@ export const create = mutation({
   args: {
     title: v.optional(v.string()),
     initialContent: v.optional(v.string()),
+    contentType: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -80,6 +82,7 @@ export const create = mutation({
       ownerId: user.tokenIdentifier,
       organizationId: organizationId,
       initialContent: args.initialContent ?? "",
+      contentType: args.contentType ?? CONTENT_TYPE_REGULAR,
     });
 
     return documentId;
