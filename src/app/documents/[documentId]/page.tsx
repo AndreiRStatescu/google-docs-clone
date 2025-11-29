@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { preloadQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import Document from "./document";
+import { DocumentLayout } from "./document-layout";
 
 interface DocumentIdPageProps {
   params: Promise<{ documentId: string }>;
@@ -28,7 +28,7 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
     throw new Error("Document not found");
   }
 
-  return <Document preloadedDocument={preloadedDocument} />;
+  return <DocumentLayout preloadedDocument={preloadedDocument} />;
 };
 
 export default DocumentIdPage;
