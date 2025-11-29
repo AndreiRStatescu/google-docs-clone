@@ -30,7 +30,7 @@ const Document = ({ preloadedDocument }: DocumentProps) => {
             <Editor initialContent={document.initialContent} documentId={document._id} />
           )}
           {document.contentType === CONTENT_TYPE_MARKDOWN && (
-            <EditorMarkdown initialContent={document.initialContent} documentId={document._id} />
+            <EditorMarkdown />
           )}
         </div>
       </div>
