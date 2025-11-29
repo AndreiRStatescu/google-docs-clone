@@ -51,6 +51,8 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
+    autofocus: true,
+    immediatelyRender: false,
     onCreate: ({ editor }) => {
       setEditor(editor);
     },
@@ -128,8 +130,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
       }),
       liveblocks,
       // Markdown, adding this seems to break formatting on non-markdown documents
-    ],
-    immediatelyRender: false,
+    ]
   });
 
   return (

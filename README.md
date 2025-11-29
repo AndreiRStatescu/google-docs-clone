@@ -65,4 +65,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - add authorization to api.documents.getById (check for other methods missing authorization as well)
 - removing a doc from the doc page files menu will try to reload and end up with an error. This is because the mutation will trigger an exception before there is any change to route this back to the main page
 - renaming a doc from the doc page files menu does not refresh the title on the page, unless you also a page reload
+- right clicking a document from the files menu should open the doc in a new taqb, not select the doc
 - adding proper use of liveblock/suspense with components wrapped properly into <ClientSideSuspense> tags may decrease loading time to the point where the "Room loading..." screen no longer shows up. 
