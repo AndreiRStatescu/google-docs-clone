@@ -1,7 +1,7 @@
+import { CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 
 export const getByIds = query({
   args: { ids: v.array(v.id("documents")) },
@@ -167,5 +167,28 @@ export const getById = query({
     }
 
     return document;
+  },
+});
+
+export const getByParentFolderId = query({
+  args: { parentFolderId: v.optional(v.string()) },
+  handler: async (ctx, { parentFolderId }) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthenticated");
+    }
+
+    const organizationId = user.organization_id
+      ? (user.organization_id as string)
+      : user.tokenIdentifier;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_parent_folder_id", q => q.eq("parentFolderId", parentFolderId))
+      .filter(q => q.eq(q.field("organizationId"), organizationId))
+      .collect();
+
+    // Sort documents alphabetically by title
+    return documents.sort((a, b) => a.title.localeCompare(b.title));
   },
 });

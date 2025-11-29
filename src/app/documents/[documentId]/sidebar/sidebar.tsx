@@ -1,42 +1,12 @@
 "use client";
 
-import { Clock, FileText, FolderOpen, Star, Trash2 } from "lucide-react";
+import { useMutation, useQuery } from "convex/react";
+import { File, Folder, FolderPlus } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-interface SidebarEntry {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  href?: string;
-}
-
-const sidebarEntries: SidebarEntry[] = [
-  {
-    id: "recent",
-    label: "Recent Documents",
-    icon: <Clock className="w-5 h-5" />,
-  },
-  {
-    id: "starred",
-    label: "Starred",
-    icon: <Star className="w-5 h-5" />,
-  },
-  {
-    id: "my-documents",
-    label: "My Documents",
-    icon: <FileText className="w-5 h-5" />,
-  },
-  {
-    id: "shared",
-    label: "Shared with Me",
-    icon: <FolderOpen className="w-5 h-5" />,
-  },
-  {
-    id: "trash",
-    label: "Trash",
-    icon: <Trash2 className="w-5 h-5" />,
-  },
-];
+import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 interface SidebarProps {
   width: number;
@@ -44,7 +14,23 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ width, onWidthChange }: SidebarProps) => {
+  const params = useParams();
+  const documentId = params.documentId as Id<"documents">;
   const [isResizing, setIsResizing] = useState(false);
+
+  const currentDocument = useQuery(api.documents.getById, { id: documentId });
+  const parentFolderId = currentDocument?.parentFolderId;
+
+  const folders = useQuery(api.folders.getByParentFolderId, { parentFolderId });
+  const documents = useQuery(api.documents.getByParentFolderId, { parentFolderId });
+  const createFolder = useMutation(api.folders.create);
+
+  const handleCreateFolder = async () => {
+    await createFolder({
+      name: "New Folder",
+      parentFolderId: parentFolderId,
+    });
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -81,21 +67,47 @@ export const Sidebar = ({ width, onWidthChange }: SidebarProps) => {
   return (
     <aside
       style={{ width: `${width}px` }}
-      className="bg-white border-r border-gray-200 h-screen fixed left-0 top-[102px] pt-4 px-3 print:hidden"
+      className="bg-white border-r border-gray-200 h-screen fixed left-0 top-[102px] pt-4 px-3 print:hidden overflow-y-auto"
     >
-      <div className="mb-6 px-3">
-        <h2 className="text-lg font-semibold text-gray-800">Documents</h2>
+      <div className="mb-4 px-3 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-800">Current Folder</h2>
+        <button
+          onClick={handleCreateFolder}
+          className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+          title="Create new folder"
+        >
+          <FolderPlus className="w-5 h-5" />
+        </button>
       </div>
       <nav className="space-y-1">
-        {sidebarEntries.map(entry => (
-          <button
-            key={entry.id}
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+        {/* Folders first (alphabetically sorted) */}
+        {folders?.map(folder => (
+          <div
+            key={folder._id}
+            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
           >
-            <span className="text-gray-500">{entry.icon}</span>
-            <span>{entry.label}</span>
-          </button>
+            <Folder className="w-4 h-4 text-blue-500 shrink-0" />
+            <span className="truncate">{folder.name}</span>
+          </div>
         ))}
+
+        {/* Documents next (alphabetically sorted) */}
+        {documents?.map(doc => (
+          <Link
+            key={doc._id}
+            href={`/documents/${doc._id}`}
+            className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
+              doc._id === documentId ? "bg-blue-50 text-blue-700" : "text-gray-700"
+            }`}
+          >
+            <File className="w-4 h-4 text-gray-400 shrink-0" />
+            <span className="truncate">{doc.title}</span>
+          </Link>
+        ))}
+
+        {folders?.length === 0 && documents?.length === 0 && (
+          <div className="px-3 py-4 text-sm text-gray-500 text-center">No items in this folder</div>
+        )}
       </nav>
       <div
         className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-blue-500 transition-colors"

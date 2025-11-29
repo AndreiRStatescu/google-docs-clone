@@ -9,6 +9,7 @@
  */
 
 import type * as documents from "../documents.js";
+import type * as folders from "../folders.js";
 
 import type {
   ApiFromModules,
@@ -18,6 +19,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   documents: typeof documents;
+  folders: typeof folders;
 }>;
 
 /**
