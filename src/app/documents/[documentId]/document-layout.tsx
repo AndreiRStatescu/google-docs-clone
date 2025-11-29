@@ -4,7 +4,7 @@ import { Preloaded } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import Document from "./document";
-import { Sidebar } from "./sidebar";
+import { Sidebar } from "./sidebar/sidebar";
 
 interface DocumentLayoutProps {
   preloadedDocument: Preloaded<typeof api.documents.getById>;
