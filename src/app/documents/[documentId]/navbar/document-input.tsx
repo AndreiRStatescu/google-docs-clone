@@ -59,7 +59,7 @@ export const DocumentInput = ({ title, id, canEdit }: DocumentInputProps) => {
     setIsEditing(false);
   };
 
-  const handleSumit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsPending(true);
     setIsError(false);
@@ -81,7 +81,7 @@ export const DocumentInput = ({ title, id, canEdit }: DocumentInputProps) => {
   return (
     <div className="flex items-center gap-2">
       {isEditing && canEdit ? (
-        <form onSubmit={handleSumit} className="relative w-fit max-w-[50ch]">
+        <form onSubmit={handleSubmit} className="relative w-fit max-w-[50ch]">
           <span className="invisible whitespace-pre px-1.5 text-lg">{value || " "}</span>
           <input
             ref={inputRef}
