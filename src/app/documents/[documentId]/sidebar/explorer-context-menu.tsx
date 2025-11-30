@@ -13,6 +13,7 @@ interface ExplorerContextMenuProps {
   folderId?: Id<"folders">;
   children: React.ReactNode;
   onCreateDocument?: (folderId: Id<"folders">) => void;
+  onCreateFolder?: (folderId: Id<"folders">) => void;
 }
 
 export const ExplorerContextMenu = ({
@@ -21,6 +22,7 @@ export const ExplorerContextMenu = ({
   folderId,
   children,
   onCreateDocument,
+  onCreateFolder,
 }: ExplorerContextMenuProps) => {
   const handleDocumentA = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,6 +46,13 @@ export const ExplorerContextMenu = ({
     e.stopPropagation();
     if (folderId && onCreateDocument) {
       onCreateDocument(folderId);
+    }
+  };
+
+  const handleCreateFolder = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (folderId && onCreateFolder) {
+      onCreateFolder(folderId);
     }
   };
 
@@ -85,6 +94,7 @@ export const ExplorerContextMenu = ({
         {type === "folder" && (
           <>
             <ContextMenuItem onClick={handleCreateDocument}>Create new document</ContextMenuItem>
+            <ContextMenuItem onClick={handleCreateFolder}>Create new folder</ContextMenuItem>
             <ContextMenuItem onClick={handleFolderD}>Option D</ContextMenuItem>
             <ContextMenuItem onClick={handleFolderE}>Option E</ContextMenuItem>
           </>

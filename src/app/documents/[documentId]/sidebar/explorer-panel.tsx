@@ -66,10 +66,33 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
     })
       .then(() => {
         toast.success("Document created successfully");
+        expandFolder(folderId);
       })
       .catch(() => {
         toast.error("Something went wrong");
       });
+  };
+
+  const handleCreateFolderInFolder = async (parentFolderId: Id<"folders">) => {
+    createFolder({
+      name: "New Folder",
+      parentFolderId: parentFolderId,
+    })
+      .then(() => {
+        toast.success("Folder created successfully");
+        expandFolder(parentFolderId);
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
+  };
+
+  const expandFolder = (folderId: string) => {
+    setExpandedFolders(prev => {
+      const next = new Set(prev);
+      next.add(folderId);
+      return next;
+    });
   };
 
   const toggleFolder = (folderId: string) => {
@@ -98,6 +121,7 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
           type="folder"
           folderId={folderData._id}
           onCreateDocument={handleCreateDocumentInFolder}
+          onCreateFolder={handleCreateFolderInFolder}
         >
           <div
             onClick={() => toggleFolder(folderId)}
