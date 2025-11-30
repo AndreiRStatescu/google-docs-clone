@@ -11,15 +11,16 @@ import { Clock, FolderOpen, Search, Star } from "lucide-react";
 import { useState } from "react";
 
 interface ActivityBarProps {
-  onActivityChange?: (activity: string) => void;
+  onActivityChange?: (activity: string | null) => void;
 }
 
 export const ActivityBar = ({ onActivityChange }: ActivityBarProps) => {
-  const [activeActivity, setActiveActivity] = useState(ACTIVITY_EXPLORER);
+  const [activeActivity, setActiveActivity] = useState<string | null>(ACTIVITY_EXPLORER);
 
   const handleActivityClick = (activity: string) => {
-    setActiveActivity(activity);
-    onActivityChange?.(activity);
+    const newActivity = activeActivity === activity ? null : activity;
+    setActiveActivity(newActivity);
+    onActivityChange?.(newActivity);
   };
 
   const activities = [

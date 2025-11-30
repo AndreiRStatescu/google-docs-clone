@@ -1,6 +1,6 @@
 "use client";
 
-import { ACTIVITY_BAR_WIDTH, EXPLORER_SIDEBAR_DEFAULT_WIDTH } from "@/app/constants/defaults";
+import { ACTIVITY_BAR_WIDTH, SIDEBAR_PANEL_DEFAULT_WIDTH } from "@/app/constants/defaults";
 import { CONTENT_TYPE_MARKDOWN, CONTENT_TYPE_REGULAR } from "@/app/constants/templates";
 import { Preloaded, usePreloadedQuery, useQuery } from "convex/react";
 import { useState } from "react";
@@ -21,7 +21,7 @@ const Document = ({ preloadedDocument }: DocumentProps) => {
   const currentUserId = useQuery(api.documents.getUserId);
   const canEdit = currentUserId === document.ownerId;
   const [totalSidebarWidth, setTotalSidebarWidth] = useState(
-    ACTIVITY_BAR_WIDTH + EXPLORER_SIDEBAR_DEFAULT_WIDTH
+    ACTIVITY_BAR_WIDTH + SIDEBAR_PANEL_DEFAULT_WIDTH
   );
 
   return (

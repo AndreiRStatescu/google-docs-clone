@@ -1,29 +1,24 @@
 "use client";
 
-import {
-  ACTIVITY_BAR_WIDTH,
-  EXPLORER_SIDEBAR_MAX_WIDTH,
-  EXPLORER_SIDEBAR_MIN_WIDTH,
-} from "@/app/constants/defaults";
 import { useMutation, useQuery } from "convex/react";
 import { File, FilePlus, Folder, FolderPlus } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { TEMPLATE_ID_BLANK, templates } from "../../../constants/templates";
+import { SidebarPanel } from "./sidebar-panel";
 
-interface ExplorerSidebarProps {
+interface ExplorerPanelProps {
   width: number;
   onWidthChange: (width: number) => void;
 }
 
-export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) => {
+export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
   const params = useParams();
   const documentId = params.documentId as Id<"documents">;
-  const [isResizing, setIsResizing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
@@ -60,46 +55,8 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
       });
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsResizing(true);
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isResizing) return;
-    e.preventDefault();
-    const newWidth = Math.max(
-      EXPLORER_SIDEBAR_MIN_WIDTH,
-      Math.min(EXPLORER_SIDEBAR_MAX_WIDTH, e.clientX - ACTIVITY_BAR_WIDTH)
-    );
-    onWidthChange(newWidth);
-  };
-
-  const handleMouseUp = () => {
-    setIsResizing(false);
-  };
-
-  useEffect(() => {
-    if (isResizing) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
-
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-    }
-  }, [isResizing]);
-
   return (
-    <aside
-      style={{ width: `${width}px`, left: `${ACTIVITY_BAR_WIDTH}px` }}
-      className="bg-white border-r border-gray-200 h-screen fixed top-[102px] pt-4 px-3 print:hidden overflow-y-auto"
-    >
+    <SidebarPanel width={width} onWidthChange={onWidthChange}>
       <div className="mb-4 px-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
         <div className="flex items-center gap-1">
@@ -150,10 +107,6 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
           <div className="px-3 py-4 text-sm text-gray-500 text-center">No items in this folder</div>
         )}
       </nav>
-      <div
-        className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-blue-500 transition-colors"
-        onMouseDown={handleMouseDown}
-      />
-    </aside>
+    </SidebarPanel>
   );
 };

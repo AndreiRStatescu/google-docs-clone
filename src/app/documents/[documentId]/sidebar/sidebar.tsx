@@ -1,29 +1,55 @@
 "use client";
 
-import { ACTIVITY_EXPLORER } from "@/app/constants/activities";
-import { ACTIVITY_BAR_WIDTH, EXPLORER_SIDEBAR_DEFAULT_WIDTH } from "@/app/constants/defaults";
+import {
+  ACTIVITY_EXPLORER,
+  ACTIVITY_RECENT,
+  ACTIVITY_SEARCH,
+  ACTIVITY_STARRED,
+} from "@/app/constants/activities";
+import { ACTIVITY_BAR_WIDTH, SIDEBAR_PANEL_DEFAULT_WIDTH } from "@/app/constants/defaults";
 import { useState } from "react";
 import { ActivityBar } from "./activity-bar";
-import { ExplorerSidebar } from "./explorer-sidebar";
+import { ExplorerPanel } from "./explorer-panel";
+import { RecentPanel } from "./recent-panel";
+import { SearchPanel } from "./search-panel";
+import { StarredPanel } from "./starred-panel";
 
 interface SidebarProps {
   onWidthChange?: (totalWidth: number) => void;
 }
 
 export const Sidebar = ({ onWidthChange }: SidebarProps) => {
-  const [sidebarWidth, setSidebarWidth] = useState(EXPLORER_SIDEBAR_DEFAULT_WIDTH);
-  const [activeActivity, setActiveActivity] = useState(ACTIVITY_EXPLORER);
+  const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_PANEL_DEFAULT_WIDTH);
+  const [activeActivity, setActiveActivity] = useState<string | null>(ACTIVITY_EXPLORER);
 
   const handleWidthChange = (newWidth: number) => {
     setSidebarWidth(newWidth);
     onWidthChange?.(ACTIVITY_BAR_WIDTH + newWidth);
   };
 
+  const handleActivityChange = (activity: string | null) => {
+    setActiveActivity(activity);
+    if (activity === null) {
+      onWidthChange?.(ACTIVITY_BAR_WIDTH);
+    } else {
+      onWidthChange?.(ACTIVITY_BAR_WIDTH + sidebarWidth);
+    }
+  };
+
   return (
     <>
-      <ActivityBar onActivityChange={setActiveActivity} />
+      <ActivityBar onActivityChange={handleActivityChange} />
       {activeActivity === ACTIVITY_EXPLORER && (
-        <ExplorerSidebar width={sidebarWidth} onWidthChange={handleWidthChange} />
+        <ExplorerPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
+      )}
+      {activeActivity === ACTIVITY_SEARCH && (
+        <SearchPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
+      )}
+      {activeActivity === ACTIVITY_RECENT && (
+        <RecentPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
+      )}
+      {activeActivity === ACTIVITY_STARRED && (
+        <StarredPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
       )}
     </>
   );
