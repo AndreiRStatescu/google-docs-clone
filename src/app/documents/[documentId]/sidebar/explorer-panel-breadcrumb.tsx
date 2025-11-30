@@ -1,9 +1,5 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { Home } from "lucide-react";
-import { api } from "../../../../../convex/_generated/api";
-import { Id } from "../../../../../convex/_generated/dataModel";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -13,13 +9,20 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useQuery } from "convex/react";
+import { Home } from "lucide-react";
+import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 interface ExplorerPanelBreadcrumbProps {
   parentFolderId?: string;
   availableWidth?: number;
 }
 
-export const ExplorerPanelBreadcrumb = ({ parentFolderId, availableWidth }: ExplorerPanelBreadcrumbProps) => {
+export const ExplorerPanelBreadcrumb = ({
+  parentFolderId,
+  availableWidth,
+}: ExplorerPanelBreadcrumbProps) => {
   // Get the full folder path from root to current folder
   const folderPath = useQuery(
     api.folders.getPath,
@@ -34,11 +37,11 @@ export const ExplorerPanelBreadcrumb = ({ parentFolderId, availableWidth }: Expl
     const myDriveWidth = 100;
     const ellipsisWidth = 40;
     const paddingAndGaps = 48; // Account for padding and gaps
-    
+
     const usableWidth = (availableWidth ?? 300) - paddingAndGaps;
     const maxFolderItems = Math.floor((usableWidth - myDriveWidth) / estimatedItemWidth);
     const maxVisibleItems = Math.max(1, maxFolderItems); // At least show current folder
-    
+
     const pathLength = folderPath?.length ?? 0;
     const shouldTruncate = pathLength > maxVisibleItems;
 
@@ -76,7 +79,10 @@ export const ExplorerPanelBreadcrumb = ({ parentFolderId, availableWidth }: Expl
                       {folder.name}
                     </BreadcrumbPage>
                   ) : (
-                    <BreadcrumbLink href="#" className="max-w-20 sm:max-w-[120px] truncate text-xs block">
+                    <BreadcrumbLink
+                      href="#"
+                      className="max-w-20 sm:max-w-[120px] truncate text-xs block"
+                    >
                       {folder.name}
                     </BreadcrumbLink>
                   )}
@@ -93,7 +99,7 @@ export const ExplorerPanelBreadcrumb = ({ parentFolderId, availableWidth }: Expl
     const visibleFolderCount = Math.max(1, maxVisibleItems - 1); // Reserve space for "My Drive"
     const startIndex = pathLength - visibleFolderCount;
     const visibleFolders = folderPath.slice(startIndex);
-    
+
     return (
       <>
         <BreadcrumbItem className="shrink-0">
@@ -118,7 +124,10 @@ export const ExplorerPanelBreadcrumb = ({ parentFolderId, availableWidth }: Expl
                     {folder.name}
                   </BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href="#" className="max-w-20 sm:max-w-[120px] truncate text-xs block">
+                  <BreadcrumbLink
+                    href="#"
+                    className="max-w-20 sm:max-w-[120px] truncate text-xs block"
+                  >
                     {folder.name}
                   </BreadcrumbLink>
                 )}
@@ -133,7 +142,9 @@ export const ExplorerPanelBreadcrumb = ({ parentFolderId, availableWidth }: Expl
 
   return (
     <Breadcrumb className="mb-3 overflow-hidden">
-      <BreadcrumbList className="text-xs gap-1 sm:gap-1.5 flex-nowrap">{renderBreadcrumb()}</BreadcrumbList>
+      <BreadcrumbList className="text-xs gap-1 sm:gap-1.5 flex-nowrap">
+        {renderBreadcrumb()}
+      </BreadcrumbList>
     </Breadcrumb>
   );
 };

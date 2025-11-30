@@ -37,7 +37,9 @@ export const ExplorerPanelToolbar = ({
         onDragLeave={onDragLeave}
         onDrop={onDrop}
       >
-        <h2 className="text-lg font-semibold text-gray-800 truncate min-w-0 flex-1 mr-2">{parentFolderName || "My Drive"}</h2>
+        <h2 className="text-lg font-semibold text-gray-800 truncate min-w-0 flex-1 mr-2">
+          {parentFolderName || "My Drive"}
+        </h2>
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onCreateDocument}
