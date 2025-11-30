@@ -1,21 +1,14 @@
 "use client";
 
-import { SidebarPanel } from "./sidebar-panel";
-
-interface SearchPanelProps {
-  width: number;
-  onWidthChange: (width: number) => void;
-}
-
-export const SearchPanel = ({ width, onWidthChange }: SearchPanelProps) => {
+export const SearchPanel = () => {
   return (
-    <SidebarPanel width={width} onWidthChange={onWidthChange}>
+    <>
       <div className="mb-4 px-3">
         <h2 className="text-lg font-semibold text-gray-800">Search</h2>
       </div>
       <div className="px-3 py-4 text-sm text-gray-500">
         {/* Search content will be implemented here */}
       </div>
-    </SidebarPanel>
+    </>
   );
 };

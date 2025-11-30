@@ -9,14 +9,8 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { TEMPLATE_ID_BLANK, templates } from "../../../constants/templates";
 import { ExplorerContextMenu } from "./explorer-context-menu";
-import { SidebarPanel } from "./sidebar-panel";
 
-interface ExplorerPanelProps {
-  width: number;
-  onWidthChange: (width: number) => void;
-}
-
-export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
+export const ExplorerPanel = () => {
   const params = useParams();
   const documentId = params.documentId as Id<"documents">;
   const [isCreating, setIsCreating] = useState(false);
@@ -167,7 +161,7 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
   };
 
   return (
-    <SidebarPanel width={width} onWidthChange={onWidthChange}>
+    <>
       <div className="mb-4 px-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
         <div className="flex items-center gap-1">
@@ -216,6 +210,6 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
       <ExplorerContextMenu type="empty">
         <div className="flex-1 min-h-6"></div>
       </ExplorerContextMenu>
-    </SidebarPanel>
+    </>
   );
 };

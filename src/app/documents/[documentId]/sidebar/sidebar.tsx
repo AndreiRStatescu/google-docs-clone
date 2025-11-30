@@ -12,6 +12,7 @@ import { ActivityBar } from "./activity-bar";
 import { ExplorerPanel } from "./explorer-panel";
 import { RecentPanel } from "./recent-panel";
 import { SearchPanel } from "./search-panel";
+import { SidebarPanel } from "./sidebar-panel";
 import { StarredPanel } from "./starred-panel";
 
 interface SidebarProps {
@@ -39,18 +40,34 @@ export const Sidebar = ({ onWidthChange }: SidebarProps) => {
   return (
     <>
       <ActivityBar onActivityChange={handleActivityChange} />
-      {activeActivity === ACTIVITY_EXPLORER && (
-        <ExplorerPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
-      )}
-      {activeActivity === ACTIVITY_SEARCH && (
-        <SearchPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
-      )}
-      {activeActivity === ACTIVITY_RECENT && (
-        <RecentPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
-      )}
-      {activeActivity === ACTIVITY_STARRED && (
-        <StarredPanel width={sidebarWidth} onWidthChange={handleWidthChange} />
-      )}
+      <SidebarPanel
+        width={sidebarWidth}
+        onWidthChange={handleWidthChange}
+        isVisible={activeActivity === ACTIVITY_EXPLORER}
+      >
+        <ExplorerPanel />
+      </SidebarPanel>
+      <SidebarPanel
+        width={sidebarWidth}
+        onWidthChange={handleWidthChange}
+        isVisible={activeActivity === ACTIVITY_SEARCH}
+      >
+        <SearchPanel />
+      </SidebarPanel>
+      <SidebarPanel
+        width={sidebarWidth}
+        onWidthChange={handleWidthChange}
+        isVisible={activeActivity === ACTIVITY_RECENT}
+      >
+        <RecentPanel />
+      </SidebarPanel>
+      <SidebarPanel
+        width={sidebarWidth}
+        onWidthChange={handleWidthChange}
+        isVisible={activeActivity === ACTIVITY_STARRED}
+      >
+        <StarredPanel />
+      </SidebarPanel>
     </>
   );
 };

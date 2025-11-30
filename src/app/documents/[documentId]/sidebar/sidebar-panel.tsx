@@ -11,9 +11,15 @@ interface SidebarPanelProps {
   width: number;
   onWidthChange: (width: number) => void;
   children: ReactNode;
+  isVisible?: boolean;
 }
 
-export const SidebarPanel = ({ width, onWidthChange, children }: SidebarPanelProps) => {
+export const SidebarPanel = ({
+  width,
+  onWidthChange,
+  children,
+  isVisible = true,
+}: SidebarPanelProps) => {
   const [isResizing, setIsResizing] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -53,14 +59,20 @@ export const SidebarPanel = ({ width, onWidthChange, children }: SidebarPanelPro
 
   return (
     <aside
-      style={{ width: `${width}px`, left: `${ACTIVITY_BAR_WIDTH}px` }}
-      className="bg-white border-r border-gray-200 fixed top-[102px] bottom-0 pt-4 px-3 print:hidden overflow-y-auto flex flex-col"
+      style={{
+        width: `${width}px`,
+        left: `${ACTIVITY_BAR_WIDTH}px`,
+        display: isVisible ? "flex" : "none",
+      }}
+      className="bg-white border-r border-gray-200 fixed top-[102px] bottom-0 pt-4 px-3 print:hidden overflow-y-auto flex-col"
     >
       {children}
-      <div
-        className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-blue-500 transition-colors"
-        onMouseDown={handleMouseDown}
-      />
+      {isVisible && (
+        <div
+          className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-blue-500 transition-colors"
+          onMouseDown={handleMouseDown}
+        />
+      )}
     </aside>
   );
 };
