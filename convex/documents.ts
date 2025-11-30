@@ -138,6 +138,7 @@ export const updateById = mutation({
     id: v.id("documents"),
     title: v.optional(v.string()),
     updateTime: v.optional(v.number()),
+    parentFolderId: v.optional(v.union(v.string(), v.null())),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -156,6 +157,7 @@ export const updateById = mutation({
     await ctx.db.patch(args.id, {
       ...(args.title !== undefined ? { title: args.title } : {}),
       ...(args.updateTime !== undefined ? { updateTime: args.updateTime } : {}),
+      ...(args.parentFolderId !== undefined ? { parentFolderId: args.parentFolderId } : {}),
     });
   },
 });

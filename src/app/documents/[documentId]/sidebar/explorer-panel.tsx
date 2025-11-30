@@ -15,6 +15,8 @@ export const ExplorerPanel = () => {
   const documentId = params.documentId as Id<"documents">;
   const [isCreating, setIsCreating] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+  const [draggedDocumentId, setDraggedDocumentId] = useState<Id<"documents"> | null>(null);
+  const [dropTargetId, setDropTargetId] = useState<string | null>(null);
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
   const parentFolderId = currentDocument?.parentFolderId;
@@ -23,6 +25,7 @@ export const ExplorerPanel = () => {
   const documents = useQuery(api.documents.getByParentFolderId, { parentFolderId });
   const createFolder = useMutation(api.folders.create);
   const createDocument = useMutation(api.documents.create);
+  const updateDocument = useMutation(api.documents.updateById);
 
   const handleCreateFolder = async () => {
     await createFolder({
@@ -101,6 +104,49 @@ export const ExplorerPanel = () => {
     });
   };
 
+  const handleDragStart = (e: React.DragEvent, docId: Id<"documents">) => {
+    setDraggedDocumentId(docId);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", docId);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedDocumentId(null);
+    setDropTargetId(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDropTargetId(targetId);
+  };
+
+  const handleDragLeave = () => {
+    setDropTargetId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetFolderId: Id<"folders"> | undefined) => {
+    e.preventDefault();
+    setDropTargetId(null);
+
+    if (!draggedDocumentId) return;
+
+    try {
+      await updateDocument({
+        id: draggedDocumentId,
+        parentFolderId: targetFolderId || null,
+      });
+      toast.success("Document moved successfully");
+      if (targetFolderId) {
+        expandFolder(targetFolderId);
+      }
+    } catch (error) {
+      toast.error("Failed to move document");
+    } finally {
+      setDraggedDocumentId(null);
+    }
+  };
+
   const FolderItem = ({ folder, level = 0 }: { folder: any; level?: number }) => {
     const subFolders = useQuery(api.folders.getByParentFolderId, { parentFolderId: folder._id });
     const docs = useQuery(api.documents.getByParentFolderId, { parentFolderId: folder._id });
@@ -117,7 +163,12 @@ export const ExplorerPanel = () => {
         >
           <div
             onClick={() => toggleFolder(folder._id)}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+            onDragOver={e => handleDragOver(e, folder._id)}
+            onDragLeave={handleDragLeave}
+            onDrop={e => handleDrop(e, folder._id)}
+            className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer ${
+              dropTargetId === folder._id ? "bg-blue-100 ring-2 ring-blue-400" : ""
+            }`}
             style={{ paddingLeft: `${0.75 + level * 1}rem` }}
           >
             {isExpanded ? (
@@ -146,10 +197,13 @@ export const ExplorerPanel = () => {
                 documentTitle={doc.title}
               >
                 <button
+                  draggable
+                  onDragStart={e => handleDragStart(e, doc._id)}
+                  onDragEnd={handleDragEnd}
                   onClick={() => window.open(`/documents/${doc._id}`, "_blank")}
                   className={`w-full flex items-center gap-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
                     doc._id === documentId ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                  }`}
+                  } ${draggedDocumentId === doc._id ? "opacity-50" : ""}`}
                   style={{
                     paddingLeft: `${0.75 + (level + 1) * 1 + 1.5}rem`,
                     paddingRight: "0.75rem",
@@ -168,7 +222,12 @@ export const ExplorerPanel = () => {
 
   return (
     <>
-      <div className="mb-4 px-3 flex items-center justify-between">
+      <div
+        className="mb-4 px-3 flex items-center justify-between"
+        onDragOver={e => handleDragOver(e, "root")}
+        onDragLeave={handleDragLeave}
+        onDrop={e => handleDrop(e, undefined)}
+      >
         <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
         <div className="flex items-center gap-1">
           <button
@@ -203,10 +262,13 @@ export const ExplorerPanel = () => {
             documentTitle={doc.title}
           >
             <button
+              draggable
+              onDragStart={e => handleDragStart(e, doc._id)}
+              onDragEnd={handleDragEnd}
               onClick={() => window.open(`/documents/${doc._id}`, "_blank")}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
                 doc._id === documentId ? "bg-blue-50 text-blue-700" : "text-gray-700"
-              }`}
+              } ${draggedDocumentId === doc._id ? "opacity-50" : ""}`}
             >
               <File className="w-4 h-4 text-gray-400 shrink-0" />
               <span className="truncate">{doc.title}</span>
