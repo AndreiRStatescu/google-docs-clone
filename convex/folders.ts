@@ -1,4 +1,5 @@
 import { ConvexError, v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
 export const getByParentFolderId = query({
@@ -66,7 +67,35 @@ export const removeById = mutation({
       throw new ConvexError("Forbidden");
     }
 
-    await ctx.db.delete(args.id);
+    // Recursive helper function to delete folder and all its contents
+    const deleteFolderRecursively = async (folderId: Id<"folders">) => {
+      // Get all subfolders
+      const subFolders = await ctx.db
+        .query("folders")
+        .withIndex("by_parent_folder_id", q => q.eq("parentFolderId", folderId))
+        .collect();
+
+      // Recursively delete all subfolders
+      for (const subFolder of subFolders) {
+        await deleteFolderRecursively(subFolder._id);
+      }
+
+      // Get all documents in this folder
+      const documents = await ctx.db
+        .query("documents")
+        .withIndex("by_parent_folder_id", q => q.eq("parentFolderId", folderId))
+        .collect();
+
+      // Delete all documents in this folder
+      for (const document of documents) {
+        await ctx.db.delete(document._id);
+      }
+
+      // Finally, delete the folder itself
+      await ctx.db.delete(folderId);
+    };
+
+    await deleteFolderRecursively(args.id);
   },
 });
 

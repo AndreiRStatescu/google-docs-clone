@@ -18,7 +18,8 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
 interface RemoveDialogProps {
-  documentId: Id<"documents">;
+  documentId?: Id<"documents">;
+  folderId?: Id<"folders">;
   children: React.ReactNode;
   documentIds?: Id<"documents">[];
   onSuccess?: () => void;
@@ -26,31 +27,42 @@ interface RemoveDialogProps {
 
 export const RemoveDialog = ({
   documentId,
+  folderId,
   children,
   documentIds,
   onSuccess,
 }: RemoveDialogProps) => {
-  const remove = useMutation(api.documents.removeById);
-  const removeBulk = useMutation(api.documents.removeByIds);
+  const removeDocument = useMutation(api.documents.removeById);
+  const removeDocuments = useMutation(api.documents.removeByIds);
+  const removeFolder = useMutation(api.folders.removeById);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  const idsToRemove = documentIds && documentIds.length > 0 ? documentIds : [documentId];
+  const isFolder = !!folderId;
+  const idsToRemove =
+    documentIds && documentIds.length > 0 ? documentIds : documentId ? [documentId] : [];
   const isMultiple = idsToRemove.length > 1;
+
+  const itemType = isFolder ? "folder" : "document";
+  const itemTypePlural = isFolder ? "folders" : "documents";
 
   const onRemove = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsRemoving(true);
 
     try {
-      if (isMultiple) {
-        await removeBulk({ ids: idsToRemove });
+      if (isFolder) {
+        await removeFolder({ id: folderId });
+      } else if (isMultiple) {
+        await removeDocuments({ ids: idsToRemove as Id<"documents">[] });
       } else {
-        await remove({ id: documentId });
+        await removeDocument({ id: documentId! });
       }
       toast.success(
-        isMultiple
-          ? `${idsToRemove.length} documents deleted successfully`
-          : "Document deleted successfully"
+        isFolder
+          ? "Folder deleted successfully"
+          : isMultiple
+            ? `${idsToRemove.length} documents deleted successfully`
+            : "Document deleted successfully"
       );
       onSuccess?.();
     } catch (error) {
@@ -67,9 +79,17 @@ export const RemoveDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>
             Are you sure you want to delete{" "}
-            {isMultiple ? `these ${idsToRemove.length} documents` : "this document"}?
+            {isFolder
+              ? "this folder and all its contents"
+              : isMultiple
+                ? `these ${idsToRemove.length} documents`
+                : "this document"}
+            ?
           </AlertDialogTitle>
-          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+          <AlertDialogDescription>
+            This action cannot be undone.
+            {isFolder && " All nested files and folders will also be permanently deleted."}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={e => e.stopPropagation()}>Cancel</AlertDialogCancel>

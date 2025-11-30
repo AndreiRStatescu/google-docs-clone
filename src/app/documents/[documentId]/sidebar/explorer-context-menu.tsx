@@ -1,5 +1,6 @@
 import { Id } from "../../../../../convex/_generated/dataModel";
 
+import { RemoveDialog } from "@/components/remove-dialog";
 import { RenameDialog } from "@/components/rename-dialog";
 import {
   ContextMenu,
@@ -94,7 +95,9 @@ export const ExplorerContextMenu = ({
             <RenameDialog documentId={documentId} initialTitle={documentTitle}>
               <ContextMenuItem onSelect={e => e.preventDefault()}>Rename</ContextMenuItem>
             </RenameDialog>
-            <ContextMenuItem onClick={handleDocumentB}>Option B</ContextMenuItem>
+            <RemoveDialog documentId={documentId}>
+              <ContextMenuItem onSelect={e => e.preventDefault()}>Remove</ContextMenuItem>
+            </RemoveDialog>
             <ContextMenuItem onClick={handleDocumentC}>Option C</ContextMenuItem>
           </>
         )}
@@ -107,7 +110,9 @@ export const ExplorerContextMenu = ({
                 <ContextMenuItem onSelect={e => e.preventDefault()}>Rename</ContextMenuItem>
               </RenameDialog>
             )}
-            <ContextMenuItem onClick={handleFolderD}>Option D</ContextMenuItem>
+            <RemoveDialog folderId={folderId}>
+              <ContextMenuItem onSelect={e => e.preventDefault()}>Remove</ContextMenuItem>
+            </RemoveDialog>
             <ContextMenuItem onClick={handleFolderE}>Option E</ContextMenuItem>
           </>
         )}
