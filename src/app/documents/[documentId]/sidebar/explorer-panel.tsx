@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery } from "convex/react";
 import { File, FilePlus, Folder, FolderPlus } from "lucide-react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -56,6 +55,22 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
       });
   };
 
+  const handleCreateDocumentInFolder = async (folderId: Id<"folders">) => {
+    const blankTemplate = templates[TEMPLATE_ID_BLANK];
+    createDocument({
+      title: blankTemplate.label,
+      initialContent: blankTemplate.initialContent,
+      contentType: blankTemplate.contentType,
+      parentFolderId: folderId,
+    })
+      .then(() => {
+        toast.success("Document created successfully");
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
+  };
+
   return (
     <SidebarPanel width={width} onWidthChange={onWidthChange}>
       <div className="mb-4 px-3 flex items-center justify-between">
@@ -78,39 +93,43 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
           </button>
         </div>
       </div>
-      <ExplorerContextMenu type="empty">
-        <nav className="space-y-1">
-          {/* Folders first (alphabetically sorted) */}
-          {folders?.map(folder => (
-            <ExplorerContextMenu key={folder._id} type="folder" folderId={folder._id}>
-              <div className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                <Folder className="w-4 h-4 text-blue-500 shrink-0" />
-                <span className="truncate">{folder.name}</span>
-              </div>
-            </ExplorerContextMenu>
-          ))}
-
-          {/* Documents next (alphabetically sorted) */}
-          {documents?.map(doc => (
-            <ExplorerContextMenu key={doc._id} type="document" documentId={doc._id}>
-              <Link
-                href={`/documents/${doc._id}`}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
-                  doc._id === documentId ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                }`}
-              >
-                <File className="w-4 h-4 text-gray-400 shrink-0" />
-                <span className="truncate">{doc.title}</span>
-              </Link>
-            </ExplorerContextMenu>
-          ))}
-
-          {folders?.length === 0 && documents?.length === 0 && (
-            <div className="px-3 py-4 text-sm text-gray-500 text-center">
-              No items in this folder
+      <nav className="space-y-1">
+        {/* Folders first (alphabetically sorted) */}
+        {folders?.map(folder => (
+          <ExplorerContextMenu
+            key={folder._id}
+            type="folder"
+            folderId={folder._id}
+            onCreateDocument={handleCreateDocumentInFolder}
+          >
+            <div className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+              <Folder className="w-4 h-4 text-blue-500 shrink-0" />
+              <span className="truncate">{folder.name}</span>
             </div>
-          )}
-        </nav>
+          </ExplorerContextMenu>
+        ))}
+
+        {/* Documents next (alphabetically sorted) */}
+        {documents?.map(doc => (
+          <ExplorerContextMenu key={doc._id} type="document" documentId={doc._id}>
+            <button
+              onClick={() => window.open(`/documents/${doc._id}`, "_blank")}
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
+                doc._id === documentId ? "bg-blue-50 text-blue-700" : "text-gray-700"
+              }`}
+            >
+              <File className="w-4 h-4 text-gray-400 shrink-0" />
+              <span className="truncate">{doc.title}</span>
+            </button>
+          </ExplorerContextMenu>
+        ))}
+
+        {folders?.length === 0 && documents?.length === 0 && (
+          <div className="px-3 py-4 text-sm text-gray-500 text-center">No items in this folder</div>
+        )}
+      </nav>
+      <ExplorerContextMenu type="empty">
+        <div className="flex-1 min-h-6"></div>
       </ExplorerContextMenu>
     </SidebarPanel>
   );

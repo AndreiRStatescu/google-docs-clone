@@ -54,7 +54,7 @@ export const SidebarPanel = ({ width, onWidthChange, children }: SidebarPanelPro
   return (
     <aside
       style={{ width: `${width}px`, left: `${ACTIVITY_BAR_WIDTH}px` }}
-      className="bg-white border-r border-gray-200 h-screen fixed top-[102px] pt-4 px-3 print:hidden overflow-y-auto flex flex-col"
+      className="bg-white border-r border-gray-200 fixed top-[102px] bottom-0 pt-4 px-3 print:hidden overflow-y-auto flex flex-col"
     >
       {children}
       <div
