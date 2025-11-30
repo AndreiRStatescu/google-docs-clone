@@ -1,5 +1,6 @@
 import { Id } from "../../../../../convex/_generated/dataModel";
 
+import { RenameDialog } from "@/components/rename-dialog";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -10,7 +11,9 @@ import {
 interface ExplorerContextMenuProps {
   type: "document" | "folder" | "empty";
   documentId?: Id<"documents">;
+  documentTitle?: string;
   folderId?: Id<"folders">;
+  folderName?: string;
   children: React.ReactNode;
   onCreateDocument?: (folderId: Id<"folders">) => void;
   onCreateFolder?: (folderId: Id<"folders">) => void;
@@ -19,7 +22,9 @@ interface ExplorerContextMenuProps {
 export const ExplorerContextMenu = ({
   type,
   documentId,
+  documentTitle,
   folderId,
+  folderName,
   children,
   onCreateDocument,
   onCreateFolder,
@@ -84,17 +89,24 @@ export const ExplorerContextMenu = ({
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
-        {type === "document" && (
+        {type === "document" && documentId && documentTitle && (
           <>
-            <ContextMenuItem onClick={handleDocumentA}>Option A</ContextMenuItem>
+            <RenameDialog documentId={documentId} initialTitle={documentTitle}>
+              <ContextMenuItem onSelect={e => e.preventDefault()}>Rename</ContextMenuItem>
+            </RenameDialog>
             <ContextMenuItem onClick={handleDocumentB}>Option B</ContextMenuItem>
             <ContextMenuItem onClick={handleDocumentC}>Option C</ContextMenuItem>
           </>
         )}
-        {type === "folder" && (
+        {type === "folder" && folderId && (
           <>
             <ContextMenuItem onClick={handleCreateDocument}>Create new document</ContextMenuItem>
             <ContextMenuItem onClick={handleCreateFolder}>Create new folder</ContextMenuItem>
+            {folderName && (
+              <RenameDialog folderId={folderId} initialTitle={folderName}>
+                <ContextMenuItem onSelect={e => e.preventDefault()}>Rename</ContextMenuItem>
+              </RenameDialog>
+            )}
             <ContextMenuItem onClick={handleFolderD}>Option D</ContextMenuItem>
             <ContextMenuItem onClick={handleFolderE}>Option E</ContextMenuItem>
           </>

@@ -12,35 +12,49 @@ import {
 
 import { useMutation } from "convex/react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { toast } from "sonner";
 
 interface RenameDialogProps {
-  documentId: Id<"documents">;
+  documentId?: Id<"documents">;
+  folderId?: Id<"folders">;
   initialTitle: string;
   children: React.ReactNode;
 }
 
-export const RenameDialog = ({ documentId, initialTitle, children }: RenameDialogProps) => {
-  const update = useMutation(api.documents.updateById);
+export const RenameDialog = ({
+  documentId,
+  folderId,
+  initialTitle,
+  children,
+}: RenameDialogProps) => {
+  const updateDocument = useMutation(api.documents.updateById);
+  const updateFolder = useMutation(api.folders.updateById);
   const [isUpdating, setIsUpdating] = useState(false);
 
   const [newTitle, setNewTitle] = useState(initialTitle);
   const [open, setOpen] = useState(false);
 
+  const isFolder = !!folderId;
+  const itemType = isFolder ? "Folder" : "Document";
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsUpdating(true);
 
-    update({ id: documentId, title: newTitle.trim() || "Untitled" })
+    const updatePromise = isFolder
+      ? updateFolder({ id: folderId, name: newTitle.trim() || "Untitled" })
+      : updateDocument({ id: documentId!, title: newTitle.trim() || "Untitled" });
+
+    updatePromise
       .catch(() => {
         toast.error("Something went wrong");
       })
       .then(() => {
-        toast.success("Document renamed successfully");
+        toast.success(`${itemType} renamed successfully`);
       })
       .finally(() => {
         setOpen(false);
@@ -54,14 +68,16 @@ export const RenameDialog = ({ documentId, initialTitle, children }: RenameDialo
       <DialogContent onClick={e => e.stopPropagation()}>
         <form onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Rename document</DialogTitle>
-            <DialogDescription>Enter a new name for this document</DialogDescription>
+            <DialogTitle>Rename {itemType.toLowerCase()}</DialogTitle>
+            <DialogDescription>
+              Enter a new name for this {itemType.toLowerCase()}
+            </DialogDescription>
           </DialogHeader>
           <div className="my-4">
             <Input
               value={newTitle}
               onChange={e => setNewTitle(e.target.value)}
-              placeholder="Document name"
+              placeholder={`${itemType} name`}
               onClick={e => e.stopPropagation()}
             />
           </div>

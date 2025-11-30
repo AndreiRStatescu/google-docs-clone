@@ -111,6 +111,7 @@ export const ExplorerPanel = () => {
         <ExplorerContextMenu
           type="folder"
           folderId={folder._id}
+          folderName={folder.name}
           onCreateDocument={handleCreateDocumentInFolder}
           onCreateFolder={handleCreateFolderInFolder}
         >
@@ -138,7 +139,12 @@ export const ExplorerPanel = () => {
 
             {/* Documents in this folder */}
             {docs?.map(doc => (
-              <ExplorerContextMenu key={doc._id} type="document" documentId={doc._id}>
+              <ExplorerContextMenu
+                key={doc._id}
+                type="document"
+                documentId={doc._id}
+                documentTitle={doc.title}
+              >
                 <button
                   onClick={() => window.open(`/documents/${doc._id}`, "_blank")}
                   className={`w-full flex items-center gap-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
@@ -190,7 +196,12 @@ export const ExplorerPanel = () => {
 
         {/* Documents next (alphabetically sorted) */}
         {documents?.map(doc => (
-          <ExplorerContextMenu key={doc._id} type="document" documentId={doc._id}>
+          <ExplorerContextMenu
+            key={doc._id}
+            type="document"
+            documentId={doc._id}
+            documentTitle={doc.title}
+          >
             <button
               onClick={() => window.open(`/documents/${doc._id}`, "_blank")}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
