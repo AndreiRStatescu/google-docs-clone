@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "convex/react";
-import { File, FilePlus, Folder, FolderPlus } from "lucide-react";
+import { ChevronDown, ChevronRight, File, FilePlus, Folder, FolderPlus } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
   const params = useParams();
   const documentId = params.documentId as Id<"documents">;
   const [isCreating, setIsCreating] = useState(false);
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
   const parentFolderId = currentDocument?.parentFolderId;
@@ -71,6 +72,79 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
       });
   };
 
+  const toggleFolder = (folderId: string) => {
+    setExpandedFolders(prev => {
+      const next = new Set(prev);
+      if (next.has(folderId)) {
+        next.delete(folderId);
+      } else {
+        next.add(folderId);
+      }
+      return next;
+    });
+  };
+
+  const FolderItem = ({ folderId, level = 0 }: { folderId: string; level?: number }) => {
+    const folder = useQuery(api.folders.getByParentFolderId, { parentFolderId: folderId });
+    const docs = useQuery(api.documents.getByParentFolderId, { parentFolderId: folderId });
+    const folderData = folders?.find(f => f._id === folderId);
+    const isExpanded = expandedFolders.has(folderId);
+
+    if (!folderData) return null;
+
+    return (
+      <>
+        <ExplorerContextMenu
+          type="folder"
+          folderId={folderData._id}
+          onCreateDocument={handleCreateDocumentInFolder}
+        >
+          <div
+            onClick={() => toggleFolder(folderId)}
+            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+            style={{ paddingLeft: `${0.75 + level * 1}rem` }}
+          >
+            {isExpanded ? (
+              <ChevronDown className="w-4 h-4 shrink-0" />
+            ) : (
+              <ChevronRight className="w-4 h-4 shrink-0" />
+            )}
+            <Folder className="w-4 h-4 text-blue-500 shrink-0" />
+            <span className="truncate">{folderData.name}</span>
+          </div>
+        </ExplorerContextMenu>
+
+        {isExpanded && (
+          <>
+            {/* Nested folders */}
+            {folder?.map(subFolder => (
+              <FolderItem key={subFolder._id} folderId={subFolder._id} level={level + 1} />
+            ))}
+
+            {/* Documents in this folder */}
+            {docs?.map(doc => (
+              <ExplorerContextMenu key={doc._id} type="document" documentId={doc._id}>
+                <button
+                  onClick={() => window.open(`/documents/${doc._id}`, "_blank")}
+                  className={`w-full flex items-center gap-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-colors ${
+                    doc._id === documentId ? "bg-blue-50 text-blue-700" : "text-gray-700"
+                  }`}
+                  style={{
+                    paddingLeft: `${0.75 + (level + 1) * 1 + 1.5}rem`,
+                    paddingRight: "0.75rem",
+                  }}
+                >
+                  <File className="w-4 h-4 text-gray-400 shrink-0" />
+                  <span className="truncate">{doc.title}</span>
+                </button>
+              </ExplorerContextMenu>
+            ))}
+          </>
+        )}
+      </>
+    );
+  };
+
   return (
     <SidebarPanel width={width} onWidthChange={onWidthChange}>
       <div className="mb-4 px-3 flex items-center justify-between">
@@ -96,17 +170,7 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
       <nav className="space-y-1">
         {/* Folders first (alphabetically sorted) */}
         {folders?.map(folder => (
-          <ExplorerContextMenu
-            key={folder._id}
-            type="folder"
-            folderId={folder._id}
-            onCreateDocument={handleCreateDocumentInFolder}
-          >
-            <div className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-              <Folder className="w-4 h-4 text-blue-500 shrink-0" />
-              <span className="truncate">{folder.name}</span>
-            </div>
-          </ExplorerContextMenu>
+          <FolderItem key={folder._id} folderId={folder._id} />
         ))}
 
         {/* Documents next (alphabetically sorted) */}
