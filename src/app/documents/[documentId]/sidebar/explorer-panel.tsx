@@ -107,24 +107,21 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
     });
   };
 
-  const FolderItem = ({ folderId, level = 0 }: { folderId: string; level?: number }) => {
-    const folder = useQuery(api.folders.getByParentFolderId, { parentFolderId: folderId });
-    const docs = useQuery(api.documents.getByParentFolderId, { parentFolderId: folderId });
-    const folderData = folders?.find(f => f._id === folderId);
-    const isExpanded = expandedFolders.has(folderId);
-
-    if (!folderData) return null;
+  const FolderItem = ({ folder, level = 0 }: { folder: any; level?: number }) => {
+    const subFolders = useQuery(api.folders.getByParentFolderId, { parentFolderId: folder._id });
+    const docs = useQuery(api.documents.getByParentFolderId, { parentFolderId: folder._id });
+    const isExpanded = expandedFolders.has(folder._id);
 
     return (
       <>
         <ExplorerContextMenu
           type="folder"
-          folderId={folderData._id}
+          folderId={folder._id}
           onCreateDocument={handleCreateDocumentInFolder}
           onCreateFolder={handleCreateFolderInFolder}
         >
           <div
-            onClick={() => toggleFolder(folderId)}
+            onClick={() => toggleFolder(folder._id)}
             className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
             style={{ paddingLeft: `${0.75 + level * 1}rem` }}
           >
@@ -134,15 +131,15 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
               <ChevronRight className="w-4 h-4 shrink-0" />
             )}
             <Folder className="w-4 h-4 text-blue-500 shrink-0" />
-            <span className="truncate">{folderData.name}</span>
+            <span className="truncate">{folder.name}</span>
           </div>
         </ExplorerContextMenu>
 
         {isExpanded && (
           <>
             {/* Nested folders */}
-            {folder?.map(subFolder => (
-              <FolderItem key={subFolder._id} folderId={subFolder._id} level={level + 1} />
+            {subFolders?.map(subFolder => (
+              <FolderItem key={subFolder._id} folder={subFolder} level={level + 1} />
             ))}
 
             {/* Documents in this folder */}
@@ -194,7 +191,7 @@ export const ExplorerPanel = ({ width, onWidthChange }: ExplorerPanelProps) => {
       <nav className="space-y-1">
         {/* Folders first (alphabetically sorted) */}
         {folders?.map(folder => (
-          <FolderItem key={folder._id} folderId={folder._id} />
+          <FolderItem key={folder._id} folder={folder} />
         ))}
 
         {/* Documents next (alphabetically sorted) */}
