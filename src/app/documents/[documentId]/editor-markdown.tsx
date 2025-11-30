@@ -11,7 +11,7 @@ import { EditorContent, NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer,
 import StarterKit from '@tiptap/starter-kit'
 import { useState } from 'react'
 
-import { mdContent } from '../../constants/content'
+import { CONTENT_MARKDOWN } from '../../constants/content'
 
 // Custom React component for demonstration
 export const CustomReactComponent = ({ node }: any) => {
@@ -77,7 +77,7 @@ const CustomReactNode = Node.create({
 })
 
 export const EditorMarkdown = () => {
-  const [markdownInput, setMarkdownInput] = useState(mdContent)
+  const [markdownInput, setMarkdownInput] = useState(CONTENT_MARKDOWN)
   const [error, setError] = useState<string | null>(null)
 
   const editor = useEditor({
