@@ -8,7 +8,7 @@ import { Editor } from "./editor";
 import { EditorMarkdown } from "./editor-markdown";
 import { Navbar } from "./navbar/navbar";
 import { Room } from "./room";
-import { Sidebar } from "./sidebar/sidebar";
+import { ExplorerSidebar } from "./sidebar/explorer-sidebar";
 import { Toolbar } from "./toolbar/toolbar";
 
 interface DocumentProps {
@@ -23,7 +23,7 @@ const Document = ({ preloadedDocument }: DocumentProps) => {
 
   return (
     <Room>
-      <Sidebar width={sidebarWidth} onWidthChange={setSidebarWidth} />
+      <ExplorerSidebar width={sidebarWidth} onWidthChange={setSidebarWidth} />
       <div className="min-h-screen bg-[#FAFBFD]" style={{ marginLeft: `${sidebarWidth}px` }}>
         <div className="flex flex-col px-4 pt-2 gap-y-2 fixed top-0 left-0 right-0 z-10 bg-[#FAFBFD] print:hidden">
           <Navbar data={document} canEdit={canEdit} />

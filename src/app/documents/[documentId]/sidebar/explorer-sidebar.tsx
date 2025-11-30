@@ -8,12 +8,12 @@ import { useEffect, useState } from "react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 
-interface SidebarProps {
+interface ExplorerSidebarProps {
   width: number;
   onWidthChange: (width: number) => void;
 }
 
-export const Sidebar = ({ width, onWidthChange }: SidebarProps) => {
+export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) => {
   const params = useParams();
   const documentId = params.documentId as Id<"documents">;
   const [isResizing, setIsResizing] = useState(false);
@@ -70,7 +70,7 @@ export const Sidebar = ({ width, onWidthChange }: SidebarProps) => {
       className="bg-white border-r border-gray-200 h-screen fixed left-0 top-[102px] pt-4 px-3 print:hidden overflow-y-auto"
     >
       <div className="mb-4 px-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-800">Current Folder</h2>
+        <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
         <button
           onClick={handleCreateFolder}
           className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
