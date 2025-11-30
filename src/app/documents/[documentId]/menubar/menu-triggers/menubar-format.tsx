@@ -14,7 +14,6 @@ import styles from "../menubar.module.css";
 import {
   BoldIcon,
   ItalicIcon,
-  Menu,
   RemoveFormattingIcon,
   StrikethroughIcon,
   TextIcon,

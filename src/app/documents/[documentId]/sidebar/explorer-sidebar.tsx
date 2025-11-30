@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  ACTIVITY_BAR_WIDTH,
+  EXPLORER_SIDEBAR_MAX_WIDTH,
+  EXPLORER_SIDEBAR_MIN_WIDTH,
+} from "@/app/constants/defaults";
 import { useMutation, useQuery } from "convex/react";
 import { File, FilePlus, Folder, FolderPlus } from "lucide-react";
 import Link from "next/link";
@@ -63,7 +68,10 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isResizing) return;
     e.preventDefault();
-    const newWidth = Math.max(200, Math.min(400, e.clientX));
+    const newWidth = Math.max(
+      EXPLORER_SIDEBAR_MIN_WIDTH,
+      Math.min(EXPLORER_SIDEBAR_MAX_WIDTH, e.clientX - ACTIVITY_BAR_WIDTH)
+    );
     onWidthChange(newWidth);
   };
 
@@ -89,8 +97,8 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
 
   return (
     <aside
-      style={{ width: `${width}px` }}
-      className="bg-white border-r border-gray-200 h-screen fixed left-0 top-[102px] pt-4 px-3 print:hidden overflow-y-auto"
+      style={{ width: `${width}px`, left: `${ACTIVITY_BAR_WIDTH}px` }}
+      className="bg-white border-r border-gray-200 h-screen fixed top-[102px] pt-4 px-3 print:hidden overflow-y-auto"
     >
       <div className="mb-4 px-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
@@ -101,14 +109,14 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
             className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Create new blank document"
           >
-            <FilePlus className="w-5 h-5" />
+            <FilePlus style={{ width: "1rem", height: "1rem" }} />
           </button>
           <button
             onClick={handleCreateFolder}
             className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
             title="Create new folder"
           >
-            <FolderPlus className="w-5 h-5" />
+            <FolderPlus style={{ width: "1rem", height: "1rem" }} />
           </button>
         </div>
       </div>
