@@ -1,12 +1,14 @@
 "use client";
 
 import { useMutation, useQuery } from "convex/react";
-import { File, Folder, FolderPlus } from "lucide-react";
+import { File, FilePlus, Folder, FolderPlus } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
+import { TEMPLATE_ID_BLANK, templates } from "../../../constants/templates";
 
 interface ExplorerSidebarProps {
   width: number;
@@ -17,6 +19,7 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
   const params = useParams();
   const documentId = params.documentId as Id<"documents">;
   const [isResizing, setIsResizing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
   const parentFolderId = currentDocument?.parentFolderId;
@@ -24,12 +27,32 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
   const folders = useQuery(api.folders.getByParentFolderId, { parentFolderId });
   const documents = useQuery(api.documents.getByParentFolderId, { parentFolderId });
   const createFolder = useMutation(api.folders.create);
+  const createDocument = useMutation(api.documents.create);
 
   const handleCreateFolder = async () => {
     await createFolder({
       name: "New Folder",
       parentFolderId: parentFolderId,
     });
+  };
+
+  const handleCreateDocument = async () => {
+    setIsCreating(true);
+    const blankTemplate = templates[TEMPLATE_ID_BLANK];
+    createDocument({
+      title: blankTemplate.label,
+      initialContent: blankTemplate.initialContent,
+      contentType: blankTemplate.contentType,
+    })
+      .then(() => {
+        toast.success("Document created successfully");
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setIsCreating(false);
+      });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -71,13 +94,23 @@ export const ExplorerSidebar = ({ width, onWidthChange }: ExplorerSidebarProps) 
     >
       <div className="mb-4 px-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
-        <button
-          onClick={handleCreateFolder}
-          className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-          title="Create new folder"
-        >
-          <FolderPlus className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleCreateDocument}
+            disabled={isCreating}
+            className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Create new blank document"
+          >
+            <FilePlus className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleCreateFolder}
+            className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+            title="Create new folder"
+          >
+            <FolderPlus className="w-5 h-5" />
+          </button>
+        </div>
       </div>
       <nav className="space-y-1">
         {/* Folders first (alphabetically sorted) */}

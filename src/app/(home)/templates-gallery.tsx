@@ -13,14 +13,19 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
-import { templates, DocumentContentType } from "../constants/templates";
+import { DocumentContentType, templates } from "../constants/templates";
 
 export const TemplatesGallery = () => {
   const router = useRouter();
   const createDocument = useMutation(api.documents.create);
   const [isCreating, setIsCreating] = useState(false);
 
-  const onTemplateClick = (title: string, initialContent: string, contentType: DocumentContentType, e: React.MouseEvent) => {
+  const onTemplateClick = (
+    title: string,
+    initialContent: string,
+    contentType: DocumentContentType,
+    e: React.MouseEvent
+  ) => {
     setIsCreating(true);
     createDocument({ title, initialContent, contentType })
       .then(documentId => {
@@ -45,9 +50,9 @@ export const TemplatesGallery = () => {
         <h3 className="font-medium">Start a new document</h3>
         <Carousel>
           <CarouselContent className="-ml-4">
-            {templates.map(template => (
+            {Object.entries(templates).map(([id, template]) => (
               <CarouselItem
-                key={template.id}
+                key={id}
                 className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 2xl:basis-[14.285714%] pl-4"
               >
                 <div
@@ -58,7 +63,14 @@ export const TemplatesGallery = () => {
                 >
                   <button
                     disabled={isCreating}
-                    onClick={e => onTemplateClick(template.label, template.initialContent, template.contentType, e)}
+                    onClick={e =>
+                      onTemplateClick(
+                        template.label,
+                        template.initialContent,
+                        template.contentType,
+                        e
+                      )
+                    }
                     style={{
                       backgroundImage: `url(${template.imgUrl})`,
                       backgroundSize: "cover",

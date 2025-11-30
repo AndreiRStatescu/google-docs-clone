@@ -66,6 +66,7 @@ export const create = mutation({
     title: v.optional(v.string()),
     initialContent: v.optional(v.string()),
     contentType: v.optional(v.string()),
+    parentFolderId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -83,6 +84,7 @@ export const create = mutation({
       organizationId: organizationId,
       initialContent: args.initialContent ?? "",
       contentType: args.contentType ?? CONTENT_TYPE_REGULAR,
+      parentFolderId: args.parentFolderId,
     });
 
     return documentId;
