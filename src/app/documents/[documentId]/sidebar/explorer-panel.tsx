@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "convex/react";
-import { ChevronDown, ChevronRight, File, FilePlus, Folder, FolderPlus } from "lucide-react";
+import { ChevronDown, ChevronRight, File, Folder } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -9,8 +9,13 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { TEMPLATE_ID_BLANK, templates } from "../../../constants/templates";
 import { ExplorerContextMenu } from "./explorer-context-menu";
+import { ExplorerPanelToolbar } from "./explorer-panel-toolbar";
 
-export const ExplorerPanel = () => {
+interface ExplorerPanelProps {
+  sidebarWidth?: number;
+}
+
+export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
   const params = useParams();
   const documentId = params.documentId as Id<"documents">;
   const [isCreating, setIsCreating] = useState(false);
@@ -21,6 +26,10 @@ export const ExplorerPanel = () => {
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
   const parentFolderId = currentDocument?.parentFolderId;
+  const parentFolder = useQuery(
+    api.folders.getById,
+    parentFolderId ? { id: parentFolderId as Id<"folders"> } : "skip"
+  );
 
   const folders = useQuery(api.folders.getByParentFolderId, { parentFolderId });
   const documents = useQuery(api.documents.getByParentFolderId, { parentFolderId });
@@ -264,31 +273,17 @@ export const ExplorerPanel = () => {
 
   return (
     <>
-      <div
-        className="mb-4 px-3 flex items-center justify-between"
+      <ExplorerPanelToolbar
+        parentFolderId={parentFolderId}
+        parentFolderName={parentFolder?.name}
+        sidebarWidth={sidebarWidth}
+        isCreating={isCreating}
+        onCreateDocument={handleCreateDocument}
+        onCreateFolder={handleCreateFolder}
         onDragOver={e => handleDragOver(e, "root")}
         onDragLeave={handleDragLeave}
         onDrop={e => handleDrop(e, undefined)}
-      >
-        <h2 className="text-lg font-semibold text-gray-800">My Drive</h2>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={handleCreateDocument}
-            disabled={isCreating}
-            className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Create new blank document"
-          >
-            <FilePlus style={{ width: "1rem", height: "1rem" }} />
-          </button>
-          <button
-            onClick={handleCreateFolder}
-            className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-            title="Create new folder"
-          >
-            <FolderPlus style={{ width: "1rem", height: "1rem" }} />
-          </button>
-        </div>
-      </div>
+      />
       <nav className="space-y-1">
         {/* Folders first (alphabetically sorted) */}
         {folders?.map(folder => (

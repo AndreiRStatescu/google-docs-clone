@@ -45,7 +45,7 @@ export const Sidebar = ({ onWidthChange }: SidebarProps) => {
         onWidthChange={handleWidthChange}
         isVisible={activeActivity === ACTIVITY_EXPLORER}
       >
-        <ExplorerPanel />
+        <ExplorerPanel sidebarWidth={sidebarWidth} />
       </SidebarPanel>
       <SidebarPanel
         width={sidebarWidth}

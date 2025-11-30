@@ -2,6 +2,68 @@ import { ConvexError, v } from "convex/values";
 import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
+export const getById = query({
+  args: { id: v.id("folders") },
+  handler: async (ctx, { id }) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthenticated");
+    }
+
+    const folder = await ctx.db.get(id);
+    if (!folder) {
+      return null;
+    }
+
+    const organizationId = user.organization_id
+      ? (user.organization_id as string)
+      : user.tokenIdentifier;
+
+    if (folder.organizationId !== organizationId) {
+      throw new ConvexError("Forbidden");
+    }
+
+    return folder;
+  },
+});
+
+export const getPath = query({
+  args: { id: v.id("folders") },
+  handler: async (ctx, { id }) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthenticated");
+    }
+
+    const organizationId = user.organization_id
+      ? (user.organization_id as string)
+      : user.tokenIdentifier;
+
+    const path: Array<{ _id: string; name: string }> = [];
+    let currentId: Id<"folders"> | undefined = id;
+
+    while (currentId) {
+      const folder = await ctx.db.get(currentId);
+      if (!folder) {
+        break;
+      }
+
+      if (folder.organizationId !== organizationId) {
+        throw new ConvexError("Forbidden");
+      }
+
+      path.unshift({
+        _id: folder._id,
+        name: folder.name,
+      });
+
+      currentId = folder.parentFolderId as Id<"folders"> | undefined;
+    }
+
+    return path;
+  },
+});
+
 export const getByParentFolderId = query({
   args: { parentFolderId: v.optional(v.string()) },
   handler: async (ctx, { parentFolderId }) => {
