@@ -102,7 +102,8 @@ export const removeById = mutation({
 export const updateById = mutation({
   args: {
     id: v.id("folders"),
-    name: v.string(),
+    name: v.optional(v.string()),
+    parentFolderId: v.optional(v.union(v.string(), v.null())),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -118,8 +119,50 @@ export const updateById = mutation({
       throw new ConvexError("Forbidden");
     }
 
-    await ctx.db.patch(args.id, {
-      name: args.name,
-    });
+    // Check for circular dependencies when moving folders
+    if (args.parentFolderId !== undefined && args.parentFolderId !== null) {
+      const isCircular = await checkCircularDependency(
+        ctx,
+        args.id,
+        args.parentFolderId as Id<"folders">
+      );
+      if (isCircular) {
+        throw new ConvexError("Cannot move folder into itself or its descendants");
+      }
+    }
+
+    const updateData: any = {};
+    if (args.name !== undefined) {
+      updateData.name = args.name;
+    }
+    if (args.parentFolderId !== undefined) {
+      updateData.parentFolderId = args.parentFolderId === null ? undefined : args.parentFolderId;
+    }
+
+    await ctx.db.patch(args.id, updateData);
   },
 });
+
+// Helper function to check for circular dependencies
+async function checkCircularDependency(
+  ctx: any,
+  folderId: Id<"folders">,
+  targetParentId: Id<"folders">
+): Promise<boolean> {
+  // Can't move folder into itself
+  if (folderId === targetParentId) {
+    return true;
+  }
+
+  // Check if targetParentId is a descendant of folderId
+  let currentId: string | undefined = targetParentId;
+  while (currentId) {
+    if (currentId === folderId) {
+      return true;
+    }
+    const parent: any = await ctx.db.get(currentId as Id<"folders">);
+    currentId = parent?.parentFolderId;
+  }
+
+  return false;
+}

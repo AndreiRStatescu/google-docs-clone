@@ -16,6 +16,7 @@ export const ExplorerPanel = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [draggedDocumentId, setDraggedDocumentId] = useState<Id<"documents"> | null>(null);
+  const [draggedFolderId, setDraggedFolderId] = useState<Id<"folders"> | null>(null);
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
@@ -26,6 +27,7 @@ export const ExplorerPanel = () => {
   const createFolder = useMutation(api.folders.create);
   const createDocument = useMutation(api.documents.create);
   const updateDocument = useMutation(api.documents.updateById);
+  const updateFolder = useMutation(api.folders.updateById);
 
   const handleCreateFolder = async () => {
     await createFolder({
@@ -110,14 +112,29 @@ export const ExplorerPanel = () => {
     e.dataTransfer.setData("text/plain", docId);
   };
 
+  const handleFolderDragStart = (e: React.DragEvent, folderId: Id<"folders">) => {
+    setDraggedFolderId(folderId);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", folderId);
+    e.stopPropagation();
+  };
+
   const handleDragEnd = () => {
     setDraggedDocumentId(null);
+    setDraggedFolderId(null);
     setDropTargetId(null);
   };
 
   const handleDragOver = (e: React.DragEvent, targetId: string) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
+
+    // Don't allow dropping folder into itself
+    if (draggedFolderId && targetId === draggedFolderId) {
+      e.dataTransfer.dropEffect = "none";
+      return;
+    }
+
     setDropTargetId(targetId);
   };
 
@@ -127,23 +144,43 @@ export const ExplorerPanel = () => {
 
   const handleDrop = async (e: React.DragEvent, targetFolderId: Id<"folders"> | undefined) => {
     e.preventDefault();
+    e.stopPropagation();
     setDropTargetId(null);
 
-    if (!draggedDocumentId) return;
-
-    try {
-      await updateDocument({
-        id: draggedDocumentId,
-        parentFolderId: targetFolderId || null,
-      });
-      toast.success("Document moved successfully");
-      if (targetFolderId) {
-        expandFolder(targetFolderId);
+    if (draggedDocumentId) {
+      try {
+        await updateDocument({
+          id: draggedDocumentId,
+          parentFolderId: targetFolderId || null,
+        });
+        toast.success("Document moved successfully");
+        if (targetFolderId) {
+          expandFolder(targetFolderId);
+        }
+      } catch (error) {
+        toast.error("Failed to move document");
+      } finally {
+        setDraggedDocumentId(null);
       }
-    } catch (error) {
-      toast.error("Failed to move document");
-    } finally {
-      setDraggedDocumentId(null);
+    } else if (draggedFolderId) {
+      try {
+        await updateFolder({
+          id: draggedFolderId,
+          parentFolderId: targetFolderId || null,
+        });
+        toast.success("Folder moved successfully");
+        if (targetFolderId) {
+          expandFolder(targetFolderId);
+        }
+      } catch (error: any) {
+        if (error?.message?.includes("circular")) {
+          toast.error("Cannot move folder into itself or its descendants");
+        } else {
+          toast.error("Failed to move folder");
+        }
+      } finally {
+        setDraggedFolderId(null);
+      }
     }
   };
 
@@ -162,13 +199,18 @@ export const ExplorerPanel = () => {
           onCreateFolder={handleCreateFolderInFolder}
         >
           <div
+            draggable
+            onDragStart={e => handleFolderDragStart(e, folder._id)}
+            onDragEnd={handleDragEnd}
             onClick={() => toggleFolder(folder._id)}
             onDragOver={e => handleDragOver(e, folder._id)}
             onDragLeave={handleDragLeave}
             onDrop={e => handleDrop(e, folder._id)}
             className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer ${
-              dropTargetId === folder._id ? "bg-blue-100 ring-2 ring-blue-400" : ""
-            }`}
+              dropTargetId === folder._id && draggedFolderId !== folder._id
+                ? "bg-blue-100 ring-2 ring-blue-400"
+                : ""
+            } ${draggedFolderId === folder._id ? "opacity-50" : ""}`}
             style={{ paddingLeft: `${0.75 + level * 1}rem` }}
           >
             {isExpanded ? (
