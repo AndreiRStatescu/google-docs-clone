@@ -17,14 +17,18 @@ interface FolderItemProps {
   onToggleFolder: (folderId: string) => void;
   onNavigateDown?: (folderId: Id<"folders">) => void;
   onDragStart: (e: React.DragEvent, docId: Id<"documents">) => void;
-  onFolderDragStart: (e: React.DragEvent, folderId: Id<"folders">) => void;
+  onFolderDragStart: (
+    e: React.DragEvent,
+    folderId: Id<"folders">,
+    parentFolderId?: Id<"folders"> | null
+  ) => void;
   onDragEnd: () => void;
   onDragOver: (e: React.DragEvent, targetId: string) => void;
   onDragLeave: () => void;
   onDrop: (e: React.DragEvent, targetFolderId: Id<"folders"> | null) => Promise<void>;
   onDropOnDocument: (e: React.DragEvent, targetDocId: Id<"documents">) => Promise<void>;
-  onCreateDocument: (folderId: Id<"folders">) => Promise<void>;
-  onCreateFolder: (parentFolderId: Id<"folders">) => Promise<void>;
+  onCreateDocument: (folderId: Id<"folders"> | null) => Promise<void>;
+  onCreateFolder: (parentFolderId: Id<"folders"> | null) => Promise<void>;
 }
 
 export const FolderItem = ({
@@ -62,7 +66,7 @@ export const FolderItem = ({
       >
         <div
           draggable
-          onDragStart={e => onFolderDragStart(e, folder._id)}
+          onDragStart={e => onFolderDragStart(e, folder._id, folder.parentFolderId)}
           onDragEnd={onDragEnd}
           onClick={() => onToggleFolder(folder._id)}
           onDoubleClick={() => onNavigateDown?.(folder._id)}

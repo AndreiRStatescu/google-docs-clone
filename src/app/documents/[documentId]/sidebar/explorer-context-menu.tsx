@@ -30,12 +30,6 @@ export const ExplorerContextMenu = ({
   onCreateDocument,
   onCreateFolder,
 }: ExplorerContextMenuProps) => {
-  const handleDocumentC = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option C for documents
-    console.log("Document Option C", documentId);
-  };
-
   const handleCreateDocument = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (folderId !== undefined && onCreateDocument) {
@@ -50,24 +44,6 @@ export const ExplorerContextMenu = ({
     }
   };
 
-  const handleFolderE = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option E for folders
-    console.log("Folder Option E", folderId);
-  };
-
-  const handleEmptyF = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option F for empty area
-    console.log("Empty Option F");
-  };
-
-  const handleEmptyG = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option G for empty area
-    console.log("Empty Option G");
-  };
-
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
@@ -80,7 +56,6 @@ export const ExplorerContextMenu = ({
             <RemoveDialog documentId={documentId}>
               <ContextMenuItem onSelect={e => e.preventDefault()}>Remove</ContextMenuItem>
             </RemoveDialog>
-            <ContextMenuItem onClick={handleDocumentC}>Option C</ContextMenuItem>
           </>
         )}
         {type === "folder" && folderId && (
@@ -95,7 +70,6 @@ export const ExplorerContextMenu = ({
             <RemoveDialog folderId={folderId}>
               <ContextMenuItem onSelect={e => e.preventDefault()}>Remove</ContextMenuItem>
             </RemoveDialog>
-            <ContextMenuItem onClick={handleFolderE}>Option E</ContextMenuItem>
           </>
         )}
         {type === "empty" && (

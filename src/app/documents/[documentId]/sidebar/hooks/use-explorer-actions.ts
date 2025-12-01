@@ -22,8 +22,8 @@ interface UseExplorerActionsReturn {
   isCreating: boolean;
   handleCreateFolder: () => Promise<void>;
   handleCreateDocument: () => Promise<void>;
-  handleCreateDocumentInFolder: (folderId: Id<"folders">) => Promise<void>;
-  handleCreateFolderInFolder: (parentFolderId: Id<"folders">) => Promise<void>;
+  handleCreateDocumentInFolder: (folderId: Id<"folders"> | null) => Promise<void>;
+  handleCreateFolderInFolder: (parentFolderId: Id<"folders"> | null) => Promise<void>;
 }
 
 export const useExplorerActions = ({
@@ -61,7 +61,7 @@ export const useExplorerActions = ({
       });
   };
 
-  const handleCreateDocumentInFolder = async (folderId: Id<"folders">) => {
+  const handleCreateDocumentInFolder = async (folderId: Id<"folders"> | null) => {
     const blankTemplate = templates[TEMPLATE_ID_BLANK];
     createDocument({
       title: blankTemplate.label,
@@ -71,21 +71,25 @@ export const useExplorerActions = ({
     })
       .then(() => {
         toast.success("Document created successfully");
-        onFolderExpand(folderId);
+        if (folderId) {
+          onFolderExpand(folderId);
+        }
       })
       .catch(() => {
         toast.error("Something went wrong");
       });
   };
 
-  const handleCreateFolderInFolder = async (parentFolderId: Id<"folders">) => {
+  const handleCreateFolderInFolder = async (parentFolderId: Id<"folders"> | null) => {
     createFolder({
       name: "New Folder",
       parentFolderId: parentFolderId,
     })
       .then(() => {
         toast.success("Folder created successfully");
-        onFolderExpand(parentFolderId);
+        if (parentFolderId) {
+          onFolderExpand(parentFolderId);
+        }
       })
       .catch(() => {
         toast.error("Something went wrong");

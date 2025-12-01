@@ -20,7 +20,11 @@ interface UseExplorerDragDropReturn {
   draggedFolderId: Id<"folders"> | null;
   dropTargetId: string | null;
   handleDragStart: (e: React.DragEvent, docId: Id<"documents">) => void;
-  handleFolderDragStart: (e: React.DragEvent, folderId: Id<"folders">) => void;
+  handleFolderDragStart: (
+    e: React.DragEvent,
+    folderId: Id<"folders">,
+    parentFolderId?: Id<"folders"> | null
+  ) => void;
   handleDragEnd: () => void;
   handleDragOver: (e: React.DragEvent, targetId: string) => void;
   handleDragLeave: () => void;
@@ -36,6 +40,9 @@ export const useExplorerDragDrop = ({
 }: UseExplorerDragDropProps): UseExplorerDragDropReturn => {
   const [draggedDocumentId, setDraggedDocumentId] = useState<Id<"documents"> | null>(null);
   const [draggedFolderId, setDraggedFolderId] = useState<Id<"folders"> | null>(null);
+  const [draggedFolderParentId, setDraggedFolderParentId] = useState<
+    Id<"folders"> | null | undefined
+  >(undefined);
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
 
   const handleDragStart = useCallback((e: React.DragEvent, docId: Id<"documents">) => {
@@ -44,16 +51,21 @@ export const useExplorerDragDrop = ({
     e.dataTransfer.setData("text/plain", docId);
   }, []);
 
-  const handleFolderDragStart = useCallback((e: React.DragEvent, folderId: Id<"folders">) => {
-    setDraggedFolderId(folderId);
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", folderId);
-    e.stopPropagation();
-  }, []);
+  const handleFolderDragStart = useCallback(
+    (e: React.DragEvent, folderId: Id<"folders">, parentFolderId?: Id<"folders"> | null) => {
+      setDraggedFolderId(folderId);
+      setDraggedFolderParentId(parentFolderId ?? null);
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", folderId);
+      e.stopPropagation();
+    },
+    []
+  );
 
   const handleDragEnd = useCallback(() => {
     setDraggedDocumentId(null);
     setDraggedFolderId(null);
+    setDraggedFolderParentId(undefined);
     setDropTargetId(null);
   }, []);
 
@@ -85,9 +97,19 @@ export const useExplorerDragDrop = ({
 
       if (draggedDocumentId) {
         try {
+          const draggedDoc = getDocument(draggedDocumentId);
+          const currentParent = draggedDoc?.parentFolderId ?? null;
+          const targetParent = targetFolderId ?? null;
+
+          // Check if already in target folder
+          if (currentParent === targetParent) {
+            setDraggedDocumentId(null);
+            return;
+          }
+
           await updateDocument({
             id: draggedDocumentId,
-            parentFolderId: targetFolderId ?? null,
+            parentFolderId: targetParent,
           });
           toast.success("Document moved successfully");
           if (targetFolderId) {
@@ -100,9 +122,19 @@ export const useExplorerDragDrop = ({
         }
       } else if (draggedFolderId) {
         try {
+          const currentParent = draggedFolderParentId ?? null;
+          const targetParent = targetFolderId ?? null;
+
+          // Check if already in target folder
+          if (currentParent === targetParent) {
+            setDraggedFolderId(null);
+            setDraggedFolderParentId(undefined);
+            return;
+          }
+
           await updateFolder({
             id: draggedFolderId,
-            parentFolderId: targetFolderId ?? null,
+            parentFolderId: targetParent,
           });
           toast.success("Folder moved successfully");
           if (targetFolderId) {
@@ -117,10 +149,18 @@ export const useExplorerDragDrop = ({
           }
         } finally {
           setDraggedFolderId(null);
+          setDraggedFolderParentId(undefined);
         }
       }
     },
-    [draggedDocumentId, draggedFolderId, updateDocument, updateFolder, onFolderExpand]
+    [
+      draggedDocumentId,
+      draggedFolderId,
+      draggedFolderParentId,
+      updateDocument,
+      updateFolder,
+      onFolderExpand,
+    ]
   );
 
   const handleDropOnDocument = useCallback(
@@ -140,9 +180,19 @@ export const useExplorerDragDrop = ({
 
       if (draggedDocumentId) {
         try {
+          const draggedDoc = getDocument(draggedDocumentId);
+          const currentParent = draggedDoc?.parentFolderId ?? null;
+          const targetParent = targetParentFolderId ?? null;
+
+          // Check if already in target folder
+          if (currentParent === targetParent) {
+            setDraggedDocumentId(null);
+            return;
+          }
+
           await updateDocument({
             id: draggedDocumentId,
-            parentFolderId: targetParentFolderId ?? null,
+            parentFolderId: targetParent,
           });
           toast.success("Document moved successfully");
           if (targetParentFolderId) {
@@ -155,9 +205,19 @@ export const useExplorerDragDrop = ({
         }
       } else if (draggedFolderId) {
         try {
+          const currentParent = draggedFolderParentId ?? null;
+          const targetParent = targetParentFolderId ?? null;
+
+          // Check if already in target folder
+          if (currentParent === targetParent) {
+            setDraggedFolderId(null);
+            setDraggedFolderParentId(undefined);
+            return;
+          }
+
           await updateFolder({
             id: draggedFolderId,
-            parentFolderId: targetParentFolderId ?? null,
+            parentFolderId: targetParent,
           });
           toast.success("Folder moved successfully");
           if (targetParentFolderId) {
@@ -172,10 +232,19 @@ export const useExplorerDragDrop = ({
           }
         } finally {
           setDraggedFolderId(null);
+          setDraggedFolderParentId(undefined);
         }
       }
     },
-    [draggedDocumentId, draggedFolderId, updateDocument, updateFolder, onFolderExpand, getDocument]
+    [
+      draggedDocumentId,
+      draggedFolderId,
+      draggedFolderParentId,
+      updateDocument,
+      updateFolder,
+      onFolderExpand,
+      getDocument,
+    ]
   );
 
   return {
