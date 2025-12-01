@@ -105,6 +105,27 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
         class:
           "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
       },
+      handleKeyDown: (view, event) => {
+        // Check for Alt/Opt + Space
+        if (event.altKey && event.code === "Space") {
+          event.preventDefault();
+
+          const { state, dispatch } = view;
+          const { tr } = state;
+
+          // Insert a new paragraph with "DUMMY Stuff"
+          const paragraph = state.schema.nodes.paragraph.create(
+            null,
+            state.schema.text("DUMMY Stuff")
+          );
+
+          tr.replaceSelectionWith(paragraph);
+          dispatch(tr);
+
+          return true;
+        }
+        return false;
+      },
     },
     extensions: [
       StarterKit.configure({ undoRedo: false }),
