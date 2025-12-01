@@ -1,19 +1,13 @@
 "use client";
 
 import {
-  AlignCenterIcon,
-  AlignJustifyIcon,
-  AlignLeftIcon,
-  AlignRightIcon,
-  ListCollapseIcon,
-} from "lucide-react";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEditorStore } from "@/store/use-editor-store";
 import { cn } from "@/lib/utils";
+import { useEditorStore } from "@/store/use-editor-store";
+import { ListCollapseIcon } from "lucide-react";
 
 export const ToolbarLineHeightButton = () => {
   const { editor } = useEditorStore();

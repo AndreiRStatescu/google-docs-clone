@@ -35,7 +35,6 @@ export const ExplorerPanelBreadcrumb = ({
     // Rough estimate: ~80px per folder item, 100px for "My Drive", 40px for ellipsis
     const estimatedItemWidth = 80;
     const myDriveWidth = 100;
-    const ellipsisWidth = 40;
     const paddingAndGaps = 48; // Account for padding and gaps
 
     const usableWidth = (availableWidth ?? 300) - paddingAndGaps;

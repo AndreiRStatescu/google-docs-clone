@@ -20,7 +20,7 @@ import { useState } from "react";
 import { CONTENT_MARKDOWN } from "../../constants/content";
 
 // Custom React component for demonstration
-export const CustomReactComponent = ({ node }: any) => {
+export const CustomReactComponent = ({ node }: { node: { attrs: { content?: string } } }) => {
   return (
     <NodeViewWrapper className="custom-react-node">
       <div

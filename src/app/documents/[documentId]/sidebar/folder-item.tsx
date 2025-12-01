@@ -7,7 +7,7 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import { ExplorerContextMenu } from "./explorer-context-menu";
 
 interface FolderItemProps {
-  folder: any;
+  folder: { _id: Id<"folders">; name: string; parentFolderId?: Id<"folders"> | null };
   level?: number;
   documentId: Id<"documents">;
   expandedFolders: Set<string>;

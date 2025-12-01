@@ -1,23 +1,12 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Inter } from "next/font/google";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
 import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import "@liveblocks/react-ui/styles.css";
 import "@liveblocks/react-tiptap/styles.css";
+import "@liveblocks/react-ui/styles.css";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const inter = Inter({
   subsets: ["latin"],

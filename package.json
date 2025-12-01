@@ -91,6 +91,7 @@
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "baseline-browser-mapping": "^2.8.32",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "prettier": "^3.6.2",

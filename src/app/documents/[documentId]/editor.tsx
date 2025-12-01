@@ -58,7 +58,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
     onDestroy: () => {
       setEditor(null);
     },
-    onUpdate: ({ editor, transaction }) => {
+    onUpdate: ({ transaction }) => {
       triggerUpdate();
       // Only update time if the document content actually changed by user action
       // Exclude: sync transactions (initial load, Liveblocks sync)
@@ -68,13 +68,13 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
         debouncedUpdateTime();
       }
     },
-    onSelectionUpdate: ({ editor }) => {
+    onSelectionUpdate: () => {
       triggerUpdate();
     },
-    onTransaction: ({ editor }) => {
+    onTransaction: () => {
       triggerUpdate();
     },
-    onFocus: ({ editor }) => {
+    onFocus: () => {
       setEditorFocused(true);
       triggerUpdate();
     },
@@ -95,7 +95,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
       setEditorFocused(false);
       triggerUpdate();
     },
-    onContentError: ({ editor }) => {
+    onContentError: () => {
       triggerUpdate();
     },
 

@@ -1,7 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { formatDateTime } from "@/lib/utils";
 import { Building2Icon, CircleUserIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { SiGoogledocs } from "react-icons/si";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { DocumentContextMenu } from "./document-context-menu";
@@ -32,7 +31,6 @@ export const DocumentRow = ({
   onClearSelection,
   index,
 }: DocumentRowProps) => {
-  const router = useRouter();
   const isOwner = currentUserId === document.ownerId;
 
   const onRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {

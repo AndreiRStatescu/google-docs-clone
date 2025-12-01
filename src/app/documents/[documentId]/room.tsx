@@ -4,7 +4,7 @@ import { DOC_INITIAL_LEFT_MARGIN, DOC_INITIAL_RIGHT_MARGIN } from "@/app/constan
 import { FullscreenLoader } from "@/components/fullscreen-loader";
 import { ClientSideSuspense, LiveblocksProvider, RoomProvider } from "@liveblocks/react/suspense";
 import { useParams } from "next/navigation";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { getDocuments, getUsers } from "./action";
@@ -21,19 +21,17 @@ export function Room({ children }: { children: ReactNode }) {
 
   const [users, setUsers] = useState<User[]>([]);
 
-  const fetchUsers = useMemo(
-    () => async () => {
-      try {
-        const list = await getUsers();
-        setUsers(list);
-      } catch (error) {
-        toast.error("Failed to fetch users: " + error);
-      }
-    },
-    []
-  );
+  const fetchUsers = useCallback(async () => {
+    try {
+      const list = await getUsers();
+      setUsers(list);
+    } catch (error) {
+      toast.error("Failed to fetch users: " + error);
+    }
+  }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUsers();
   }, [fetchUsers]);
 

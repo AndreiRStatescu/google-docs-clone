@@ -43,7 +43,7 @@ export const getPath = query({
     let currentId: Id<"folders"> | null = id;
 
     while (currentId !== null) {
-      const folder: any = await ctx.db.get(currentId);
+      const folder = await ctx.db.get(currentId);
       if (!folder) {
         break;
       }
@@ -90,7 +90,7 @@ export const getByParentFolderId = query({
 export const create = mutation({
   args: {
     name: v.string(),
-    parentFolderId: v.optional(v.union(v.id("folders"), v.null())),
+    parentFolderId: v.union(v.id("folders"), v.null()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -106,7 +106,7 @@ export const create = mutation({
       name: args.name,
       ownerId: user.tokenIdentifier,
       organizationId: organizationId,
-      parentFolderId: args.parentFolderId ?? null,
+      parentFolderId: args.parentFolderId,
     });
 
     return folderId;
@@ -182,18 +182,16 @@ export const updateById = mutation({
     }
 
     // Check for circular dependencies when moving folders
-    if (args.parentFolderId !== undefined && args.parentFolderId !== null) {
-      const isCircular = await checkCircularDependency(
-        ctx,
-        args.id,
-        args.parentFolderId as Id<"folders">
-      );
-      if (isCircular) {
-        throw new ConvexError("Cannot move folder into itself or its descendants");
+    if (args.parentFolderId !== undefined) {
+      if (args.parentFolderId !== null) {
+        const isCircular = await checkCircularDependency(ctx, args.id, args.parentFolderId);
+        if (isCircular) {
+          throw new ConvexError("Cannot move folder into itself or its descendants");
+        }
       }
     }
 
-    const updateData: any = {};
+    const updateData: Partial<{ name: string; parentFolderId: Id<"folders"> | null }> = {};
     if (args.name !== undefined) {
       updateData.name = args.name;
     }
@@ -207,7 +205,9 @@ export const updateById = mutation({
 
 // Helper function to check for circular dependencies
 async function checkCircularDependency(
-  ctx: any,
+  ctx: {
+    db: { get: (id: Id<"folders">) => Promise<{ parentFolderId: Id<"folders"> | null } | null> };
+  },
   folderId: Id<"folders">,
   targetParentId: Id<"folders">
 ): Promise<boolean> {
@@ -217,13 +217,13 @@ async function checkCircularDependency(
   }
 
   // Check if targetParentId is a descendant of folderId
-  let currentId: string | undefined = targetParentId;
+  let currentId: Id<"folders"> | null = targetParentId;
   while (currentId) {
     if (currentId === folderId) {
       return true;
     }
-    const parent: any = await ctx.db.get(currentId as Id<"folders">);
-    currentId = parent?.parentFolderId;
+    const parent = await ctx.db.get(currentId);
+    currentId = parent?.parentFolderId ?? null;
   }
 
   return false;

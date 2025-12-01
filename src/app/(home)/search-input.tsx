@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSearchParam } from "@/hooks/use-search-param";
 import { SearchIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
-import { useSearchParam } from "@/hooks/use-search-param";
 
 export const SearchInput = () => {
-  const [search, setSearch] = useSearchParam("search");
+  const [, setSearch] = useSearchParam("search");
   const [value, setValue] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);

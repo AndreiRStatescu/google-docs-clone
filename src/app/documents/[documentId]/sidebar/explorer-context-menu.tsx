@@ -30,18 +30,6 @@ export const ExplorerContextMenu = ({
   onCreateDocument,
   onCreateFolder,
 }: ExplorerContextMenuProps) => {
-  const handleDocumentA = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option A for documents
-    console.log("Document Option A", documentId);
-  };
-
-  const handleDocumentB = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option B for documents
-    console.log("Document Option B", documentId);
-  };
-
   const handleDocumentC = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Implement Option C for documents
@@ -60,12 +48,6 @@ export const ExplorerContextMenu = ({
     if (folderId && onCreateFolder) {
       onCreateFolder(folderId);
     }
-  };
-
-  const handleFolderD = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Implement Option D for folders
-    console.log("Folder Option D", folderId);
   };
 
   const handleFolderE = (e: React.MouseEvent) => {

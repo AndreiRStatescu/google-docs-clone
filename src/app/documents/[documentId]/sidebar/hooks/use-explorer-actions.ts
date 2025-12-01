@@ -4,13 +4,16 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 import { TEMPLATE_ID_BLANK, templates } from "../../../../constants/templates";
 
 interface UseExplorerActionsProps {
-  createFolder: (args: { name: string; parentFolderId: Id<"folders"> | null }) => Promise<any>;
+  createFolder: (args: {
+    name: string;
+    parentFolderId: Id<"folders"> | null;
+  }) => Promise<Id<"folders">>;
   createDocument: (args: {
     title: string;
     initialContent: string;
     contentType: string;
     parentFolderId?: Id<"folders"> | null;
-  }) => Promise<any>;
+  }) => Promise<Id<"documents">>;
   onFolderExpand: (folderId: string) => void;
   parentFolderId: Id<"folders"> | null;
 }

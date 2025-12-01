@@ -6,11 +6,11 @@ interface UseExplorerDragDropProps {
   updateDocument: (args: {
     id: Id<"documents">;
     parentFolderId?: Id<"folders"> | null;
-  }) => Promise<any>;
+  }) => Promise<null>;
   updateFolder: (args: {
     id: Id<"folders">;
     parentFolderId?: Id<"folders"> | null;
-  }) => Promise<any>;
+  }) => Promise<null>;
   onFolderExpand: (folderId: string) => void;
   getDocument: (docId: Id<"documents">) => { parentFolderId?: Id<"folders"> | null } | undefined;
 }
@@ -93,7 +93,7 @@ export const useExplorerDragDrop = ({
           if (targetFolderId) {
             onFolderExpand(targetFolderId);
           }
-        } catch (error) {
+        } catch {
           toast.error("Failed to move document");
         } finally {
           setDraggedDocumentId(null);
@@ -108,8 +108,9 @@ export const useExplorerDragDrop = ({
           if (targetFolderId) {
             onFolderExpand(targetFolderId);
           }
-        } catch (error: any) {
-          if (error?.message?.includes("circular")) {
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          if (errorMessage.includes("circular")) {
             toast.error("Cannot move folder into itself or its descendants");
           } else {
             toast.error("Failed to move folder");
@@ -147,7 +148,7 @@ export const useExplorerDragDrop = ({
           if (targetParentFolderId) {
             onFolderExpand(targetParentFolderId);
           }
-        } catch (error) {
+        } catch {
           toast.error("Failed to move document");
         } finally {
           setDraggedDocumentId(null);
@@ -162,8 +163,9 @@ export const useExplorerDragDrop = ({
           if (targetParentFolderId) {
             onFolderExpand(targetParentFolderId);
           }
-        } catch (error: any) {
-          if (error?.message?.includes("circular")) {
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          if (errorMessage.includes("circular")) {
             toast.error("Cannot move folder into itself or its descendants");
           } else {
             toast.error("Failed to move folder");

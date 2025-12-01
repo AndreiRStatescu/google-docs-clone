@@ -54,7 +54,7 @@ const InboxMenu = () => {
             </InboxNotificationList>
           ) : (
             <div className="p-2 w-[400px] text-center text-sm text-muted-foreground">
-              You're all caught up! 🎉
+              You&apos;re all caught up! 🎉
             </div>
           )}
         </DropdownMenuContent>

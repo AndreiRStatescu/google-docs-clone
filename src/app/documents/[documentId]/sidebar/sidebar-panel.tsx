@@ -5,7 +5,7 @@ import {
   SIDEBAR_PANEL_MAX_WIDTH,
   SIDEBAR_PANEL_MIN_WIDTH,
 } from "@/app/constants/defaults";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 interface SidebarPanelProps {
   width: number;
@@ -27,19 +27,22 @@ export const SidebarPanel = ({
     setIsResizing(true);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isResizing) return;
-    e.preventDefault();
-    const newWidth = Math.max(
-      SIDEBAR_PANEL_MIN_WIDTH,
-      Math.min(SIDEBAR_PANEL_MAX_WIDTH, e.clientX - ACTIVITY_BAR_WIDTH)
-    );
-    onWidthChange(newWidth);
-  };
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isResizing) return;
+      e.preventDefault();
+      const newWidth = Math.max(
+        SIDEBAR_PANEL_MIN_WIDTH,
+        Math.min(SIDEBAR_PANEL_MAX_WIDTH, e.clientX - ACTIVITY_BAR_WIDTH)
+      );
+      onWidthChange(newWidth);
+    },
+    [isResizing, onWidthChange]
+  );
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     setIsResizing(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (isResizing) {
@@ -55,7 +58,7 @@ export const SidebarPanel = ({
         document.body.style.userSelect = "";
       };
     }
-  }, [isResizing]);
+  }, [isResizing, handleMouseMove, handleMouseUp]);
 
   return (
     <aside

@@ -42,9 +42,6 @@ export const RemoveDialog = ({
     documentIds && documentIds.length > 0 ? documentIds : documentId ? [documentId] : [];
   const isMultiple = idsToRemove.length > 1;
 
-  const itemType = isFolder ? "folder" : "document";
-  const itemTypePlural = isFolder ? "folders" : "documents";
-
   const onRemove = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsRemoving(true);
@@ -65,7 +62,7 @@ export const RemoveDialog = ({
             : "Document deleted successfully"
       );
       onSuccess?.();
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong");
     } finally {
       setIsRemoving(false);

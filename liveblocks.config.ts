@@ -3,6 +3,7 @@
 declare global {
   interface Liveblocks {
     // Each user's Presence, for useMyPresence, useOthers, etc.
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     Presence: {
       // Example, real-time cursor coordinates
       // cursor: { x: number; y: number };
@@ -28,12 +29,14 @@ declare global {
     };
 
     // Custom events, for useBroadcastEvent, useEventListener
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     RoomEvent: {};
     // Example has two events, using a union
     // | { type: "PLAY" }
     // | { type: "REACTION"; emoji: "🔥" };
 
     // Custom metadata set on threads, for useThreads, useCreateThread, etc.
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     ThreadMetadata: {
       // Example, attaching coordinates to a thread
       // x: number;
@@ -41,6 +44,7 @@ declare global {
     };
 
     // Custom room info set with resolveRoomsInfo, for useRoomInfo
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     RoomInfo: {
       // Example, rooms with a title and url
       // title: string;

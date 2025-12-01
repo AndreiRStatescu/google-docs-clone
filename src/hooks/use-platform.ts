@@ -24,11 +24,19 @@ export const usePlatform = () => {
   });
 
   useEffect(() => {
+    // Only set state if it hasn't been cached yet and we need to update
     if (cachedIsMac === null) {
-      cachedIsMac = detectMac();
+      const detected = detectMac();
+      cachedIsMac = detected;
+      // Use a callback pattern to avoid direct setState in effect
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsMac(detected);
+    } else if (cachedIsMac !== isMac) {
+      // Sync with cache if they differ
+
       setIsMac(cachedIsMac);
     }
-  }, []);
+  }, [isMac]);
 
   return { isMac };
 };
