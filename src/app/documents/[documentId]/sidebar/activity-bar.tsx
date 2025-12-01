@@ -1,13 +1,14 @@
 "use client";
 
 import {
+  ACTIVITY_CHATBOT,
   ACTIVITY_EXPLORER,
   ACTIVITY_RECENT,
   ACTIVITY_SEARCH,
   ACTIVITY_STARRED,
 } from "@/app/constants/activities";
 import { ACTIVITY_BAR_WIDTH } from "@/app/constants/defaults";
-import { Clock, FolderOpen, Search, Star } from "lucide-react";
+import { Clock, FolderOpen, MessageSquare, Search, Star } from "lucide-react";
 import { useState } from "react";
 
 interface ActivityBarProps {
@@ -28,6 +29,7 @@ export const ActivityBar = ({ onActivityChange }: ActivityBarProps) => {
     { id: ACTIVITY_SEARCH, icon: Search, label: "Search" },
     { id: ACTIVITY_RECENT, icon: Clock, label: "Recent" },
     { id: ACTIVITY_STARRED, icon: Star, label: "Starred" },
+    { id: ACTIVITY_CHATBOT, icon: MessageSquare, label: "Chatbot" },
   ];
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ACTIVITY_CHATBOT,
   ACTIVITY_EXPLORER,
   ACTIVITY_RECENT,
   ACTIVITY_SEARCH,
@@ -9,6 +10,7 @@ import {
 import { ACTIVITY_BAR_WIDTH, SIDEBAR_PANEL_DEFAULT_WIDTH } from "@/app/constants/defaults";
 import { useState } from "react";
 import { ActivityBar } from "./activity-bar";
+import { ChatbotPanel } from "./chatbot-panel";
 import { ExplorerPanel } from "./explorer-panel";
 import { RecentPanel } from "./recent-panel";
 import { SearchPanel } from "./search-panel";
@@ -67,6 +69,13 @@ export const Sidebar = ({ onWidthChange }: SidebarProps) => {
         isVisible={activeActivity === ACTIVITY_STARRED}
       >
         <StarredPanel />
+      </SidebarPanel>
+      <SidebarPanel
+        width={sidebarWidth}
+        onWidthChange={handleWidthChange}
+        isVisible={activeActivity === ACTIVITY_CHATBOT}
+      >
+        <ChatbotPanel />
       </SidebarPanel>
     </>
   );

@@ -14,7 +14,6 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import { useMutation } from "convex/react";
-import { useRef, useState } from "react";
 import ImageResize from "tiptap-extension-resize-image";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
@@ -42,12 +41,6 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
   const debouncedUpdateTime = useDebounce(() => {
     updateDocument({ id: documentId, updateTime: Date.now() });
   }, 1000);
-
-  const [dummyCursorPosition, setDummyCursorPosition] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
-  const editorRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     autofocus: true,
@@ -78,20 +71,7 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
       setEditorFocused(true);
       triggerUpdate();
     },
-    onBlur: ({ editor }) => {
-      // Store cursor position before losing focus
-      const { from } = editor.state.selection;
-      const coords = editor.view.coordsAtPos(from);
-      const editorElement = editorRef.current?.querySelector(".ProseMirror");
-
-      if (editorElement && coords) {
-        const editorRect = editorElement.getBoundingClientRect();
-        setDummyCursorPosition({
-          top: coords.top - editorRect.top,
-          left: coords.left - editorRect.left,
-        });
-      }
-
+    onBlur: () => {
       setEditorFocused(false);
       triggerUpdate();
     },
@@ -156,20 +136,9 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
     <div className="size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible">
       <Ruler />
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
-        <div ref={editorRef} className="relative">
+        <div className="relative">
           <EditorContent editor={editor} />
           <Threads editor={editor} />
-
-          {/* Dummy cursor that appears when editor loses focus */}
-          {!isEditorFocused && dummyCursorPosition && (
-            <div
-              className="absolute w-px h-[1.2em] bg-black pointer-events-none z-10"
-              style={{
-                top: `${dummyCursorPosition.top}px`,
-                left: `${dummyCursorPosition.left}px`,
-              }}
-            />
-          )}
         </div>
       </div>
     </div>
