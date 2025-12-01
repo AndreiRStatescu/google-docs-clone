@@ -13,11 +13,11 @@ interface ExplorerContextMenuProps {
   type: "document" | "folder" | "empty";
   documentId?: Id<"documents">;
   documentTitle?: string;
-  folderId?: Id<"folders">;
+  folderId?: Id<"folders"> | null;
   folderName?: string;
   children: React.ReactNode;
-  onCreateDocument?: (folderId: Id<"folders">) => void;
-  onCreateFolder?: (folderId: Id<"folders">) => void;
+  onCreateDocument?: (folderId: Id<"folders"> | null) => void;
+  onCreateFolder?: (folderId: Id<"folders"> | null) => void;
 }
 
 export const ExplorerContextMenu = ({
@@ -38,14 +38,14 @@ export const ExplorerContextMenu = ({
 
   const handleCreateDocument = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (folderId && onCreateDocument) {
+    if (folderId !== undefined && onCreateDocument) {
       onCreateDocument(folderId);
     }
   };
 
   const handleCreateFolder = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (folderId && onCreateFolder) {
+    if (folderId !== undefined && onCreateFolder) {
       onCreateFolder(folderId);
     }
   };
@@ -100,8 +100,8 @@ export const ExplorerContextMenu = ({
         )}
         {type === "empty" && (
           <>
-            <ContextMenuItem onClick={handleEmptyF}>Option F</ContextMenuItem>
-            <ContextMenuItem onClick={handleEmptyG}>Option G</ContextMenuItem>
+            <ContextMenuItem onClick={handleCreateDocument}>Create new document</ContextMenuItem>
+            <ContextMenuItem onClick={handleCreateFolder}>Create new folder</ContextMenuItem>
           </>
         )}
       </ContextMenuContent>

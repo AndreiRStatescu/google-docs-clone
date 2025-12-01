@@ -169,7 +169,12 @@ export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
           <div className="px-3 py-4 text-sm text-gray-500 text-center">No items in this folder</div>
         )}
       </nav>
-      <ExplorerContextMenu type="empty">
+      <ExplorerContextMenu
+        type="empty"
+        folderId={parentFolderId}
+        onCreateDocument={handleCreateDocument}
+        onCreateFolder={handleCreateFolder}
+      >
         <div className="flex-1 min-h-6"></div>
       </ExplorerContextMenu>
     </>
