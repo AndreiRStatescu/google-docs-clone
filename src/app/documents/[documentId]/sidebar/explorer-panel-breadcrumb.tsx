@@ -18,12 +18,20 @@ interface ExplorerPanelBreadcrumbProps {
   parentFolderId?: string | null;
   availableWidth?: number;
   onNavigate?: (folderId: Id<"folders"> | null) => void;
+  dropTargetId?: string | null;
+  onDragOver?: (e: React.DragEvent, targetId: string) => void;
+  onDragLeave?: () => void;
+  onDrop?: (e: React.DragEvent, targetFolderId: Id<"folders"> | null) => void;
 }
 
 export const ExplorerPanelBreadcrumb = ({
   parentFolderId,
   availableWidth,
   onNavigate,
+  dropTargetId,
+  onDragOver,
+  onDragLeave,
+  onDrop,
 }: ExplorerPanelBreadcrumbProps) => {
   // Get the full folder path from root to current folder
   const folderPath = useQuery(
@@ -69,7 +77,12 @@ export const ExplorerPanelBreadcrumb = ({
                 e.preventDefault();
                 onNavigate?.(null);
               }}
-              className="flex items-center gap-1 text-xs whitespace-nowrap cursor-pointer"
+              onDragOver={e => onDragOver?.(e, "root")}
+              onDragLeave={onDragLeave}
+              onDrop={e => onDrop?.(e, null)}
+              className={`flex items-center gap-1 text-xs whitespace-nowrap cursor-pointer transition-colors ${
+                dropTargetId === "root" ? "bg-blue-100 ring-2 ring-blue-400 rounded" : ""
+              }`}
             >
               <Home className="w-3 h-3 shrink-0" />
               <span className="hidden sm:inline">My Drive</span>
@@ -93,7 +106,12 @@ export const ExplorerPanelBreadcrumb = ({
                         e.preventDefault();
                         onNavigate?.(folder._id as Id<"folders">);
                       }}
-                      className="max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer"
+                      onDragOver={e => onDragOver?.(e, folder._id)}
+                      onDragLeave={onDragLeave}
+                      onDrop={e => onDrop?.(e, folder._id as Id<"folders">)}
+                      className={`max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer transition-colors ${
+                        dropTargetId === folder._id ? "bg-blue-100 ring-2 ring-blue-400 rounded" : ""
+                      }`}
                     >
                       {folder.name}
                     </BreadcrumbLink>
@@ -121,7 +139,12 @@ export const ExplorerPanelBreadcrumb = ({
               e.preventDefault();
               onNavigate?.(null);
             }}
-            className="flex items-center gap-1 text-xs whitespace-nowrap cursor-pointer"
+            onDragOver={e => onDragOver?.(e, "root")}
+            onDragLeave={onDragLeave}
+            onDrop={e => onDrop?.(e, null)}
+            className={`flex items-center gap-1 text-xs whitespace-nowrap cursor-pointer transition-colors ${
+              dropTargetId === "root" ? "bg-blue-100 ring-2 ring-blue-400 rounded" : ""
+            }`}
           >
             <Home className="w-3 h-3 shrink-0" />
             <span className="hidden sm:inline">My Drive</span>
@@ -149,7 +172,12 @@ export const ExplorerPanelBreadcrumb = ({
                       e.preventDefault();
                       onNavigate?.(folder._id as Id<"folders">);
                     }}
-                    className="max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer"
+                    onDragOver={e => onDragOver?.(e, folder._id)}
+                    onDragLeave={onDragLeave}
+                    onDrop={e => onDrop?.(e, folder._id as Id<"folders">)}
+                    className={`max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer transition-colors ${
+                      dropTargetId === folder._id ? "bg-blue-100 ring-2 ring-blue-400 rounded" : ""
+                    }`}
                   >
                     {folder.name}
                   </BreadcrumbLink>

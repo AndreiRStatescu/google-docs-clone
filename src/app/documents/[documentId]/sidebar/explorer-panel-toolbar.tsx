@@ -13,9 +13,10 @@ interface ExplorerPanelToolbarProps {
   onCreateFolder: () => void;
   onNavigateUp?: () => void;
   onNavigate?: (folderId: Id<"folders"> | null) => void;
-  onDragOver: (e: React.DragEvent) => void;
+  dropTargetId?: string | null;
+  onDragOver: (e: React.DragEvent, targetId: string) => void;
   onDragLeave: () => void;
-  onDrop: (e: React.DragEvent) => void;
+  onDrop: (e: React.DragEvent, targetFolderId: Id<"folders"> | null) => void;
 }
 
 export const ExplorerPanelToolbar = ({
@@ -27,6 +28,7 @@ export const ExplorerPanelToolbar = ({
   onCreateFolder,
   onNavigateUp,
   onNavigate,
+  dropTargetId,
   onDragOver,
   onDragLeave,
   onDrop,
@@ -38,13 +40,17 @@ export const ExplorerPanelToolbar = ({
           parentFolderId={parentFolderId}
           availableWidth={sidebarWidth}
           onNavigate={onNavigate}
+          dropTargetId={dropTargetId}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
         />
       </div>
       <div
         className="mb-4 px-3 flex items-center justify-between"
-        onDragOver={onDragOver}
+        onDragOver={e => onDragOver(e, "root")}
         onDragLeave={onDragLeave}
-        onDrop={onDrop}
+        onDrop={e => onDrop(e, null)}
       >
         <h2 className="text-lg font-semibold text-gray-800 truncate min-w-0 flex-1 mr-2">
           {parentFolderName || "My Drive"}

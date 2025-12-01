@@ -107,9 +107,10 @@ export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
         onCreateFolder={handleCreateFolder}
         onNavigateUp={handleNavigateUp}
         onNavigate={setPinnedParentFolderId}
-        onDragOver={e => handleDragOver(e, "root")}
+        dropTargetId={dropTargetId}
+        onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onDrop={e => handleDrop(e, null)}
+        onDrop={handleDrop}
       />
       <nav className="space-y-1">
         {/* Folders first (alphabetically sorted) */}
