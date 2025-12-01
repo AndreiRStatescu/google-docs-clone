@@ -8,7 +8,7 @@ import {
   ACTIVITY_STARRED,
 } from "@/app/constants/activities";
 import { ACTIVITY_BAR_WIDTH, SIDEBAR_PANEL_DEFAULT_WIDTH } from "@/app/constants/defaults";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityBar } from "./activity-bar";
 import { ChatbotPanel } from "./chatbot-panel";
 import { ExplorerPanel } from "./explorer-panel";
@@ -24,6 +24,18 @@ interface SidebarProps {
 export const Sidebar = ({ onWidthChange }: SidebarProps) => {
   const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_PANEL_DEFAULT_WIDTH);
   const [activeActivity, setActiveActivity] = useState<string | null>(ACTIVITY_EXPLORER);
+
+  useEffect(() => {
+    const handleOpenChatbot = () => {
+      setActiveActivity(ACTIVITY_CHATBOT);
+    };
+
+    window.addEventListener("open-chatbot-panel", handleOpenChatbot);
+
+    return () => {
+      window.removeEventListener("open-chatbot-panel", handleOpenChatbot);
+    };
+  }, []);
 
   const handleWidthChange = (newWidth: number) => {
     setSidebarWidth(newWidth);

@@ -239,6 +239,7 @@ export const ChatbotPanel = () => {
       <div className="px-3 pb-3">
         <textarea
           ref={textareaRef}
+          id="chatbot-input"
           value={inputText}
           onChange={e => setInputText(e.target.value)}
           onKeyDown={handleKeyPress}

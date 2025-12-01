@@ -90,17 +90,16 @@ export const Editor = ({ initialContent, documentId }: EditorProps) => {
         if (event.altKey && event.code === "Space") {
           event.preventDefault();
 
-          const { state, dispatch } = view;
-          const { tr } = state;
+          // Dispatch event to open chatbot panel
+          window.dispatchEvent(new CustomEvent("open-chatbot-panel"));
 
-          // Insert a new paragraph with "DUMMY Stuff"
-          const paragraph = state.schema.nodes.paragraph.create(
-            null,
-            state.schema.text("DUMMY Stuff")
-          );
-
-          tr.replaceSelectionWith(paragraph);
-          dispatch(tr);
+          // Focus the chatbot input after a short delay to allow panel to open
+          setTimeout(() => {
+            const chatbotInput = document.getElementById("chatbot-input") as HTMLTextAreaElement;
+            if (chatbotInput) {
+              chatbotInput.focus();
+            }
+          }, 100);
 
           return true;
         }
