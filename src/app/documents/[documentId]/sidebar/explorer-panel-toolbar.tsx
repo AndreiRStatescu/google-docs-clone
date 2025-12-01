@@ -1,6 +1,6 @@
 "use client";
 
-import { FilePlus, FolderPlus } from "lucide-react";
+import { ArrowUp, FilePlus, FolderPlus } from "lucide-react";
 import { ExplorerPanelBreadcrumb } from "./explorer-panel-breadcrumb";
 
 interface ExplorerPanelToolbarProps {
@@ -10,6 +10,7 @@ interface ExplorerPanelToolbarProps {
   isCreating: boolean;
   onCreateDocument: () => void;
   onCreateFolder: () => void;
+  onNavigateUp?: () => void;
   onDragOver: (e: React.DragEvent) => void;
   onDragLeave: () => void;
   onDrop: (e: React.DragEvent) => void;
@@ -22,6 +23,7 @@ export const ExplorerPanelToolbar = ({
   isCreating,
   onCreateDocument,
   onCreateFolder,
+  onNavigateUp,
   onDragOver,
   onDragLeave,
   onDrop,
@@ -41,6 +43,14 @@ export const ExplorerPanelToolbar = ({
           {parentFolderName || "My Drive"}
         </h2>
         <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={onNavigateUp}
+            disabled={!parentFolderId}
+            className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Navigate up one level"
+          >
+            <ArrowUp style={{ width: "1rem", height: "1rem" }} />
+          </button>
           <button
             onClick={onCreateDocument}
             disabled={isCreating}

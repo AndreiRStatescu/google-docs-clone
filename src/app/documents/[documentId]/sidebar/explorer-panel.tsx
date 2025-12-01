@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { File } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { ExplorerContextMenu } from "./explorer-context-menu";
@@ -21,11 +22,33 @@ export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
   const documentId = params.documentId as Id<"documents">;
 
   const currentDocument = useQuery(api.documents.getById, { id: documentId });
-  const parentFolderId = currentDocument?.parentFolderId ?? null;
+
+  // Pin the parent folder ID on initial load to prevent Explorer from changing
+  // when the current document is moved to a different folder
+  const [pinnedParentFolderId, setPinnedParentFolderId] = useState<
+    Id<"folders"> | null | undefined
+  >(undefined);
+
+  // Initialize the pinned folder ID once when the document loads
+  const parentFolderId =
+    pinnedParentFolderId === undefined
+      ? (currentDocument?.parentFolderId ?? null)
+      : pinnedParentFolderId;
+
   const parentFolder = useQuery(
     api.folders.getById,
     parentFolderId ? { id: parentFolderId } : "skip"
   );
+
+  const handleNavigateUp = () => {
+    if (parentFolder) {
+      setPinnedParentFolderId(parentFolder.parentFolderId ?? null);
+    }
+  };
+
+  const handleNavigateDown = (folderId: Id<"folders">) => {
+    setPinnedParentFolderId(folderId);
+  };
 
   const folders = useQuery(api.folders.getByParentFolderId, { parentFolderId });
   const documents = useQuery(api.documents.getByParentFolderId, { parentFolderId });
@@ -82,6 +105,7 @@ export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
         isCreating={isCreating}
         onCreateDocument={handleCreateDocument}
         onCreateFolder={handleCreateFolder}
+        onNavigateUp={handleNavigateUp}
         onDragOver={e => handleDragOver(e, "root")}
         onDragLeave={handleDragLeave}
         onDrop={e => handleDrop(e, null)}
@@ -98,6 +122,7 @@ export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
             draggedFolderId={draggedFolderId}
             dropTargetId={dropTargetId}
             onToggleFolder={toggleFolder}
+            onNavigateDown={handleNavigateDown}
             onDragStart={handleDragStart}
             onFolderDragStart={handleFolderDragStart}
             onDragEnd={handleDragEnd}

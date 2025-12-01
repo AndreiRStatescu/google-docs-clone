@@ -15,6 +15,7 @@ interface FolderItemProps {
   draggedFolderId: Id<"folders"> | null;
   dropTargetId: string | null;
   onToggleFolder: (folderId: string) => void;
+  onNavigateDown?: (folderId: Id<"folders">) => void;
   onDragStart: (e: React.DragEvent, docId: Id<"documents">) => void;
   onFolderDragStart: (e: React.DragEvent, folderId: Id<"folders">) => void;
   onDragEnd: () => void;
@@ -35,6 +36,7 @@ export const FolderItem = ({
   draggedFolderId,
   dropTargetId,
   onToggleFolder,
+  onNavigateDown,
   onDragStart,
   onFolderDragStart,
   onDragEnd,
@@ -63,6 +65,7 @@ export const FolderItem = ({
           onDragStart={e => onFolderDragStart(e, folder._id)}
           onDragEnd={onDragEnd}
           onClick={() => onToggleFolder(folder._id)}
+          onDoubleClick={() => onNavigateDown?.(folder._id)}
           onDragOver={e => onDragOver(e, folder._id)}
           onDragLeave={onDragLeave}
           onDrop={e => onDrop(e, folder._id)}
@@ -97,6 +100,7 @@ export const FolderItem = ({
               draggedFolderId={draggedFolderId}
               dropTargetId={dropTargetId}
               onToggleFolder={onToggleFolder}
+              onNavigateDown={onNavigateDown}
               onDragStart={onDragStart}
               onFolderDragStart={onFolderDragStart}
               onDragEnd={onDragEnd}

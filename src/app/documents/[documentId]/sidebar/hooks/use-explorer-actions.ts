@@ -45,6 +45,7 @@ export const useExplorerActions = ({
       title: blankTemplate.label,
       initialContent: blankTemplate.initialContent,
       contentType: blankTemplate.contentType,
+      parentFolderId: parentFolderId,
     })
       .then(() => {
         toast.success("Document created successfully");
