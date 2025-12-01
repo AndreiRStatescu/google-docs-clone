@@ -1,0 +1,98 @@
+import { useState } from "react";
+import { toast } from "sonner";
+import { Id } from "../../../../../../convex/_generated/dataModel";
+import { TEMPLATE_ID_BLANK, templates } from "../../../../constants/templates";
+
+interface UseExplorerActionsProps {
+  createFolder: (args: { name: string; parentFolderId: Id<"folders"> | null }) => Promise<any>;
+  createDocument: (args: {
+    title: string;
+    initialContent: string;
+    contentType: string;
+    parentFolderId?: Id<"folders"> | null;
+  }) => Promise<any>;
+  onFolderExpand: (folderId: string) => void;
+  parentFolderId: Id<"folders"> | null;
+}
+
+interface UseExplorerActionsReturn {
+  isCreating: boolean;
+  handleCreateFolder: () => Promise<void>;
+  handleCreateDocument: () => Promise<void>;
+  handleCreateDocumentInFolder: (folderId: Id<"folders">) => Promise<void>;
+  handleCreateFolderInFolder: (parentFolderId: Id<"folders">) => Promise<void>;
+}
+
+export const useExplorerActions = ({
+  createFolder,
+  createDocument,
+  onFolderExpand,
+  parentFolderId,
+}: UseExplorerActionsProps): UseExplorerActionsReturn => {
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleCreateFolder = async () => {
+    await createFolder({
+      name: "New Folder",
+      parentFolderId: parentFolderId,
+    });
+  };
+
+  const handleCreateDocument = async () => {
+    setIsCreating(true);
+    const blankTemplate = templates[TEMPLATE_ID_BLANK];
+    createDocument({
+      title: blankTemplate.label,
+      initialContent: blankTemplate.initialContent,
+      contentType: blankTemplate.contentType,
+    })
+      .then(() => {
+        toast.success("Document created successfully");
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setIsCreating(false);
+      });
+  };
+
+  const handleCreateDocumentInFolder = async (folderId: Id<"folders">) => {
+    const blankTemplate = templates[TEMPLATE_ID_BLANK];
+    createDocument({
+      title: blankTemplate.label,
+      initialContent: blankTemplate.initialContent,
+      contentType: blankTemplate.contentType,
+      parentFolderId: folderId,
+    })
+      .then(() => {
+        toast.success("Document created successfully");
+        onFolderExpand(folderId);
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
+  };
+
+  const handleCreateFolderInFolder = async (parentFolderId: Id<"folders">) => {
+    createFolder({
+      name: "New Folder",
+      parentFolderId: parentFolderId,
+    })
+      .then(() => {
+        toast.success("Folder created successfully");
+        onFolderExpand(parentFolderId);
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
+  };
+
+  return {
+    isCreating,
+    handleCreateFolder,
+    handleCreateDocument,
+    handleCreateDocumentInFolder,
+    handleCreateFolderInFolder,
+  };
+};

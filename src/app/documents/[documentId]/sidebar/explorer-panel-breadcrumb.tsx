@@ -15,7 +15,7 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 
 interface ExplorerPanelBreadcrumbProps {
-  parentFolderId?: string;
+  parentFolderId?: string | null;
   availableWidth?: number;
 }
 

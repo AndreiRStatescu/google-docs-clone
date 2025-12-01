@@ -66,7 +66,7 @@ export const create = mutation({
     title: v.optional(v.string()),
     initialContent: v.optional(v.string()),
     contentType: v.optional(v.string()),
-    parentFolderId: v.optional(v.string()),
+    parentFolderId: v.optional(v.union(v.id("folders"), v.null())),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -84,7 +84,7 @@ export const create = mutation({
       organizationId: organizationId,
       initialContent: args.initialContent ?? "",
       contentType: args.contentType ?? CONTENT_TYPE_REGULAR,
-      parentFolderId: args.parentFolderId,
+      parentFolderId: args.parentFolderId ?? null,
     });
 
     return documentId;
@@ -138,7 +138,7 @@ export const updateById = mutation({
     id: v.id("documents"),
     title: v.optional(v.string()),
     updateTime: v.optional(v.number()),
-    parentFolderId: v.optional(v.union(v.string(), v.null())),
+    parentFolderId: v.optional(v.union(v.id("folders"), v.null())),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -175,7 +175,7 @@ export const getById = query({
 });
 
 export const getByParentFolderId = query({
-  args: { parentFolderId: v.optional(v.string()) },
+  args: { parentFolderId: v.union(v.id("folders"), v.null()) },
   handler: async (ctx, { parentFolderId }) => {
     const user = await ctx.auth.getUserIdentity();
     if (!user) {

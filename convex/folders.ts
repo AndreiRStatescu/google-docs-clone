@@ -40,10 +40,10 @@ export const getPath = query({
       : user.tokenIdentifier;
 
     const path: Array<{ _id: string; name: string }> = [];
-    let currentId: Id<"folders"> | undefined = id;
+    let currentId: Id<"folders"> | null = id;
 
-    while (currentId) {
-      const folder = await ctx.db.get(currentId);
+    while (currentId !== null) {
+      const folder: any = await ctx.db.get(currentId);
       if (!folder) {
         break;
       }
@@ -57,7 +57,7 @@ export const getPath = query({
         name: folder.name,
       });
 
-      currentId = folder.parentFolderId as Id<"folders"> | undefined;
+      currentId = folder.parentFolderId as Id<"folders"> | null;
     }
 
     return path;
@@ -65,7 +65,7 @@ export const getPath = query({
 });
 
 export const getByParentFolderId = query({
-  args: { parentFolderId: v.optional(v.string()) },
+  args: { parentFolderId: v.union(v.id("folders"), v.null()) },
   handler: async (ctx, { parentFolderId }) => {
     const user = await ctx.auth.getUserIdentity();
     if (!user) {
@@ -90,7 +90,7 @@ export const getByParentFolderId = query({
 export const create = mutation({
   args: {
     name: v.string(),
-    parentFolderId: v.optional(v.string()),
+    parentFolderId: v.optional(v.union(v.id("folders"), v.null())),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -106,7 +106,7 @@ export const create = mutation({
       name: args.name,
       ownerId: user.tokenIdentifier,
       organizationId: organizationId,
-      parentFolderId: args.parentFolderId,
+      parentFolderId: args.parentFolderId ?? null,
     });
 
     return folderId;
@@ -165,7 +165,7 @@ export const updateById = mutation({
   args: {
     id: v.id("folders"),
     name: v.optional(v.string()),
-    parentFolderId: v.optional(v.union(v.string(), v.null())),
+    parentFolderId: v.optional(v.union(v.id("folders"), v.null())),
   },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
@@ -198,7 +198,7 @@ export const updateById = mutation({
       updateData.name = args.name;
     }
     if (args.parentFolderId !== undefined) {
-      updateData.parentFolderId = args.parentFolderId === null ? undefined : args.parentFolderId;
+      updateData.parentFolderId = args.parentFolderId;
     }
 
     await ctx.db.patch(args.id, updateData);

@@ -7,7 +7,7 @@ export default defineSchema({
     initialContent: v.optional(v.string()),
     ownerId: v.string(),
     roomId: v.optional(v.string()),
-    parentFolderId: v.optional(v.string()),
+    parentFolderId: v.union(v.id("folders"), v.null()),
     organizationId: v.optional(v.string()),
     updateTime: v.optional(v.number()),
     contentType: v.optional(v.string()),
@@ -23,7 +23,7 @@ export default defineSchema({
   folders: defineTable({
     name: v.string(),
     ownerId: v.string(),
-    parentFolderId: v.optional(v.string()),
+    parentFolderId: v.union(v.id("folders"), v.null()),
     organizationId: v.optional(v.string()),
   })
     .index("by_owner_id", ["ownerId"])

@@ -4,7 +4,7 @@ import { FilePlus, FolderPlus } from "lucide-react";
 import { ExplorerPanelBreadcrumb } from "./explorer-panel-breadcrumb";
 
 interface ExplorerPanelToolbarProps {
-  parentFolderId?: string;
+  parentFolderId?: string | null;
   parentFolderName?: string;
   sidebarWidth?: number;
   isCreating: boolean;
