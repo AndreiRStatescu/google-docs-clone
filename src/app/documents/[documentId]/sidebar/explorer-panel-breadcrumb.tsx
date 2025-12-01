@@ -110,7 +110,9 @@ export const ExplorerPanelBreadcrumb = ({
                       onDragLeave={onDragLeave}
                       onDrop={e => onDrop?.(e, folder._id as Id<"folders">)}
                       className={`max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer transition-colors ${
-                        dropTargetId === folder._id ? "bg-blue-100 ring-2 ring-blue-400 rounded" : ""
+                        dropTargetId === folder._id
+                          ? "bg-blue-100 ring-2 ring-blue-400 rounded"
+                          : ""
                       }`}
                     >
                       {folder.name}
