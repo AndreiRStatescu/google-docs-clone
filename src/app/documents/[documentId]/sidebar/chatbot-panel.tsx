@@ -1,6 +1,14 @@
 "use client";
 
+import { MODE_ASK, MODE_WRITE } from "@/app/constants/chatbot-options";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useEditorStore } from "@/store/use-editor-store";
 import { Send } from "lucide-react";
 import { marked } from "marked";
@@ -17,6 +25,7 @@ export const ChatbotPanel = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+  const [mode, setMode] = useState<typeof MODE_ASK | typeof MODE_WRITE>(MODE_WRITE);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
@@ -199,15 +208,29 @@ export const ChatbotPanel = () => {
           className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent overflow-y-auto scrollbar-hide"
           style={{ minHeight: "40px", maxHeight: "120px" }}
         />
-        <Button
-          onClick={handleSend}
-          disabled={!inputText.trim() || isWaitingForResponse}
-          size="sm"
-          className="w-full mt-2"
-        >
-          <Send className="w-4 h-4 mr-2" />
-          Send
-        </Button>
+        <div className="flex gap-2 mt-2">
+          <Select
+            value={mode}
+            onValueChange={(value: typeof MODE_ASK | typeof MODE_WRITE) => setMode(value)}
+          >
+            <SelectTrigger className="w-[100px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={MODE_ASK}>Ask</SelectItem>
+              <SelectItem value={MODE_WRITE}>Write</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            onClick={handleSend}
+            disabled={!inputText.trim() || isWaitingForResponse}
+            size="sm"
+            className="flex-1"
+          >
+            <Send className="w-4 h-4 mr-2" />
+            Send
+          </Button>
+        </div>
       </div>
     </div>
   );
