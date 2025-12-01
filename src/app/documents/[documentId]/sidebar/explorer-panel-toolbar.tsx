@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, FilePlus, FolderPlus } from "lucide-react";
+import { FilePlus, FolderPlus, FolderUp } from "lucide-react";
 import { ExplorerPanelBreadcrumb } from "./explorer-panel-breadcrumb";
 
 interface ExplorerPanelToolbarProps {
@@ -49,7 +49,7 @@ export const ExplorerPanelToolbar = ({
             className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Navigate up one level"
           >
-            <ArrowUp style={{ width: "1rem", height: "1rem" }} />
+            <FolderUp style={{ width: "1rem", height: "1rem" }} />
           </button>
           <button
             onClick={onCreateDocument}
