@@ -17,11 +17,13 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 interface ExplorerPanelBreadcrumbProps {
   parentFolderId?: string | null;
   availableWidth?: number;
+  onNavigate?: (folderId: Id<"folders"> | null) => void;
 }
 
 export const ExplorerPanelBreadcrumb = ({
   parentFolderId,
   availableWidth,
+  onNavigate,
 }: ExplorerPanelBreadcrumbProps) => {
   // Get the full folder path from root to current folder
   const folderPath = useQuery(
@@ -61,7 +63,14 @@ export const ExplorerPanelBreadcrumb = ({
       return (
         <>
           <BreadcrumbItem className="shrink-0">
-            <BreadcrumbLink href="#" className="flex items-center gap-1 text-xs whitespace-nowrap">
+            <BreadcrumbLink
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                onNavigate?.(null);
+              }}
+              className="flex items-center gap-1 text-xs whitespace-nowrap cursor-pointer"
+            >
               <Home className="w-3 h-3 shrink-0" />
               <span className="hidden sm:inline">My Drive</span>
               <span className="sm:hidden">Home</span>
@@ -80,7 +89,11 @@ export const ExplorerPanelBreadcrumb = ({
                   ) : (
                     <BreadcrumbLink
                       href="#"
-                      className="max-w-20 sm:max-w-[120px] truncate text-xs block"
+                      onClick={e => {
+                        e.preventDefault();
+                        onNavigate?.(folder._id as Id<"folders">);
+                      }}
+                      className="max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer"
                     >
                       {folder.name}
                     </BreadcrumbLink>
@@ -102,7 +115,14 @@ export const ExplorerPanelBreadcrumb = ({
     return (
       <>
         <BreadcrumbItem className="shrink-0">
-          <BreadcrumbLink href="#" className="flex items-center gap-1 text-xs whitespace-nowrap">
+          <BreadcrumbLink
+            href="#"
+            onClick={e => {
+              e.preventDefault();
+              onNavigate?.(null);
+            }}
+            className="flex items-center gap-1 text-xs whitespace-nowrap cursor-pointer"
+          >
             <Home className="w-3 h-3 shrink-0" />
             <span className="hidden sm:inline">My Drive</span>
             <span className="sm:hidden">Home</span>
@@ -125,7 +145,11 @@ export const ExplorerPanelBreadcrumb = ({
                 ) : (
                   <BreadcrumbLink
                     href="#"
-                    className="max-w-20 sm:max-w-[120px] truncate text-xs block"
+                    onClick={e => {
+                      e.preventDefault();
+                      onNavigate?.(folder._id as Id<"folders">);
+                    }}
+                    className="max-w-20 sm:max-w-[120px] truncate text-xs block cursor-pointer"
                   >
                     {folder.name}
                   </BreadcrumbLink>

@@ -1,6 +1,7 @@
 "use client";
 
 import { FilePlus, FolderPlus, FolderUp } from "lucide-react";
+import { Id } from "../../../../../convex/_generated/dataModel";
 import { ExplorerPanelBreadcrumb } from "./explorer-panel-breadcrumb";
 
 interface ExplorerPanelToolbarProps {
@@ -11,6 +12,7 @@ interface ExplorerPanelToolbarProps {
   onCreateDocument: () => void;
   onCreateFolder: () => void;
   onNavigateUp?: () => void;
+  onNavigate?: (folderId: Id<"folders"> | null) => void;
   onDragOver: (e: React.DragEvent) => void;
   onDragLeave: () => void;
   onDrop: (e: React.DragEvent) => void;
@@ -24,6 +26,7 @@ export const ExplorerPanelToolbar = ({
   onCreateDocument,
   onCreateFolder,
   onNavigateUp,
+  onNavigate,
   onDragOver,
   onDragLeave,
   onDrop,
@@ -31,7 +34,11 @@ export const ExplorerPanelToolbar = ({
   return (
     <>
       <div className="px-3">
-        <ExplorerPanelBreadcrumb parentFolderId={parentFolderId} availableWidth={sidebarWidth} />
+        <ExplorerPanelBreadcrumb
+          parentFolderId={parentFolderId}
+          availableWidth={sidebarWidth}
+          onNavigate={onNavigate}
+        />
       </div>
       <div
         className="mb-4 px-3 flex items-center justify-between"

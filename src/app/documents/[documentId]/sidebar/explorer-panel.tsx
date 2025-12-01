@@ -106,6 +106,7 @@ export const ExplorerPanel = ({ sidebarWidth }: ExplorerPanelProps = {}) => {
         onCreateDocument={handleCreateDocument}
         onCreateFolder={handleCreateFolder}
         onNavigateUp={handleNavigateUp}
+        onNavigate={setPinnedParentFolderId}
         onDragOver={e => handleDragOver(e, "root")}
         onDragLeave={handleDragLeave}
         onDrop={e => handleDrop(e, null)}
