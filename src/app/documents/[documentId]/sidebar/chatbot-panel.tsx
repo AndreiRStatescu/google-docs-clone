@@ -82,7 +82,7 @@ export const ChatbotPanel = () => {
     }
   }, [inputText]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputText.trim() || isWaitingForResponse) return;
 
     const userMessage: Message = {
@@ -92,15 +92,30 @@ export const ChatbotPanel = () => {
       timestamp: new Date(),
     };
 
+    const currentInputText = inputText;
     setMessages(prev => [...prev, userMessage]);
     setInputText("");
     setIsWaitingForResponse(true);
 
-    // Generate random delay between 0.5s and 2.5s
-    const delay = Math.random() * 2000 + 500;
+    try {
+      // Call the ChatGPT API
+      const response = await fetch("/api/chatbot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: currentInputText,
+          mode: mode,
+        }),
+      });
 
-    setTimeout(() => {
-      const botResponseText = `You said: ${userMessage.text}`;
+      if (!response.ok) {
+        throw new Error("Failed to get response from ChatGPT");
+      }
+
+      const data = await response.json();
+      const botResponseText = data.response;
 
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
@@ -112,8 +127,8 @@ export const ChatbotPanel = () => {
       setMessages(prev => [...prev, botMessage]);
       setIsWaitingForResponse(false);
 
-      // Insert bot response into the editor at cursor position
-      if (editor && !editor.isDestroyed) {
+      // Insert bot response into the editor at cursor position only in WRITE mode
+      if (mode === MODE_WRITE && editor && !editor.isDestroyed) {
         // Check if the textarea currently has focus
         const textareaHasFocus = document.activeElement === textareaRef.current;
 
@@ -138,7 +153,19 @@ export const ChatbotPanel = () => {
           textareaRef.current?.focus();
         }
       }
-    }, delay);
+    } catch (error) {
+      console.error("Error calling ChatGPT API:", error);
+
+      const errorMessage: Message = {
+        id: `bot-${Date.now()}`,
+        text: "Sorry, I encountered an error. Please try again.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+      setIsWaitingForResponse(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
