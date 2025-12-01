@@ -1,17 +1,23 @@
 "use client";
 
-import { createBlockMarkdownSpec, Node } from '@tiptap/core'
-import { Details, DetailsContent, DetailsSummary } from '@tiptap/extension-details'
-import { Highlight } from '@tiptap/extension-highlight'
-import { Image } from '@tiptap/extension-image'
-import { TaskItem, TaskList } from '@tiptap/extension-list'
-import { TableKit } from '@tiptap/extension-table'
-import { Markdown } from '@tiptap/markdown'
-import { EditorContent, NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer, useEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import { useState } from 'react'
+import { createBlockMarkdownSpec, Node } from "@tiptap/core";
+import { Details, DetailsContent, DetailsSummary } from "@tiptap/extension-details";
+import { Highlight } from "@tiptap/extension-highlight";
+import { Image } from "@tiptap/extension-image";
+import { TaskItem, TaskList } from "@tiptap/extension-list";
+import { TableKit } from "@tiptap/extension-table";
+import { Markdown } from "@tiptap/markdown";
+import {
+  EditorContent,
+  NodeViewContent,
+  NodeViewWrapper,
+  ReactNodeViewRenderer,
+  useEditor,
+} from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { useState } from "react";
 
-import { CONTENT_MARKDOWN } from '../../constants/content'
+import { CONTENT_MARKDOWN } from "../../constants/content";
 
 // Custom React component for demonstration
 export const CustomReactComponent = ({ node }: any) => {
@@ -19,37 +25,39 @@ export const CustomReactComponent = ({ node }: any) => {
     <NodeViewWrapper className="custom-react-node">
       <div
         style={{
-          border: '2px solid #3b82f6',
-          borderRadius: '8px',
-          padding: '16px',
-          margin: '8px 0',
-          backgroundColor: '#eff6ff',
+          border: "2px solid #3b82f6",
+          borderRadius: "8px",
+          padding: "16px",
+          margin: "8px 0",
+          backgroundColor: "#eff6ff",
         }}
       >
-        <h4 style={{ margin: '0 0 8px 0', color: '#1e40af' }}>Custom React Component</h4>
-        <p style={{ margin: 0, color: '#374151' }}>{node.attrs.content || 'This is a custom React node view!'}</p>
+        <h4 style={{ margin: "0 0 8px 0", color: "#1e40af" }}>Custom React Component</h4>
+        <p style={{ margin: 0, color: "#374151" }}>
+          {node.attrs.content || "This is a custom React node view!"}
+        </p>
         <div>
           <NodeViewContent />
         </div>
       </div>
     </NodeViewWrapper>
-  )
-}
+  );
+};
 
 // Custom node extension with React node view
 const CustomReactNode = Node.create({
-  name: 'customReactNode',
+  name: "customReactNode",
 
-  group: 'block',
+  group: "block",
 
-  content: 'block+',
+  content: "block+",
 
   addAttributes() {
     return {
       content: {
-        default: 'This is a custom React node view!',
+        default: "This is a custom React node view!",
       },
-    }
+    };
   },
 
   parseHTML() {
@@ -57,28 +65,28 @@ const CustomReactNode = Node.create({
       {
         tag: 'div[data-type="custom-react-node"]',
       },
-    ]
+    ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', { 'data-type': 'custom-react-node', ...HTMLAttributes }, 0]
+    return ["div", { "data-type": "custom-react-node", ...HTMLAttributes }, 0];
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(CustomReactComponent)
+    return ReactNodeViewRenderer(CustomReactComponent);
   },
 
-  markdownTokenName: 'customReactNode',
+  markdownTokenName: "customReactNode",
 
   ...createBlockMarkdownSpec({
-    nodeName: 'customReactNode',
-    name: 'react',
+    nodeName: "customReactNode",
+    name: "react",
   }),
-})
+});
 
 export const EditorMarkdown = () => {
-  const [markdownInput, setMarkdownInput] = useState(CONTENT_MARKDOWN)
-  const [error, setError] = useState<string | null>(null)
+  const [markdownInput, setMarkdownInput] = useState(CONTENT_MARKDOWN);
+  const [error, setError] = useState<string | null>(null);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -98,35 +106,35 @@ export const EditorMarkdown = () => {
       CustomReactNode,
     ],
     content: '# Markdown Test\n\nClick **"Parse Markdown"** to load content from the left panel.',
-    contentType: 'markdown',
-  })
+    contentType: "markdown",
+  });
 
   const parseMarkdown = () => {
     if (!editor || !editor.markdown) {
-      setError('Editor or MarkdownManager not available')
-      return
+      setError("Editor or MarkdownManager not available");
+      return;
     }
 
     try {
-      setError(null)
-      editor.commands.setContent(markdownInput, { contentType: 'markdown' })
+      setError(null);
+      editor.commands.setContent(markdownInput, { contentType: "markdown" });
     } catch (err) {
-      console.error(err)
-      setError(`Error parsing markdown: ${err instanceof Error ? err.message : String(err)}`)
+      console.error(err);
+      setError(`Error parsing markdown: ${err instanceof Error ? err.message : String(err)}`);
     }
-  }
+  };
 
   const getEditorAsMarkdown = () => {
     if (!editor) {
-      return ''
+      return "";
     }
 
     try {
-      return editor.getMarkdown()
+      return editor.getMarkdown();
     } catch {
-      return editor.getText()
+      return editor.getText();
     }
-  }
+  };
 
   return (
     <div className="markdown-parser-demo">
@@ -140,8 +148,8 @@ export const EditorMarkdown = () => {
             type="button"
             onClick={() => {
               if (editor) {
-                const markdown = getEditorAsMarkdown()
-                setMarkdownInput(markdown)
+                const markdown = getEditorAsMarkdown();
+                setMarkdownInput(markdown);
               }
             }}
           >
@@ -171,5 +179,5 @@ export const EditorMarkdown = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
