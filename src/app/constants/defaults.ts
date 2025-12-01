@@ -6,6 +6,6 @@ export const DOC_INITIAL_RIGHT_MARGIN = 56;
 
 export const ACTIVITY_BAR_WIDTH = 48;
 
-export const SIDEBAR_PANEL_DEFAULT_WIDTH = 256;
-export const SIDEBAR_PANEL_MIN_WIDTH = 200;
+export const SIDEBAR_PANEL_DEFAULT_WIDTH = 350;
+export const SIDEBAR_PANEL_MIN_WIDTH = 350;
 export const SIDEBAR_PANEL_MAX_WIDTH = 700;

@@ -1,6 +1,16 @@
 "use client";
 
-import { MODE_ASK, MODE_WRITE } from "@/app/constants/chatbot-options";
+import {
+  MODE_ASK,
+  MODE_WRITE,
+  MODEL_GPT_4_1,
+  MODEL_GPT_4_1_MINI,
+  MODEL_GPT_4_1_NANO,
+  MODEL_GPT_5,
+  MODEL_GPT_5_1,
+  MODEL_GPT_5_MINI,
+  MODEL_GPT_5_NANO,
+} from "@/app/constants/chatbot-options";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -26,6 +36,7 @@ export const ChatbotPanel = () => {
   const [inputText, setInputText] = useState("");
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [mode, setMode] = useState<typeof MODE_ASK | typeof MODE_WRITE>(MODE_WRITE);
+  const [model, setModel] = useState<string>(MODEL_GPT_5_NANO);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
@@ -107,6 +118,7 @@ export const ChatbotPanel = () => {
         body: JSON.stringify({
           message: currentInputText,
           mode: mode,
+          model: model,
         }),
       });
 
@@ -240,22 +252,54 @@ export const ChatbotPanel = () => {
             value={mode}
             onValueChange={(value: typeof MODE_ASK | typeof MODE_WRITE) => setMode(value)}
           >
-            <SelectTrigger className="w-[100px]">
+            <SelectTrigger className="w-[100px] text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={MODE_ASK}>Ask</SelectItem>
-              <SelectItem value={MODE_WRITE}>Write</SelectItem>
+              <SelectItem value={MODE_ASK} className="text-xs">
+                Ask
+              </SelectItem>
+              <SelectItem value={MODE_WRITE} className="text-xs">
+                Write
+              </SelectItem>
             </SelectContent>
           </Select>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger className="w-[140px] text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={MODEL_GPT_5_NANO} className="text-xs">
+                GPT-5 Nano
+              </SelectItem>
+              <SelectItem value={MODEL_GPT_5} className="text-xs">
+                GPT-5
+              </SelectItem>
+              <SelectItem value={MODEL_GPT_5_MINI} className="text-xs">
+                GPT-5 Mini
+              </SelectItem>
+              <SelectItem value={MODEL_GPT_5_1} className="text-xs">
+                GPT-5.1
+              </SelectItem>
+              <SelectItem value={MODEL_GPT_4_1} className="text-xs">
+                GPT-4.1
+              </SelectItem>
+              <SelectItem value={MODEL_GPT_4_1_MINI} className="text-xs">
+                GPT-4.1 Mini
+              </SelectItem>
+              <SelectItem value={MODEL_GPT_4_1_NANO} className="text-xs">
+                GPT-4.1 Nano
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex-1" />
           <Button
             onClick={handleSend}
             disabled={!inputText.trim() || isWaitingForResponse}
             size="sm"
-            className="flex-1"
+            className="w-[50px] text-xs"
           >
-            <Send className="w-4 h-4 mr-2" />
-            Send
+            <Send className="w-4 h-4" />
           </Button>
         </div>
       </div>

@@ -1,13 +1,59 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { MODEL_GPT_5_NANO } from "../../constants/chatbot-options";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+async function callGpt5Model(message: string, mode: string, model: string) {
+  const completion = await openai.chat.completions.create({
+    model: model,
+    messages: [
+      {
+        role: "system",
+        content:
+          mode === "ask"
+            ? "You are a helpful assistant that answers questions concisely and accurately."
+            : "You are a helpful writing assistant that helps users create content. Provide clear, well-written responses.",
+      },
+      {
+        role: "user",
+        content: message,
+      },
+    ],
+    max_completion_tokens: 1000,
+  });
+
+  return completion.choices[0]?.message?.content || "No response generated";
+}
+
+async function callGpt4Model(message: string, mode: string, model: string) {
+  const completion = await openai.chat.completions.create({
+    model: model,
+    messages: [
+      {
+        role: "system",
+        content:
+          mode === "ask"
+            ? "You are a helpful assistant that answers questions concisely and accurately."
+            : "You are a helpful writing assistant that helps users create content. Provide clear, well-written responses.",
+      },
+      {
+        role: "user",
+        content: message,
+      },
+    ],
+    temperature: 0.7,
+    max_tokens: 1000,
+  });
+
+  return completion.choices[0]?.message?.content || "No response generated";
+}
+
 export async function POST(request: Request) {
   try {
-    const { message, mode } = await request.json();
+    const { message, mode, model } = await request.json();
 
     if (!message || typeof message !== "string") {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
@@ -17,28 +63,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid mode" }, { status: 400 });
     }
 
-    // Call OpenAI API with gpt-4o-mini model
-    // Note: As of December 2025, gpt-4o-mini is the latest nano model available
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
+    const selectedModel = model || MODEL_GPT_5_NANO;
+    if (!selectedModel.startsWith("gpt-4") && !selectedModel.startsWith("gpt-5")) {
+      return NextResponse.json(
         {
-          role: "system",
-          content:
-            mode === "ask"
-              ? "You are a helpful assistant that answers questions concisely and accurately."
-              : "You are a helpful writing assistant that helps users create content. Provide clear, well-written responses.",
+          error:
+            "Invalid model. Supported models: any gpt-4 variant (e.g., gpt-4, gpt-4-turbo, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano) and any gpt-5 variant (e.g., gpt-5-nano, gpt-5, gpt-5-mini, gpt-5.1)",
         },
-        {
-          role: "user",
-          content: message,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-    });
+        { status: 400 }
+      );
+    }
 
-    const responseText = completion.choices[0]?.message?.content || "No response generated";
+    // Dispatcher: call the appropriate function based on model
+    let responseText;
+    if (selectedModel.startsWith("gpt-5")) {
+      responseText = await callGpt5Model(message, mode, selectedModel);
+    } else {
+      responseText = await callGpt4Model(message, mode, selectedModel);
+    }
 
     return NextResponse.json({ response: responseText });
   } catch (error: any) {
