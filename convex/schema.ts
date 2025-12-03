@@ -14,6 +14,7 @@ export default defineSchema({
   })
     .index("by_owner_id", ["ownerId"])
     .index("by_organization_id", ["organizationId"])
+    .index("by_organization_id_and_update_time", ["organizationId", "updateTime"])
     .index("by_parent_folder_id", ["parentFolderId"])
     .searchIndex("search_title", {
       searchField: "title",

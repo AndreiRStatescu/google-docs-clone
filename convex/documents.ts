@@ -196,3 +196,26 @@ export const getByParentFolderId = query({
     return documents.sort((a, b) => a.title.localeCompare(b.title));
   },
 });
+
+export const getRecent = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { paginationOpts }) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthenticated");
+    }
+
+    const organizationId = user.organization_id
+      ? (user.organization_id as string)
+      : user.tokenIdentifier;
+
+    // Fetch only documents with updateTime set, ordered by updateTime descending
+    return await ctx.db
+      .query("documents")
+      .withIndex("by_organization_id_and_update_time", q => q.eq("organizationId", organizationId))
+      .order("desc")
+      .paginate(paginationOpts);
+  },
+});
